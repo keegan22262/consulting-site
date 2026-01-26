@@ -1,27 +1,7 @@
 import Container from "../layout/Container";
+import ServiceCard from "./ServiceCard";
 
-const services = [
-  {
-    title: "Strategy & Growth",
-    description:
-      "Market positioning, portfolio choices, and growth roadmaps grounded in evidence and aligned to your operating realities.",
-  },
-  {
-    title: "Operating Model",
-    description:
-      "Org design, decision rights, and cross-functional ways of working that improve speed, accountability, and execution.",
-  },
-  {
-    title: "Transformation Delivery",
-    description:
-      "Program structure, governance, and hands-on delivery support for initiatives that need momentum and measurable outcomes.",
-  },
-  {
-    title: "Analytics & Performance",
-    description:
-      "KPI design, reporting clarity, and performance rhythms that keep teams focused on what matters most.",
-  },
-] as const;
+import { services } from "../../lib/services";
 
 export default function Services() {
   return (
@@ -38,10 +18,11 @@ export default function Services() {
 
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((service) => (
-              <div key={service.title} className="space-y-3">
-                <h3 className="text-base">{service.title}</h3>
-                <p>{service.description}</p>
-              </div>
+              <ServiceCard
+                key={service.title}
+                title={service.title}
+                description={service.description}
+              />
             ))}
           </div>
         </div>
