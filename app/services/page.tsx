@@ -1,4 +1,7 @@
 import Container from "../../components/layout/Container";
+import ServiceCard from "../../components/sections/ServiceCard";
+
+import { services } from "../../lib/services";
 
 export default function ServicesPage() {
 	return (
@@ -15,7 +18,16 @@ export default function ServicesPage() {
 						</p>
 
 						<section aria-label="Service cards" className="mt-10">
-							{/* Service cards will be rendered here. */}
+							<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+								{services.map((service) => (
+									<ServiceCard
+										key={service.id}
+										title={service.title}
+										summary={service.summary}
+										category={service.category}
+									/>
+								))}
+							</div>
 						</section>
 					</div>
 				</Container>

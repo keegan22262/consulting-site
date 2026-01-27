@@ -19,9 +19,10 @@ export default function Services() {
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((service) => (
               <ServiceCard
-                key={service.title}
+                key={service.id}
                 title={service.title}
-                description={service.description}
+                summary={service.summary}
+                category={service.category}
               />
             ))}
           </div>

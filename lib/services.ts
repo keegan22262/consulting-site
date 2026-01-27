@@ -1,33 +1,38 @@
 export type Service = {
+	id: string;
 	title: string;
-	description: string;
+	summary: string;
 	category: string;
 };
 
 // Placeholder data. Replace later with CMS-backed content.
 export const services: Service[] = [
 	{
-		title: "Strategy & Growth",
-		description:
+		id: "strategy",
+		title: "Strategy",
+		summary:
 			"Market positioning, portfolio choices, and growth roadmaps grounded in evidence and aligned to your operating realities.",
 		category: "Strategy",
 	},
 	{
-		title: "Operating Model",
-		description:
-			"Org design, decision rights, and cross-functional ways of working that improve speed, accountability, and execution.",
-		category: "Operations",
+		id: "advisory",
+		title: "Advisory",
+		summary:
+			"Decision support for leadership teams—from opportunity assessment to business case development and stakeholder alignment.",
+		category: "Advisory",
 	},
 	{
-		title: "Transformation Delivery",
-		description:
-			"Program structure, governance, and hands-on delivery support for initiatives that need momentum and measurable outcomes.",
-		category: "Transformation",
+		id: "risk",
+		title: "Risk",
+		summary:
+			"Risk identification, controls design, and governance improvements that strengthen resilience while keeping delivery moving.",
+		category: "Risk",
 	},
 	{
-		title: "Analytics & Performance",
-		description:
-			"KPI design, reporting clarity, and performance rhythms that keep teams focused on what matters most.",
-		category: "Performance",
+		id: "digital-transformation",
+		title: "Digital Transformation",
+		summary:
+			"Operating model evolution, process modernization, and implementation support to translate technology investments into business outcomes.",
+		category: "Digital Transformation",
 	},
 ];
