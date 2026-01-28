@@ -22,6 +22,7 @@ export default function ServicesPage() {
 								{services.map((service) => (
 									<ServiceCard
 										key={service.id}
+										id={service.id}
 										title={service.title}
 										summary={service.summary}
 										category={service.category}
