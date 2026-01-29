@@ -1,5 +1,17 @@
 import Container from "../../components/layout/Container";
 import TrustSignals from "../../components/sections/TrustSignals";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "About",
+	description:
+		"Learn how we work with leadership teams—senior-led, practical engagement models focused on clarity and outcomes.",
+	openGraph: {
+		title: "About",
+		description:
+			"Learn how we work with leadership teams—senior-led, practical engagement models focused on clarity and outcomes.",
+	},
+};
 
 export default function AboutPage() {
 	return (
@@ -12,10 +24,10 @@ export default function AboutPage() {
 								About Us
 							</h1>
 							<p className="text-lg leading-relaxed">
-								We are a consulting firm focused on helping leadership teams make
-								clear decisions, align execution, and deliver measurable outcomes.
-								Our work is practical, collaborative, and grounded in the realities
-								of how organizations operate.
+								We provide independent, senior-level support to help leadership teams make
+								clear decisions and execute with discipline. Our work is evidence-informed,
+								rigorously structured, and designed to translate priorities into measurable
+								outcomes.
 							</p>
 						</header>
 					</div>
@@ -33,8 +45,8 @@ export default function AboutPage() {
 									Our Mission
 								</h2>
 								<p className="leading-relaxed">
-									Provide clear, senior-level support that helps teams move from
-									analysis to action—reducing uncertainty and accelerating delivery.
+									Enable better decisions and stronger execution by bringing independence,
+									rigor, and practical delivery to complex initiatives.
 								</p>
 							</section>
 
@@ -43,9 +55,10 @@ export default function AboutPage() {
 									Our Approach
 								</h2>
 								<p className="leading-relaxed">
-									We combine structured problem-solving with hands-on partnership.
-									Engagements typically include discovery, alignment on priorities,
-									a focused plan, and practical support through implementation.
+									We work through structured assessment, stakeholder alignment, and clear
+									decision support, then stay close to execution to remove friction and keep
+									work moving. Deliverables are concise, traceable to decisions, and grounded
+									in operating constraints.
 								</p>
 							</section>
 
@@ -54,17 +67,17 @@ export default function AboutPage() {
 									Who We Work With
 								</h2>
 								<p className="leading-relaxed">
-									We work with organizations that need clarity and momentum—from
-									growth-stage companies to established enterprises.
+									We work with organizations that require clarity, alignment, and accountable
+									execution—from growth-stage teams to established enterprises.
 								</p>
 								<ul className="space-y-3">
 									<li className="flex gap-3">
 										<span aria-hidden="true">•</span>
-										<span>Executive teams shaping strategy and priorities</span>
+										<span>Leadership teams shaping strategy and priorities</span>
 									</li>
 									<li className="flex gap-3">
 										<span aria-hidden="true">•</span>
-										<span>Functional leaders driving complex initiatives</span>
+										<span>Functional leaders managing complex initiatives</span>
 									</li>
 									<li className="flex gap-3">
 										<span aria-hidden="true">•</span>

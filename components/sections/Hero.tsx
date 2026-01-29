@@ -8,12 +8,12 @@ export default function Hero() {
       <Container>
         <div className="flex flex-col items-center py-18 text-center">
           <h1 id="hero-title" className="max-w-3xl">
-            Strategy and execution support for leaders who need momentum.
+            Clarity for complex decisions. Execution that delivers.
           </h1>
 
           <p className="mt-6 max-w-2xl">
-            We partner with teams on growth strategy, operational alignment, and
-            high-stakes initiatives—bringing clarity from diagnosis through delivery.
+            We support leadership teams with structured analysis, decision support, and
+            practical delivery across strategy, risk, and transformation.
           </p>
 
           <div className="mt-10">

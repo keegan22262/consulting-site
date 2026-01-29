@@ -15,8 +15,8 @@ export default function ServicesOverview() {
           <div className="mx-auto max-w-3xl text-center">
             <h2 id="services-overview-title">Our Services</h2>
             <p className="mt-4">
-              Practical, senior-level support across core disciplines—focused on
-              clarity, alignment, and measurable outcomes.
+              Senior-level support across core disciplines—focused on clarity,
+              alignment, and measurable outcomes.
             </p>
             <p className="mt-4">
               <Link href="/services">View all services</Link>

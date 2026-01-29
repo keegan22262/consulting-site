@@ -10,28 +10,33 @@ type CTAProps = {
 };
 
 export default function CTA({
-  heading = "Ready to move from analysis to action?",
-  subheading = "Share your goals and constraints— we’ll respond with a clear next step.",
-  buttonText = "Contact us",
+  heading = "Start a conversation",
+  subheading = "A short discussion can help clarify needs, constraints, and next steps.",
+  buttonText = "Discuss your needs",
   href = "/contact",
 }: CTAProps) {
   return (
     <section aria-labelledby="cta-title">
       <Container>
-        <div className="flex flex-col items-center py-18 text-center">
-          <h2 id="cta-title" className="max-w-3xl">
-            {heading}
-          </h2>
-          <p className="mt-4 max-w-2xl">
-            {subheading}
-          </p>
-          <div className="mt-10">
-            <Link
-              href={href}
-              className="inline-flex items-center justify-center px-6 py-3"
-            >
-              {buttonText}
-            </Link>
+        <div className="py-22">
+          <div className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 text-center sm:px-10">
+            <h2 id="cta-title" className="mx-auto max-w-3xl font-medium">
+              {heading}
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl">
+              {subheading}
+            </p>
+            <div className="mt-8">
+              <Link
+                href={href}
+                className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-6 py-3 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+              >
+                {buttonText}
+              </Link>
+            </div>
+            <p className="mt-4 text-xs leading-5 text-slate-600">
+              Formal contact channels will be published soon.
+            </p>
           </div>
         </div>
       </Container>

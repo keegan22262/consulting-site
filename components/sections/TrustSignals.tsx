@@ -19,7 +19,7 @@ const indicators: TrustIndicator[] = [
   {
     title: "Independent",
     description:
-      "Vendor-neutral guidance focused on what works for your context—not whats easiest to sell.",
+      "Vendor-neutral guidance focused on what works for your context—not what’s easiest to sell.",
   },
   {
     title: "Impact-focused",
@@ -36,8 +36,8 @@ export default function TrustSignals() {
           <div className="mx-auto max-w-3xl text-center">
             <h2 id="trust-signals-title">How We Work</h2>
             <p className="mt-4">
-              A consulting style built for high-stakes decisions: structured, independent, and
-              accountable to real outcomes.
+              A disciplined approach for high-stakes decisions: structured, independent, and
+              accountable to measurable outcomes.
             </p>
           </div>
 

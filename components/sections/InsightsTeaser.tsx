@@ -18,7 +18,7 @@ export default function InsightsTeaser() {
           <div className="mx-auto max-w-3xl text-center">
             <h2 id="insights-teaser-title">Insights</h2>
             <p className="mt-4">
-              Research-backed perspectives and practical guidance on strategy, risk, and transformation.
+              Research-informed guidance on decision-making, risk, and transformation.
             </p>
             <p className="mt-4">
               <Link href="/insights">View all insights</Link>

@@ -10,12 +10,12 @@ type ServiceCardProps = {
 export default function ServiceCard({ id, title, summary, category }: ServiceCardProps) {
   return (
     <Link href={`/services/${id}`} className="block">
-      <article className="rounded-xl border p-6 hover:border-slate-300 hover:bg-slate-50">
-        <header className="space-y-3">
-          <p className="text-sm leading-6">{category}</p>
-          <h3 className="text-lg leading-snug">{title}</h3>
+      <article className="rounded-xl border border-slate-200 bg-white p-6">
+        <header>
+          <p className="text-xs font-medium uppercase tracking-wide text-slate-600">{category}</p>
+          <h3 className="mt-3 text-sm font-semibold tracking-tight text-slate-900">{title}</h3>
         </header>
-        <p className="mt-3 leading-relaxed">{summary}</p>
+        <p className="mt-3 text-sm leading-6 text-slate-600">{summary}</p>
       </article>
     </Link>
   );

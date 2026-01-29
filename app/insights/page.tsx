@@ -1,7 +1,19 @@
 import Container from "../../components/layout/Container";
 import InsightCard from "../../components/sections/InsightCard";
+import type { Metadata } from "next";
 
 import { insights } from "../../lib/insights";
+
+export const metadata: Metadata = {
+	title: "Insights",
+	description:
+		"Thought leadership and research-informed guidance on strategy, operating models, risk, and transformation.",
+	openGraph: {
+		title: "Insights",
+		description:
+			"Thought leadership and research-informed guidance on strategy, operating models, risk, and transformation.",
+	},
+};
 
 export default function InsightsPage() {
 	return (
@@ -13,8 +25,8 @@ export default function InsightsPage() {
 								Insights
 						</h1>
 						<p className="mt-4 max-w-2xl text-lg leading-relaxed">
-							Our insights share neutral, practical perspectives drawn from research and hands-on delivery. We focus
-							on decision-quality, execution discipline, and measurable outcomes.
+							Research, analysis, and perspective on strategy, risk, and transformation—grounded in practical delivery
+							and focused on decision-quality and measurable outcomes.
 						</p>
 
 						<section aria-label="Insight cards" className="mt-10">
