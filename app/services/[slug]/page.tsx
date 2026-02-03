@@ -1,10 +1,12 @@
 import Container from "../../../components/layout/Container";
 import CTA from "../../../components/sections/CTA";
+import InsightCard from "../../../components/sections/InsightCard";
 import ServiceContent from "../../../components/sections/ServiceContent";
 import Link from "next/link";
 import type { Metadata } from "next";
 
 import { getServiceBySlug } from "@/lib/sanityServices";
+import { getAllInsights } from "@/lib/sanityInsights";
 
 export async function generateMetadata(
   { params }: ServiceDetailsPageProps
@@ -78,6 +80,42 @@ export default async function ServiceDetailsPage({
 
   const executiveSummary = `${service.summary} We provide pragmatic decision support and delivery focus aligned to measurable outcomes.`;
 
+  const relatedInsightSlugs = (service.relatedInsights ?? [])
+    .map((item) => item?.slug)
+    .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
+
+  type RelatedInsightForRender = {
+    title: string;
+    slug: string;
+    summary: string;
+    category?: string;
+    date?: string;
+  };
+
+  let relatedInsightsForRender: RelatedInsightForRender[] = [];
+  if (relatedInsightSlugs.length > 0) {
+    const allInsights = await getAllInsights();
+    const bySlug = new Map(allInsights.map((insight) => [insight.slug, insight] as const));
+
+    relatedInsightsForRender = relatedInsightSlugs
+      .map((slugValue) => {
+        const fromIndex = bySlug.get(slugValue);
+        if (fromIndex) return fromIndex;
+
+        const fallback = (service.relatedInsights ?? []).find((item) => item?.slug === slugValue);
+        if (!fallback) return null;
+
+        return {
+          title: fallback.title,
+          slug: fallback.slug,
+          summary: fallback.summary,
+          category: fallback.category,
+          date: fallback.date,
+        };
+      })
+      .filter((value): value is RelatedInsightForRender => value !== null);
+  }
+
   return (
     <main>
       <Container>
@@ -108,6 +146,26 @@ export default async function ServiceDetailsPage({
                 outcomes={service.outcomes ?? []}
               />
             </section>
+
+            {relatedInsightsForRender.length > 0 ? (
+              <section aria-labelledby="service-related-insights-title" className="space-y-4">
+                <h2 id="service-related-insights-title" className="text-2xl leading-snug">
+                  Related Insights
+                </h2>
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                  {relatedInsightsForRender.map((insight) => (
+                    <InsightCard
+                      key={insight.slug}
+                      slug={insight.slug}
+                      title={insight.title}
+                      summary={insight.summary}
+                      category={insight.category ?? ""}
+                      date={insight.date ?? ""}
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null}
 
             <section aria-labelledby="service-approach-title" className="space-y-4">
               <h2 id="service-approach-title" className="text-2xl leading-snug">

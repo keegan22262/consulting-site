@@ -141,7 +141,7 @@ export const getInsightBySlug = cache(async (slug: string): Promise<InsightDetai
 			category: result.themeTitle,
 			date: result.publishDate,
 			content: result.body,
-			relatedServices: mapRelatedServices(result.relatedServices),
+			relatedServices: mapRelatedServices(result.relatedServices) ?? [],
 		};
 	} catch (error) {
 		console.error("Sanity getInsightBySlug failed", { slug, error });

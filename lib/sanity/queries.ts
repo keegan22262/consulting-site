@@ -16,11 +16,8 @@ export const ALL_PUBLISHED_SERVICES_QUERY = `
     (relatedInsights[]-> {
       title,
       "slug": slug.current,
-      excerpt,
-      publishDate,
-      "themeTitle": theme->title,
       status
-    })[status == "published"],
+    })[status == "published"]{ title, slug },
     []
   ),
   "overviewSections": coalesce(overviewSections, [])
@@ -42,11 +39,8 @@ export const PUBLISHED_SERVICE_BY_SLUG_QUERY = `
     (relatedInsights[]-> {
       title,
       "slug": slug.current,
-      excerpt,
-      publishDate,
-      "themeTitle": theme->title,
       status
-    })[status == "published"],
+    })[status == "published"]{ title, slug },
     []
   ),
   "overviewSections": coalesce(overviewSections, [])
@@ -67,9 +61,7 @@ export const PUBLISHED_SERVICE_BY_SLUG_EXPANDED_QUERY = `
   "relatedInsights": coalesce(relatedInsights[]-> {
     title,
     "slug": slug.current,
-    excerpt,
-    publishDate,
-    "themeTitle": theme->title
+    status
   }, []),
 
   "parentService": parentService-> {
@@ -103,7 +95,17 @@ export const ALL_PUBLISHED_INSIGHTS_QUERY = `
   excerpt,
   body,
   publishDate,
-  "themeTitle": theme->title
+  "themeTitle": theme->title,
+
+  // Optional cross-links (safe if absent in schema/documents)
+  "relatedServices": coalesce(
+    (relatedServices[]-> {
+      title,
+      "slug": slug.current,
+      status
+    })[status == "published"]{ title, slug },
+    []
+  )
 }
 `;
 
@@ -117,7 +119,17 @@ export const LATEST_PUBLISHED_INSIGHTS_QUERY = `
   "slug": slug.current,
   excerpt,
   publishDate,
-  "themeTitle": theme->title
+  "themeTitle": theme->title,
+
+  // Optional cross-links (safe if absent in schema/documents)
+  "relatedServices": coalesce(
+    (relatedServices[]-> {
+      title,
+      "slug": slug.current,
+      status
+    })[status == "published"]{ title, slug },
+    []
+  )
 }
 `;
 
@@ -136,10 +148,8 @@ export const PUBLISHED_INSIGHT_BY_SLUG_EXPANDED_QUERY = `
     (relatedServices[]-> {
       title,
       "slug": slug.current,
-      summary,
-      domain,
       status
-    })[status == "published"],
+    })[status == "published"]{ title, slug },
     []
   )
 }

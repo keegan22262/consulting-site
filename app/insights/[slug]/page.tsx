@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import Container from "@/components/layout/Container";
-import InsightCard from "@/components/sections/InsightCard";
-import { insights } from "@/lib/insights";
+import ServiceCard from "@/components/sections/ServiceCard";
+import { getInsightBySlug } from "@/lib/sanityInsights";
 
 type PageProps = {
 	params: {
@@ -11,8 +11,37 @@ type PageProps = {
 	};
 };
 
+type PortableTextChild = {
+	text?: string;
+};
+
+type PortableTextBlock = {
+	_type?: string;
+	style?: string;
+	listItem?: string;
+	children?: PortableTextChild[];
+};
+
+function blockToText(block: PortableTextBlock): string {
+	if (!Array.isArray(block.children)) return "";
+	return block.children
+		.map((child) => (typeof child?.text === "string" ? child.text : ""))
+		.join("")
+		.trim();
+}
+
+function portableTextToParagraphs(blocks: PortableTextBlock[] | undefined): string[] {
+	if (!Array.isArray(blocks)) return [];
+
+	return blocks
+		.filter((block) => block?._type === "block" && !block.listItem)
+		.map((block) => blockToText(block))
+		.filter((text) => Boolean(text));
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-	const insight = insights.find((item) => item.slug === params.slug);
+	const normalizedSlug = (params.slug || "").trim();
+	const insight = normalizedSlug ? await getInsightBySlug(normalizedSlug) : null;
 
 	if (!insight) {
 		return {
@@ -24,16 +53,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 	return {
 		title: insight.title,
-		description: insight.summary,
+		description: "Read our latest research-informed perspective.",
 		openGraph: {
 			title: insight.title,
-			description: insight.summary,
+			description: "Read our latest research-informed perspective.",
 		},
 	};
 }
 
-export default function InsightDetailPage({ params }: PageProps) {
-	const insight = insights.find((item) => item.slug === params.slug);
+export default async function InsightDetailPage({ params }: PageProps) {
+	const normalizedSlug = (params.slug || "").trim();
+	const insight = normalizedSlug ? await getInsightBySlug(normalizedSlug) : null;
 
 	if (!insight) {
 		return (
@@ -47,15 +77,10 @@ export default function InsightDetailPage({ params }: PageProps) {
 		);
 	}
 
-	const paragraphs = insight.content
-		.split(/\n\s*\n/)
-		.map((paragraph) => paragraph.trim())
-		.filter(Boolean);
-
-	const relatedInsights = insights
-		.filter((item) => item.id !== insight.id)
-		.filter((item) => insight.related.includes(item.id))
-		.slice(0, 3);
+	const paragraphs = portableTextToParagraphs(insight.content as PortableTextBlock[] | undefined);
+	const headerSummary = paragraphs[0] ?? "";
+	const relatedServices = Array.isArray(insight.relatedServices) ? insight.relatedServices : [];
+	const hasRelatedServices = relatedServices.length > 0;
 
 	return (
 		<main>
@@ -73,7 +98,7 @@ export default function InsightDetailPage({ params }: PageProps) {
 							<span>{insight.category}</span>
 						</div>
 						<p className="mt-6 text-lg leading-relaxed text-slate-700">
-							{insight.summary}
+							{headerSummary}
 						</p>
 					</header>
 
@@ -83,34 +108,37 @@ export default function InsightDetailPage({ params }: PageProps) {
 						))}
 					</div>
 
-					<section aria-labelledby="related-insights-title" className="mt-12 border-t border-slate-200 pt-10">
-						<div className="mx-auto max-w-[90ch]">
-							<div className="flex items-baseline justify-between gap-6">
-								<h2
-									id="related-insights-title"
-									className="text-xl font-semibold tracking-tight text-slate-900"
-								>
-									Related Insights
-								</h2>
-								<Link className="text-sm text-slate-700" href="/insights">
-									Back to insights
-								</Link>
+					{hasRelatedServices ? (
+						<section aria-labelledby="related-services-title" className="mt-12 border-t border-slate-200 pt-10">
+							<div className="mx-auto max-w-[90ch]">
+								<div className="flex items-baseline justify-between gap-6">
+									<h2
+										id="related-services-title"
+										className="text-xl font-semibold tracking-tight text-slate-900"
+									>
+										Related Services
+									</h2>
+									<Link className="text-sm text-slate-700" href="/insights">
+										Back to insights
+									</Link>
+								</div>
 							</div>
-						</div>
 
-						<div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-							{relatedInsights.map((related) => (
-								<InsightCard
-									key={related.id}
-									slug={related.slug}
-									title={related.title}
-									summary={related.summary}
-									category={related.category}
-									date={related.date}
-								/>
-							))}
-						</div>
-					</section>
+							<div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+								{relatedServices
+									.filter((service) => Boolean(service?.slug))
+									.map((service) => (
+										<ServiceCard
+											key={service.slug}
+											id={service.slug}
+											title={service.title}
+											summary={service.summary ?? ""}
+											category={service.category ?? ""}
+										/>
+									))}
+							</div>
+						</section>
+					) : null}
 				</article>
 			</Container>
 		</main>

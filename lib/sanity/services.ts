@@ -182,8 +182,8 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetai
 			? result.subServices
 					.map((item) => mapServiceSummary(item))
 					.filter((item): item is ServiceListItem => Boolean(item))
-			: undefined;
-		const normalizedSubServices = subServices && subServices.length > 0 ? subServices : undefined;
+			: [];
+		const normalizedSubServices = subServices;
 
 		return {
 			title: result.title ?? "",
@@ -193,7 +193,7 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetai
 			description: portableTextToPlainText(result.body),
 			offerings: [],
 			outcomes: [],
-			relatedInsights: mapRelatedInsights(result.relatedInsights),
+			relatedInsights: mapRelatedInsights(result.relatedInsights) ?? [],
 			parentService,
 			subServices: normalizedSubServices,
 			overviewSections: mapOverviewSections(result.overviewSections),
