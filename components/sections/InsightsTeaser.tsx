@@ -3,13 +3,10 @@ import Link from "next/link";
 import Container from "../layout/Container";
 import InsightCard from "./InsightCard";
 
-import { insights } from "../../lib/insights";
+import { getLatestInsights } from "@/lib/sanityInsights";
 
-export default function InsightsTeaser() {
-  const latestInsights = insights
-    .slice()
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 2);
+export default async function InsightsTeaser() {
+	const latestInsights = await getLatestInsights(2);
 
   return (
     <section aria-labelledby="insights-teaser-title">
@@ -28,11 +25,12 @@ export default function InsightsTeaser() {
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
             {latestInsights.map((insight) => (
               <InsightCard
-                key={insight.id}
+                key={insight.slug}
+                slug={insight.slug}
                 title={insight.title}
                 summary={insight.summary}
-                category={insight.category}
-                date={insight.date}
+						category={insight.category ?? ""}
+						date={insight.date ?? ""}
               />
             ))}
           </div>

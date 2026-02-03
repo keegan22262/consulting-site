@@ -1,4 +1,7 @@
+import Link from "next/link";
+
 type InsightCardProps = {
+  slug: string;
   title: string;
   summary: string;
   category: string;
@@ -19,7 +22,7 @@ function formatInsightDate(date: string) {
   }).format(parsed);
 }
 
-export default function InsightCard({ title, summary, category, date }: InsightCardProps) {
+export default function InsightCard({ slug, title, summary, category, date }: InsightCardProps) {
   return (
     <article className="rounded-xl border border-slate-200 bg-white p-6">
       <header>
@@ -32,7 +35,15 @@ export default function InsightCard({ title, summary, category, date }: InsightC
           </time>
         </div>
 
-        <h3 className="mt-3 text-sm font-semibold tracking-tight text-slate-900">{title}</h3>
+        <h3 className="mt-3 text-sm font-semibold tracking-tight text-slate-900">
+          <Link
+            href={`/insights/${slug}`}
+            aria-label={`Read insight: ${title}`}
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+          >
+            {title}
+          </Link>
+        </h3>
       </header>
 
       <p className="mt-3 text-sm leading-6 text-slate-600">{summary}</p>

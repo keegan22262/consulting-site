@@ -4,14 +4,14 @@ import ServiceContent from "../../../components/sections/ServiceContent";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-import { services, type Service } from "../../../lib/services";
+import { getServiceBySlug } from "@/lib/sanityServices";
 
 export async function generateMetadata(
   { params }: ServiceDetailsPageProps
 ): Promise<Metadata> {
   const { slug } = await params;
   const normalizedSlug = slug.trim();
-  const service: Service | undefined = services.find((s) => s.id === normalizedSlug);
+  const service = normalizedSlug ? await getServiceBySlug(normalizedSlug) : null;
 
   if (!normalizedSlug || !service) {
     return {
@@ -24,14 +24,17 @@ export async function generateMetadata(
     };
   }
 
-  const description = `${service.summary}`;
+  const safeTitle = (service.title || "").trim() || "Service";
+  const safeDescription =
+		(service.summary || "").trim() ||
+		"Consulting services focused on clear decisions and measurable outcomes.";
 
   return {
-    title: service.title,
-    description,
+    title: safeTitle,
+    description: safeDescription,
     openGraph: {
-      title: service.title,
-      description,
+      title: safeTitle,
+      description: safeDescription,
     },
   };
 }
@@ -47,7 +50,7 @@ export default async function ServiceDetailsPage({
 }: ServiceDetailsPageProps) {
   const { slug } = await params;
   const normalizedSlug = slug.trim();
-  const service: Service | undefined = services.find((s) => s.id === normalizedSlug);
+  const service = normalizedSlug ? await getServiceBySlug(normalizedSlug) : null;
 
   if (!normalizedSlug || !service) {
     return (
@@ -73,7 +76,7 @@ export default async function ServiceDetailsPage({
     );
   }
 
-  const executiveSummary = `${service.summary} We provide pragmatic decision support and delivery focus—aligned to measurable outcomes.`;
+  const executiveSummary = `${service.summary} We provide pragmatic decision support and delivery focus aligned to measurable outcomes.`;
 
   return (
     <main>
@@ -100,9 +103,9 @@ export default async function ServiceDetailsPage({
                 What We Do
               </h2>
               <ServiceContent
-                description={service.description}
-                offerings={service.offerings}
-                outcomes={service.outcomes}
+                description={service.description ?? ""}
+                offerings={service.offerings ?? []}
+                outcomes={service.outcomes ?? []}
               />
             </section>
 

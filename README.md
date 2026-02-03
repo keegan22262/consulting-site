@@ -16,6 +16,34 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Sanity Studio (standalone)
+
+This repo includes a standalone Sanity Studio in the `sanity/` folder. It is intentionally not integrated into the Next.js frontend runtime.
+
+### Setup
+
+1) Install Studio dependencies:
+
+```bash
+npm install --prefix sanity
+```
+
+2) Add these variables to your `.env.local` (do not commit it):
+
+```bash
+SANITY_PROJECT_ID=
+SANITY_DATASET=
+SANITY_API_VERSION=2025-01-01
+```
+
+### Run
+
+From the repo root:
+
+```bash
+npm run studio:dev
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

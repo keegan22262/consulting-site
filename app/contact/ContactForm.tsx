@@ -57,8 +57,8 @@ export default function ContactForm() {
 
 		if (message.length === 0) {
 			nextErrors.message = "Message is required.";
-		} else if (message.length < 10) {
-			nextErrors.message = "Message must be at least 10 characters.";
+		} else if (message.length <= 10) {
+			nextErrors.message = "Message must be more than 10 characters.";
 		}
 
 		return nextErrors;
@@ -127,9 +127,11 @@ export default function ContactForm() {
 	if (submitSuccess) {
 		return (
 			<div className="mt-6 rounded-xl border border-slate-200 bg-white p-5">
-				<p role="status" className="text-sm text-slate-700">
+				<div aria-live="polite" aria-atomic="true">
+					<p role="status" className="text-sm text-slate-700">
 					Thank you. Your message has been received.
-				</p>
+					</p>
+				</div>
 				<div className="mt-4">
 					<button
 						type="button"
@@ -224,15 +226,19 @@ export default function ContactForm() {
 					aria-disabled={isSubmitting}
 					className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-6 py-3 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
 				>
-					{isSubmitting ? "Submitting…" : "Submit"}
+					{isSubmitting ? "Sending…" : "Send message"}
 				</button>
 			</div>
 
-			{submitError ? (
-				<p role="alert" className="text-sm text-slate-700">
-					{submitError}
-				</p>
-			) : null}
+			<div aria-live="polite" aria-atomic="true">
+				{submitError ? (
+					<div className="rounded-lg border border-slate-200 bg-white px-4 py-3">
+						<p role="status" className="text-sm text-slate-700">
+							{submitError}
+						</p>
+					</div>
+				) : null}
+			</div>
 		</form>
 	);
 }

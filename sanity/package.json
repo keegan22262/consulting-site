@@ -1,0 +1,17 @@
+{
+  "name": "consulting-site-sanity-studio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "start": "sanity start",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "^3.81.0",
+    "sanity": "^3.81.0",
+    "styled-components": "^6.3.8"
+  }
+}

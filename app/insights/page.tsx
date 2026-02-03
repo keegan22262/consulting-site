@@ -2,7 +2,7 @@ import Container from "../../components/layout/Container";
 import InsightCard from "../../components/sections/InsightCard";
 import type { Metadata } from "next";
 
-import { insights } from "../../lib/insights";
+import { getAllInsights } from "@/lib/sanityInsights";
 
 export const metadata: Metadata = {
 	title: "Insights",
@@ -15,7 +15,17 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function InsightsPage() {
+
+export default async function InsightsPage() {
+	let fetchedInsights: Awaited<ReturnType<typeof getAllInsights>> = [];
+	let hasError = false;
+
+	try {
+		fetchedInsights = await getAllInsights();
+	} catch {
+		hasError = true;
+	}
+
 	return (
 		<main>
 			<section aria-labelledby="insights-page-title">
@@ -29,19 +39,34 @@ export default function InsightsPage() {
 							and focused on decision-quality and measurable outcomes.
 						</p>
 
-						<section aria-label="Insight cards" className="mt-10">
-							<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-								{insights.map((insight) => (
-									<InsightCard
-										key={insight.id}
-										title={insight.title}
-										summary={insight.summary}
-										category={insight.category}
-										date={insight.date}
-									/>
-								))}
+						{hasError ? (
+							<div className="mt-10 max-w-2xl rounded-lg border border-slate-200 bg-white px-4 py-3">
+								<p className="text-sm leading-relaxed text-slate-700">
+									Insights are unavailable at this time.
+								</p>
 							</div>
-						</section>
+						) : fetchedInsights.length === 0 ? (
+							<div className="mt-10 max-w-2xl">
+								<p className="text-sm leading-relaxed text-slate-700">
+									No insights are available at this time.
+								</p>
+							</div>
+						) : (
+							<section aria-label="Insight cards" className="mt-10">
+								<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+									{fetchedInsights.map((insight) => (
+										<InsightCard
+											key={insight.slug}
+											slug={insight.slug}
+											title={insight.title}
+											summary={insight.summary}
+											category={insight.category ?? ""}
+											date={insight.date ?? ""}
+										/>
+									))}
+								</div>
+							</section>
+						)}
 					</div>
 				</Container>
 			</section>

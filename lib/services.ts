@@ -1,5 +1,12 @@
 export type ServicePhase = "mvp" | "future";
 
+/**
+ * Placeholder, local-only content.
+ *
+ * Migration strategy (Sanity + safe fallback) lives in:
+ * - docs/sanity-replacement-strategy.md
+ */
+
 export type ServiceCategory =
 	| "Strategy & Transformation"
 	| "Digital & AI"
@@ -22,6 +29,22 @@ export type Service = {
 	phase: ServicePhase;
 	offerings: string[];
 	outcomes: string[];
+
+	/** Optional: future cross-linking to related insights (by insight id/slug). */
+	relatedInsights?: string[];
+
+	/** Optional: future structured overview blocks (local placeholder shape). */
+	overviewSections?: ServiceOverviewSection[];
+
+	/** Optional: future hierarchy support for sub-services. */
+	parentServiceId?: string;
+	subServiceIds?: string[];
+};
+
+export type ServiceOverviewSection = {
+	title: string;
+	body?: string;
+	bullets?: string[];
 };
 
 // Service domains from the client MVP document.

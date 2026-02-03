@@ -2,7 +2,7 @@ import Container from "../../components/layout/Container";
 import ServiceCard from "../../components/sections/ServiceCard";
 import type { Metadata } from "next";
 
-import { services } from "../../lib/services";
+import { getAllServices } from "@/lib/sanityServices";
 
 export const metadata: Metadata = {
 	title: "Services",
@@ -15,7 +15,9 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+	const fetchedServices = await getAllServices();
+
 	return (
 		<main>
 			<section aria-labelledby="services-page-title">
@@ -30,19 +32,27 @@ export default function ServicesPage() {
 							prioritize, align, and achieve measurable outcomes—without the overhead of large-firm engagements.
 						</p>
 
-						<section aria-label="Service cards" className="mt-10">
-							<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-								{services.map((service) => (
-									<ServiceCard
-										key={service.id}
-										id={service.id}
-										title={service.title}
-										summary={service.summary}
-										category={service.category}
-									/>
-								))}
+						{fetchedServices.length === 0 ? (
+							<div className="mt-10 max-w-2xl">
+								<p className="text-sm leading-relaxed text-slate-700">
+									No services are available at this time.
+								</p>
 							</div>
-						</section>
+						) : (
+							<section aria-label="Service cards" className="mt-10">
+								<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+									{fetchedServices.map((service) => (
+										<ServiceCard
+											key={service.slug}
+											id={service.slug}
+											title={service.title}
+											summary={service.summary}
+											category={service.category ?? ""}
+										/>
+									))}
+								</div>
+							</section>
+						)}
 					</div>
 				</Container>
 			</section>
