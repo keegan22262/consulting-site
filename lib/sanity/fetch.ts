@@ -32,6 +32,13 @@ export async function sanityFetch<T>(
 	params?: Record<string, unknown>,
 	options?: SanityFetchOptions
 ): Promise<T> {
+	if (!sanityClient) {
+		if (process.env.SANITY_DEBUG === "true") {
+			console.warn("sanityFetch skipped: Sanity client is not configured");
+		}
+		return null as unknown as T;
+	}
+
 	const revalidate = normalizeRevalidateSeconds(options?.revalidate);
 
 	// Keep caching predictable:

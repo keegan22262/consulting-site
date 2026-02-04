@@ -172,3 +172,88 @@ export const PUBLISHED_PAGE_TITLE_BODY_BY_SLUG_QUERY = `
   body
 }
 `;
+
+/** Search published services by text (title + summary), with optional domain filter. */
+export const SEARCH_PUBLISHED_SERVICES_QUERY = `
+*[
+  _type == "service" &&
+  status == "published" &&
+  $term != "" &&
+  (
+    title match ("*" + $term + "*") ||
+    summary match ("*" + $term + "*")
+  ) &&
+  (!defined($domain) || domain == $domain)
+]
+| order(domain asc, title asc)
+{
+  title,
+  "slug": slug.current,
+  summary,
+  body,
+  domain,
+
+  // Optional cross-links (safe if absent in schema/documents)
+  "relatedInsights": coalesce(
+    (relatedInsights[]-> {
+      title,
+      "slug": slug.current,
+      status
+    })[status == "published"]{ title, slug },
+    []
+  ),
+  "overviewSections": coalesce(overviewSections, [])
+}
+`;
+
+/** Search published insights by text (title + excerpt), with optional theme filter. */
+export const SEARCH_PUBLISHED_INSIGHTS_QUERY = `
+*[
+  _type == "insight" &&
+  status == "published" &&
+  $term != "" &&
+  (
+    title match ("*" + $term + "*") ||
+    excerpt match ("*" + $term + "*")
+  ) &&
+  (
+    !defined($theme) ||
+    theme->title == $theme ||
+    theme->slug.current == $theme ||
+    theme._ref == $theme
+  )
+]
+| order(publishDate desc)
+{
+  title,
+  "slug": slug.current,
+  excerpt,
+  publishDate,
+  "themeTitle": theme->title,
+
+  // Optional cross-links (safe if absent in schema/documents)
+  "relatedServices": coalesce(
+    (relatedServices[]-> {
+      title,
+      "slug": slug.current,
+      status
+    })[status == "published"]{ title, slug },
+    []
+  )
+}
+`;
+
+/** Fetch distinct domains used by published services (for filters). */
+export const PUBLISHED_SERVICE_DOMAINS_QUERY = `
+array::unique(*[_type == "service" && status == "published" && defined(domain)].domain)
+`;
+
+/** Fetch published insight themes (for filters). */
+export const PUBLISHED_INSIGHT_THEMES_QUERY = `
+*[_type == "insightTheme" && status == "published"]
+| order(title asc)
+{
+  title,
+  "slug": slug.current
+}
+`;

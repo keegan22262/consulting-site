@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 
+import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 import { PUBLISHED_PAGE_BY_SLUG_QUERY } from "@/lib/sanity/queries";
 
@@ -15,6 +16,7 @@ export type PublishedPage = {
 export const getPublishedPageBySlug = cache(async (slug: string): Promise<PublishedPage | null> => {
 	const normalizedSlug = slug?.trim();
 	if (!normalizedSlug) return null;
+	if (!sanityClient) return null;
 
 	try {
 		const result = await sanityFetch<PublishedPage | null>(

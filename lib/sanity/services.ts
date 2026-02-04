@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 
+import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 import {
 	ALL_PUBLISHED_SERVICES_QUERY,
@@ -130,6 +131,8 @@ function portableTextToPlainText(blocks: PortableTextBlock[] | undefined): strin
 }
 
 export const getAllServices = cache(async (): Promise<ServiceListItem[]> => {
+	if (!sanityClient) return [];
+
 	try {
 		const result = await sanityFetch<PublishedServiceRecord[]>(ALL_PUBLISHED_SERVICES_QUERY, {}, {
 			revalidate: 600,
@@ -160,6 +163,7 @@ export const getAllServices = cache(async (): Promise<ServiceListItem[]> => {
 
 export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetail | null> => {
 	if (!slug) return null;
+	if (!sanityClient) return null;
 
 	try {
 		const result = await sanityFetch<PublishedServiceRecord | null>(

@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 
+import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 import {
 	ALL_PUBLISHED_INSIGHTS_QUERY,
@@ -67,6 +68,8 @@ function mapRelatedServices(records: PublishedRelatedServiceRecord[] | undefined
 }
 
 export const getAllInsights = cache(async (): Promise<InsightListItem[]> => {
+	if (!sanityClient) return [];
+
 	try {
 		const result = await sanityFetch<PublishedInsightRecord[]>(ALL_PUBLISHED_INSIGHTS_QUERY, {}, {
 			revalidate: 600,
@@ -93,6 +96,7 @@ export const getAllInsights = cache(async (): Promise<InsightListItem[]> => {
 export const getLatestInsights = cache(async (limit: number): Promise<InsightListItem[]> => {
 	const safeLimit = Number.isFinite(limit) ? Math.max(0, Math.min(50, Math.floor(limit))) : 0;
 	if (safeLimit === 0) return [];
+	if (!sanityClient) return [];
 
 	try {
 		const result = await sanityFetch<PublishedInsightRecord[]>(
@@ -123,6 +127,7 @@ export const getLatestInsights = cache(async (limit: number): Promise<InsightLis
 
 export const getInsightBySlug = cache(async (slug: string): Promise<InsightDetail | null> => {
 	if (!slug) return null;
+	if (!sanityClient) return null;
 
 	try {
 		const result = await sanityFetch<PublishedInsightRecord | null>(
