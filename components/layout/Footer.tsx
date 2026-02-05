@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { getSocialLinks } from "@/lib/sanity/settings";
+import ContactTrigger from "../modals/ContactTrigger";
 
 const firmName = "Firm Name";
 
@@ -10,7 +11,7 @@ const footerLinks = [
   { label: "Services", href: "/services" },
   { label: "Insights", href: "/insights" },
   { label: "Careers", href: "/careers" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact us", href: "/contact" },
 ] as const;
 
 const legalLinks = [
@@ -64,7 +65,13 @@ export default async function Footer() {
             <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
               {footerLinks.map((link) => (
                 <li key={link.href} className="whitespace-nowrap">
-                  <Link href={link.href}>{link.label}</Link>
+                  {link.href === "/contact" ? (
+                    <ContactTrigger className="inline-flex items-center justify-center">
+                      {link.label}
+                    </ContactTrigger>
+                  ) : (
+                    <Link href={link.href}>{link.label}</Link>
+                  )}
                 </li>
               ))}
             </ul>

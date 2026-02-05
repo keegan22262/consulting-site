@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 
+import ContactTrigger from "../modals/ContactTrigger";
+
 type NavItem = {
   label: string;
   href: string;
@@ -15,7 +17,7 @@ const navigation = {
     { label: "About", href: "/about" },
     { label: "Services", href: "/services" },
     { label: "Careers", href: "/careers" },
-    { label: "Contact", href: "/contact" },
+    { label: "Contact us", href: "/contact" },
   ] satisfies NavItem[],
   more: {
     label: "More",
@@ -77,7 +79,13 @@ export default function Header() {
           <ul className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
             {navigation.primary.map((item) => (
               <li key={item.href} className="whitespace-nowrap">
-                <Link href={item.href}>{item.label}</Link>
+                {item.href === "/contact" ? (
+                  <ContactTrigger className="inline-flex items-center justify-center">
+                    {item.label}
+                  </ContactTrigger>
+                ) : (
+                  <Link href={item.href}>{item.label}</Link>
+                )}
               </li>
             ))}
 

@@ -207,7 +207,11 @@ export default async function ServiceDetailsPage({
         heading={`Discuss ${service.title}`}
         subheading={`Share your objectives for ${service.category}. We’ll respond with a clear next step.`}
         buttonText="Schedule a consultation"
-        href="/contact"
+			contactContext={{
+				inquiryType: "service",
+				relatedServiceId: service.id,
+				relatedServiceTitle: service.title,
+			}}
       />
     </main>
   );

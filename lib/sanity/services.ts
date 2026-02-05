@@ -10,6 +10,7 @@ import {
 } from "@/lib/sanity/queries";
 
 export type ServiceListItem = {
+	id?: string;
 	title: string;
 	slug: string;
 	summary: string;
@@ -63,6 +64,7 @@ type PortableTextBlock = {
 };
 
 type PublishedServiceRecord = {
+	id?: string;
 	title?: string;
 	slug?: string;
 	summary?: string;
@@ -75,6 +77,7 @@ type PublishedServiceRecord = {
 };
 
 type PublishedServiceSummaryRecord = {
+	id?: string;
 	title?: string;
 	slug?: string;
 	summary?: string;
@@ -92,6 +95,7 @@ type PublishedRelatedInsightRecord = {
 function mapServiceSummary(record: PublishedServiceSummaryRecord | null | undefined): ServiceListItem | null {
 	if (!record?.slug) return null;
 	return {
+		id: record.id,
 		title: record.title ?? "",
 		slug: record.slug ?? "",
 		summary: record.summary ?? "",
@@ -233,6 +237,7 @@ export const getAllServices = cache(async (): Promise<ServiceListItem[]> => {
 			? result
 					.filter((item) => Boolean(item?.slug))
 					.map((item) => ({
+						id: item.id,
 						title: item.title ?? "",
 						slug: item.slug ?? "",
 						summary: item.summary ?? "",
@@ -283,6 +288,7 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetai
 		const normalizedSubServices = subServices;
 
 		return {
+			id: result.id,
 			title: result.title ?? "",
 			slug: result.slug ?? "",
 			summary: result.summary ?? "",

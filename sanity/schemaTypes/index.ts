@@ -6,6 +6,7 @@ import { siteSettings } from "./siteSettings";
 import { howWeWork } from "./howWeWork";
 import { privacyPolicy } from "./privacyPolicy";
 import { terms } from "./terms";
+import { contactSubmission } from "./contactSubmission";
 
 export const schemaTypes = [
 	page,
@@ -16,4 +17,5 @@ export const schemaTypes = [
 	howWeWork,
 	privacyPolicy,
 	terms,
+	contactSubmission,
 ];

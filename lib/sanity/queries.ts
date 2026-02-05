@@ -5,6 +5,7 @@ export const ALL_PUBLISHED_SERVICES_QUERY = `
 *[_type == "service" && status == "published"]
 | order(domain asc, title asc)
 {
+  "id": _id,
   title,
   "slug": slug.current,
   summary,
@@ -28,6 +29,7 @@ export const ALL_PUBLISHED_SERVICES_QUERY = `
 export const PUBLISHED_SERVICE_BY_SLUG_QUERY = `
 *[_type == "service" && status == "published" && slug.current == $slug][0]
 {
+  "id": _id,
   title,
   "slug": slug.current,
   summary,
@@ -51,6 +53,7 @@ export const PUBLISHED_SERVICE_BY_SLUG_QUERY = `
 export const PUBLISHED_SERVICE_BY_SLUG_EXPANDED_QUERY = `
 *[_type == "service" && status == "published" && slug.current == $slug][0]
 {
+  "id": _id,
   title,
   "slug": slug.current,
   summary,
