@@ -99,23 +99,32 @@ export default function ContactForm() {
 				}),
 			});
 
-			if (response.status === 200) {
+			let apiError: string | null = null;
+			try {
+				const data = (await response.json()) as unknown;
+				if (
+					data &&
+					typeof data === "object" &&
+					"error" in data &&
+					typeof (data as { error?: unknown }).error === "string"
+				) {
+					apiError = (data as { error: string }).error;
+				}
+			} catch {
+				// ignore JSON parsing errors
+			}
+
+			if (response.ok) {
 				setSubmitSuccess(true);
 				setValues({ name: "", email: "", message: "", company: "" });
 				return;
 			}
 
-			if (response.status === 400) {
-				setSubmitError("We couldn’t send your message. Please review and try again.");
+			if (apiError) {
+				setSubmitError(apiError);
 				return;
 			}
 
-			if (response.status === 429) {
-				setSubmitError("Too many requests. Please try again later.");
-				return;
-			}
-
-			// 500 and any other unexpected status
 			setSubmitError("We couldn’t send your message. Please try again later.");
 		} catch {
 			setSubmitError("We couldn’t send your message. Please try again later.");

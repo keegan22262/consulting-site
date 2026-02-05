@@ -2,7 +2,6 @@ export const runtime = "nodejs";
 
 import "server-only";
 
-import { createClient } from "@sanity/client";
 import nodemailer from "nodemailer";
 
 type ContactPayload = {
@@ -47,51 +46,28 @@ function methodNotAllowed(): Response {
 	);
 }
 
-function getSanityWriteClient() {
-	const projectId = readEnv("SANITY_PROJECT_ID");
-	const dataset = readEnv("SANITY_DATASET");
-	const apiVersion = readEnv("SANITY_API_VERSION");
-	const token =
-		readEnv("SANITY_API_WRITE_TOKEN") ||
-		readEnv("SANITY_WRITE_TOKEN") ||
-		readEnv("SANITY_TOKEN");
-
-	if (!projectId || !dataset || !apiVersion || !token) return null;
-
-	return createClient({
-		projectId,
-		dataset,
-		apiVersion,
-		useCdn: false,
-		token,
-	});
-}
-
 type SmtpConfig = {
 	host: string;
 	port: number;
 	user: string;
 	pass: string;
-	from: string;
 	to: string;
 };
 
-function normalizePort(value: string): number {
-	const parsed = Number.parseInt(value, 10);
-	if (!Number.isFinite(parsed) || parsed <= 0) return 587;
-	return parsed;
-}
-
-function getSmtpConfig(): SmtpConfig | null {
+function getRequiredSmtpConfig(): SmtpConfig | { error: true } {
 	const host = readEnv("SMTP_HOST");
-	const port = normalizePort(readEnv("SMTP_PORT"));
+	const portRaw = readEnv("SMTP_PORT");
 	const user = readEnv("SMTP_USER");
 	const pass = readEnv("SMTP_PASS");
-	const from = readEnv("SMTP_FROM_EMAIL") || readEnv("CONTACT_SENDER_EMAIL");
-	const to = readEnv("SMTP_TO_EMAIL") || readEnv("CONTACT_RECEIVER_EMAIL");
+	const to = readEnv("CONTACT_RECEIVER_EMAIL");
 
-	if (!host || !user || !pass || !from || !to) return null;
-	return { host, port, user, pass, from, to };
+	const port = Number.parseInt(portRaw, 10);
+
+	if (!host || !portRaw || !Number.isFinite(port) || port <= 0 || !user || !pass || !to) {
+		return { error: true };
+	}
+
+	return { host, port, user, pass, to };
 }
 
 function getInquirySubject(inquiryType: InquiryType): string {
@@ -113,19 +89,9 @@ async function sendContactNotificationEmail(payload: {
 	message: string;
 	inquiryType: InquiryType;
 }): Promise<void> {
-	const smtp = getSmtpConfig();
-	if (!smtp) {
-		console.warn("SMTP is not configured; skipping contact notification email", {
-			SMTP_HOST: Boolean(readEnv("SMTP_HOST")),
-			SMTP_PORT: Boolean(readEnv("SMTP_PORT")),
-			SMTP_USER: Boolean(readEnv("SMTP_USER")),
-			SMTP_PASS: Boolean(readEnv("SMTP_PASS")),
-			SMTP_FROM_EMAIL: Boolean(readEnv("SMTP_FROM_EMAIL")),
-			SMTP_TO_EMAIL: Boolean(readEnv("SMTP_TO_EMAIL")),
-			CONTACT_SENDER_EMAIL: Boolean(readEnv("CONTACT_SENDER_EMAIL")),
-			CONTACT_RECEIVER_EMAIL: Boolean(readEnv("CONTACT_RECEIVER_EMAIL")),
-		});
-		return;
+	const smtp = getRequiredSmtpConfig();
+	if ("error" in smtp) {
+		throw new Error("Contact service not configured");
 	}
 
 	const transporter = nodemailer.createTransport({
@@ -150,7 +116,7 @@ async function sendContactNotificationEmail(payload: {
 	].join("\n");
 
 	await transporter.sendMail({
-		from: smtp.from,
+		from: smtp.user,
 		to: smtp.to,
 		subject,
 		text,
@@ -175,20 +141,9 @@ export function DELETE(): Response {
 
 export async function POST(request: Request): Promise<Response> {
 	try {
-		const sanity = getSanityWriteClient();
-		if (!sanity) {
-			console.error("Sanity write client is not configured for /api/contact", {
-				SANITY_PROJECT_ID: Boolean(readEnv("SANITY_PROJECT_ID")),
-				SANITY_DATASET: Boolean(readEnv("SANITY_DATASET")),
-				SANITY_API_VERSION: Boolean(readEnv("SANITY_API_VERSION")),
-				SANITY_API_WRITE_TOKEN: Boolean(readEnv("SANITY_API_WRITE_TOKEN")),
-				SANITY_WRITE_TOKEN: Boolean(readEnv("SANITY_WRITE_TOKEN")),
-				SANITY_TOKEN: Boolean(readEnv("SANITY_TOKEN")),
-			});
-			return Response.json(
-				{ success: false, error: "Contact submission is not configured." },
-				{ status: 503 }
-			);
+		const smtpConfig = getRequiredSmtpConfig();
+		if ("error" in smtpConfig) {
+			return Response.json({ error: "Contact service not configured" }, { status: 500 });
 		}
 
 		const parsed = (await request.json()) as unknown;
@@ -271,36 +226,20 @@ export async function POST(request: Request): Promise<Response> {
 		}
 
 		try {
-			await sanity.create({
-				_type: "contactSubmission",
+			await sendContactNotificationEmail({
 				name,
 				email,
-				message,
+				message:
+					relatedServiceRef && inquiryType === "service"
+						? `${message}\n\nRelated Service ID: ${relatedServiceRef}`
+						: message,
 				inquiryType,
-				relatedService: relatedServiceRef
-					? { _type: "reference", _ref: relatedServiceRef }
-					: undefined,
-				createdAt: new Date().toISOString(),
 			});
 		} catch (error) {
 			const timestamp = new Date().toISOString();
-			console.error("Failed to create contactSubmission in Sanity", { timestamp, error });
-			return Response.json(
-				{ success: false, error: "Internal server error." },
-				{ status: 500 }
-			);
-		}
-
-		// Best-effort email: never fail the API response if this errors.
-		void sendContactNotificationEmail({
-			name,
-			email,
-			message,
-			inquiryType,
-		}).catch((error) => {
-			const timestamp = new Date().toISOString();
 			console.error("Failed to send contact notification email", { timestamp, error });
-		});
+			return Response.json({ success: false, error: "Internal server error." }, { status: 500 });
+		}
 
 		return Response.json({ success: true }, { status: 200 });
 	} catch {
