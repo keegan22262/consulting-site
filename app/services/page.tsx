@@ -6,12 +6,10 @@ import { getAllServices } from "@/lib/sanityServices";
 
 export const metadata: Metadata = {
 	title: "Services",
-	description:
-		"Explore our consulting services across strategy, advisory, risk, and digital transformation—designed for clear decisions and execution momentum.",
+	description: "Browse available services.",
 	openGraph: {
 		title: "Services",
-		description:
-			"Explore our consulting services across strategy, advisory, risk, and digital transformation—designed for clear decisions and execution momentum.",
+		description: "Browse available services.",
 	},
 };
 
@@ -26,11 +24,7 @@ export default async function ServicesPage() {
 						<h1 id="services-page-title" className="text-4xl leading-tight">
 							Our Services
 						</h1>
-						<p className="mt-4 max-w-2xl text-lg leading-relaxed">
-							Practical, execution-focused consulting for SMEs and growth-stage organizations.
-							We provide structured decision support and hands-on delivery to help teams
-							prioritize, align, and achieve measurable outcomes—without the overhead of large-firm engagements.
-						</p>
+						<p className="mt-4 max-w-2xl text-lg leading-relaxed">Browse available services.</p>
 
 						{fetchedServices.length === 0 ? (
 							<div className="mt-10 max-w-2xl">

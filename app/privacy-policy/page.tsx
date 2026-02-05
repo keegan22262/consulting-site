@@ -1,0 +1,83 @@
+import type { Metadata } from "next";
+
+import Container from "../../components/layout/Container";
+import { PortableText } from "@portabletext/react";
+
+import { getPrivacyPolicy } from "@/lib/sanity/queries/privacyPolicy";
+
+export const metadata: Metadata = {
+	title: "Privacy Policy",
+	description: "Privacy Policy.",
+	robots: {
+		index: false,
+		follow: false,
+	},
+	openGraph: {
+		title: "Privacy Policy",
+		description: "Privacy Policy.",
+	},
+};
+
+function formatLastUpdated(value: string): string {
+	const date = new Date(value);
+	if (Number.isNaN(date.getTime())) return value;
+	return new Intl.DateTimeFormat("en-GB", {
+		year: "numeric",
+		month: "short",
+		day: "2-digit",
+	}).format(date);
+}
+
+export default async function PrivacyPolicyPage() {
+	const policy = await getPrivacyPolicy();
+
+	return (
+		<main>
+			<section aria-labelledby="privacy-policy-title">
+				<Container>
+					<div className="py-18">
+						{policy ? (
+							<>
+								<header className="mx-auto max-w-3xl space-y-4">
+									<h1 id="privacy-policy-title" className="text-4xl leading-tight">
+										{policy.title}
+									</h1>
+									<p className="text-sm text-slate-600">
+										Last updated: {formatLastUpdated(policy.lastUpdated)}
+									</p>
+								</header>
+
+								<div className="mx-auto mt-10 max-w-3xl space-y-4">
+									<PortableText
+										value={policy.content}
+										components={{
+											block: {
+												normal: ({ children }) => (
+													<p className="leading-relaxed text-slate-700">{children}</p>
+												),
+											},
+										}}
+									/>
+								</div>
+							</>
+						) : (
+							<>
+								<header className="mx-auto max-w-3xl space-y-4">
+									<h1 id="privacy-policy-title" className="text-4xl leading-tight">
+										Privacy Policy
+									</h1>
+								</header>
+
+								<div className="mx-auto mt-10 max-w-3xl rounded-lg border border-slate-200 bg-white px-4 py-3">
+									<p className="text-sm leading-relaxed text-slate-700">
+										Privacy policy content is not yet available.
+									</p>
+								</div>
+							</>
+						)}
+					</div>
+				</Container>
+			</section>
+		</main>
+	);
+}

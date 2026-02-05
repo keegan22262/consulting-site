@@ -78,7 +78,7 @@ export default async function ServiceDetailsPage({
     );
   }
 
-  const executiveSummary = `${service.summary} We provide pragmatic decision support and delivery focus aligned to measurable outcomes.`;
+  const executiveSummary = service.summary;
 
   const relatedInsightSlugs = (service.relatedInsights ?? [])
     .map((item) => item?.slug)
@@ -167,40 +167,38 @@ export default async function ServiceDetailsPage({
               </section>
             ) : null}
 
-            <section aria-labelledby="service-approach-title" className="space-y-4">
-              <h2 id="service-approach-title" className="text-2xl leading-snug">
-                Our Approach
-              </h2>
-              <p className="leading-relaxed">
-                We start by clarifying objectives, constraints, and the decisions that need to be made. We then work with
-                your team to align stakeholders, define ownership, and translate priorities into a practical plan that fits
-                your operating realities.
-              </p>
-            </section>
+            {service.approach ? (
+              <section aria-labelledby="service-approach-title" className="space-y-4">
+                <h2 id="service-approach-title" className="text-2xl leading-snug">
+                  Our Approach
+                </h2>
+                <p className="leading-relaxed">{service.approach}</p>
+              </section>
+            ) : null}
 
-            <section aria-labelledby="service-expect-title" className="space-y-4">
-              <h2 id="service-expect-title" className="text-2xl leading-snug">
-                What You Can Expect
-              </h2>
-              <p className="leading-relaxed">
-                Clear deliverables, transparent trade-offs, and focused working sessions. We provide regular progress
-                updates, document decisions and assumptions, and keep attention on execution—so recommendations translate
-                into action and measurable improvement.
-              </p>
-            </section>
+            {service.expectations ? (
+              <section aria-labelledby="service-expect-title" className="space-y-4">
+                <h2 id="service-expect-title" className="text-2xl leading-snug">
+                  What You Can Expect
+                </h2>
+                <p className="leading-relaxed">{service.expectations}</p>
+              </section>
+            ) : null}
 
-            <section aria-labelledby="service-additional-capabilities-title" className="space-y-3 border-t border-slate-200 pt-8">
-              <h2
-                id="service-additional-capabilities-title"
-                className="text-base font-semibold tracking-tight text-slate-900"
+            {service.additionalCapabilities ? (
+              <section
+                aria-labelledby="service-additional-capabilities-title"
+                className="space-y-3 border-t border-slate-200 pt-8"
               >
-                Additional Capabilities
-              </h2>
-              <p className="text-sm leading-6 text-slate-600">
-                Additional support may include adjacent advisory, delivery support, or specialist input where it helps
-                accelerate decisions and execution. Scope is tailored to context and objectives.
-              </p>
-            </section>
+                <h2
+                  id="service-additional-capabilities-title"
+                  className="text-base font-semibold tracking-tight text-slate-900"
+                >
+                  Additional Capabilities
+                </h2>
+                <p className="text-sm leading-6 text-slate-600">{service.additionalCapabilities}</p>
+              </section>
+            ) : null}
           </div>
         </section>
       </Container>

@@ -28,16 +28,24 @@ const indicators: TrustIndicator[] = [
   },
 ];
 
-export default function TrustSignals() {
+type TrustSignalsProps = {
+	title?: string;
+	intro?: string;
+};
+
+export default function TrustSignals({
+	title = "How We Work",
+	intro =
+		"A disciplined approach for high-stakes decisions: structured, independent, and accountable to measurable outcomes.",
+}: TrustSignalsProps) {
   return (
     <section aria-labelledby="trust-signals-title">
       <Container>
         <div className="py-18">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 id="trust-signals-title">How We Work</h2>
+            <h2 id="trust-signals-title">{title}</h2>
             <p className="mt-4">
-              A disciplined approach for high-stakes decisions: structured, independent, and
-              accountable to measurable outcomes.
+				{intro}
             </p>
           </div>
 

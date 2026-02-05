@@ -1,37 +1,80 @@
 import type { Metadata } from "next";
 
 import Container from "../../components/layout/Container";
+import { PortableText } from "@portabletext/react";
+
+import { getTerms } from "@/lib/sanity/queries/terms";
 
 export const metadata: Metadata = {
 	title: "Terms",
-	description: "Terms (pre-launch placeholder).",
+	description: "Terms.",
 	robots: {
 		index: false,
 		follow: false,
 	},
 	openGraph: {
 		title: "Terms",
-		description: "Terms (pre-launch placeholder).",
+		description: "Terms.",
 	},
 };
 
-export default function TermsPage() {
+function formatLastUpdated(value: string): string {
+	const date = new Date(value);
+	if (Number.isNaN(date.getTime())) return value;
+	return new Intl.DateTimeFormat("en-GB", {
+		year: "numeric",
+		month: "short",
+		day: "2-digit",
+	}).format(date);
+}
+
+export default async function TermsPage() {
+	const terms = await getTerms();
+
 	return (
 		<main>
 			<section aria-labelledby="terms-title">
 				<Container>
 					<div className="py-18">
-						<header className="mx-auto max-w-3xl space-y-4">
-							<h1 id="terms-title" className="text-4xl leading-tight">
-								Terms
-							</h1>
-							<p className="text-lg leading-relaxed">
-								This site is in pre-launch. Formal Terms will be published prior to launch.
-							</p>
-							<p className="leading-relaxed text-slate-600">
-								Until then, information is provided for general awareness and may change.
-							</p>
-						</header>
+						{terms ? (
+							<>
+								<header className="mx-auto max-w-3xl space-y-4">
+									<h1 id="terms-title" className="text-4xl leading-tight">
+										{terms.title}
+									</h1>
+									<p className="text-sm text-slate-600">
+										Last updated: {formatLastUpdated(terms.lastUpdated)}
+									</p>
+								</header>
+
+								<div className="mx-auto mt-10 max-w-3xl space-y-4">
+									<PortableText
+										value={terms.content}
+										components={{
+											block: {
+												normal: ({ children }) => (
+													<p className="leading-relaxed text-slate-700">{children}</p>
+												),
+											},
+										}}
+									/>
+								</div>
+							</>
+						) : (
+							<>
+								<header className="mx-auto max-w-3xl space-y-4">
+									<h1 id="terms-title" className="text-4xl leading-tight">
+										Terms
+									</h1>
+								</header>
+
+								<div className="mx-auto mt-10 max-w-3xl rounded-lg border border-slate-200 bg-white px-4 py-3">
+									<p className="text-sm leading-relaxed text-slate-700">
+										Terms content is not yet available.
+									</p>
+								</div>
+							</>
+						)}
 					</div>
 				</Container>
 			</section>

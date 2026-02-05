@@ -157,7 +157,7 @@ export const PUBLISHED_INSIGHT_BY_SLUG_EXPANDED_QUERY = `
 
 /** Fetch a single published static page by slug. */
 export const PUBLISHED_PAGE_BY_SLUG_QUERY = `
-*[_type == "page" && status == "published" && (slug == $slug || slug.current == $slug)][0]
+*[_type == "page" && (slug == $slug || slug.current == $slug)][0]
 {
   title,
   "body": coalesce(body, content)
@@ -166,10 +166,77 @@ export const PUBLISHED_PAGE_BY_SLUG_QUERY = `
 
 /** Fetch a single published static page by slug (title + body only). */
 export const PUBLISHED_PAGE_TITLE_BODY_BY_SLUG_QUERY = `
-*[_type == "page" && status == "published" && (slug.current == $slug || slug == $slug)][0]
+*[_type == "page" && (slug.current == $slug || slug == $slug)][0]
 {
   title,
   body
+}
+`;
+
+/** Fetch published homepage configuration fields from the Page document with slug "home". */
+export const PUBLISHED_HOME_PAGE_QUERY = `
+*[_type == "page" && (slug.current == "home" || slug == "home")][0]
+{
+  title,
+  heroTitle,
+  heroSubtitle,
+  servicesIntro,
+  insightsIntro,
+  ctaText,
+  companyDescription,
+  operatingApproach,
+  heroCTA {
+    label,
+    href
+  },
+  "sectionIntros": coalesce(sectionIntros, []) {
+    sectionId,
+    title,
+    intro,
+    linkLabel,
+    linkHref
+  }
+}
+`;
+
+/** Fetch Site Settings social link URLs. */
+export const SITE_SETTINGS_SOCIAL_LINKS_QUERY = `
+*[_type == "siteSettings"][0]
+{
+  linkedinUrl,
+  twitterUrl,
+  youtubeUrl,
+  instagramUrl
+}
+`;
+
+/** Unified search across pages, services, and insights. */
+export const UNIFIED_SEARCH_QUERY = `
+*[
+  $term != "" &&
+  _type in ["page", "service", "insight"] &&
+  (
+    _type == "page" ||
+    status == "published"
+  ) &&
+  (
+    title match ("*" + $term + "*") ||
+    summary match ("*" + $term + "*") ||
+    excerpt match ("*" + $term + "*") ||
+    pt::text(coalesce(body, content)) match ("*" + $term + "*")
+  )
+]
+| order(_updatedAt desc)
+[0...$limit]
+{
+  "type": _type,
+  title,
+  "slug": coalesce(slug.current, slug),
+  "excerpt": coalesce(
+    excerpt,
+    summary,
+    pt::text(coalesce(body, content))
+  )
 }
 `;
 

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 import Container from "../../components/layout/Container";
+import { PortableText } from "@portabletext/react";
+
+import { getPrivacyPolicy } from "@/lib/sanity/legal";
 
 export const metadata: Metadata = {
 	title: "Privacy Policy",
@@ -15,7 +18,10 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function PrivacyPolicyPage() {
+
+export default async function PrivacyPolicyPage() {
+	const policy = await getPrivacyPolicy();
+
 	return (
 		<main>
 			<section aria-labelledby="privacy-title">
@@ -23,15 +29,34 @@ export default function PrivacyPolicyPage() {
 					<div className="py-18">
 						<header className="mx-auto max-w-3xl space-y-4">
 							<h1 id="privacy-title" className="text-4xl leading-tight">
-								Privacy Policy
+								{policy?.title ?? "Privacy Policy"}
 							</h1>
-							<p className="text-lg leading-relaxed">
-								This site is in pre-launch. A formal Privacy Policy will be published prior to launch.
-							</p>
-							<p className="leading-relaxed text-slate-600">
-								If you need details related to data handling before then, please check back later.
-							</p>
+
+							{policy ? (
+								<p className="text-sm text-slate-600">Last updated: {policy.lastUpdated}</p>
+							) : null}
 						</header>
+
+						{policy ? (
+							<div className="mx-auto mt-10 max-w-3xl space-y-4">
+								<PortableText
+									value={policy.content}
+									components={{
+										block: {
+											normal: ({ children }) => (
+												<p className="leading-relaxed text-slate-700">{children}</p>
+											),
+										},
+									}}
+								/>
+							</div>
+						) : (
+							<div className="mx-auto mt-10 max-w-3xl rounded-lg border border-slate-200 bg-white px-4 py-3">
+								<p className="text-sm leading-relaxed text-slate-700">
+									Privacy policy content is not yet available.
+								</p>
+							</div>
+						)}
 					</div>
 				</Container>
 			</section>

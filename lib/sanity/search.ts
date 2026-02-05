@@ -5,7 +5,9 @@ import { sanityFetch } from "@/lib/sanity/fetch";
 import {
 	SEARCH_PUBLISHED_INSIGHTS_QUERY,
 	SEARCH_PUBLISHED_SERVICES_QUERY,
+	UNIFIED_SEARCH_QUERY,
 } from "@/lib/sanity/queries";
+import type { UnifiedSearchResult, UnifiedSearchResultType } from "@/lib/search/types";
 import type { InsightListItem } from "@/lib/sanity/insights";
 import type { ServiceListItem } from "@/lib/sanity/services";
 
@@ -16,6 +18,12 @@ export type SearchServicesOptions = {
 export type SearchInsightsOptions = {
 	theme?: string;
 };
+
+export type UnifiedSearchOptions = {
+	limit?: number;
+};
+
+export type { UnifiedSearchResult, UnifiedSearchResultType };
 
 type PublishedServiceSearchRecord = {
 	title?: string;
@@ -39,6 +47,18 @@ function normalizeTerm(term: string): string {
 function normalizeOptionalFilter(value: string | undefined): string | undefined {
 	const normalized = (value || "").trim();
 	return normalized.length > 0 ? normalized : undefined;
+}
+
+function normalizeLimit(limit: number | undefined): number {
+	if (typeof limit !== "number" || !Number.isFinite(limit)) return 20;
+	return Math.max(1, Math.min(50, Math.floor(limit)));
+}
+
+function normalizeExcerpt(value: unknown): string {
+	if (typeof value !== "string") return "";
+	const trimmed = value.replace(/\s+/g, " ").trim();
+	if (!trimmed) return "";
+	return trimmed.length > 220 ? `${trimmed.slice(0, 220).trim()}…` : trimmed;
 }
 
 /**
@@ -122,6 +142,56 @@ export async function searchInsights(
 			: [];
 	} catch (error) {
 		console.error("Sanity searchInsights failed", { term: normalizedTerm, theme, error });
+		return [];
+	}
+}
+
+type UnifiedSearchRecord = {
+	type?: string;
+	title?: string;
+	slug?: string;
+	excerpt?: string;
+};
+
+/**
+ * Unified search across Pages, Services, and Insights.
+ *
+ * - Accepts a search string
+ * - Matches against title/summary/excerpt and portable-text body
+ * - Returns minimal fields for performance and easy extension
+ */
+export async function searchAll(
+	term: string,
+	options?: UnifiedSearchOptions
+): Promise<UnifiedSearchResult[]> {
+	const normalizedTerm = normalizeTerm(term);
+	if (!normalizedTerm) return [];
+	if (!sanityClient) return [];
+
+	const limit = normalizeLimit(options?.limit);
+
+	try {
+		const result = await sanityFetch<UnifiedSearchRecord[]>(
+			UNIFIED_SEARCH_QUERY,
+			{ term: normalizedTerm, limit },
+			{
+				revalidate: 300,
+				tags: ["sanity:search:unified"],
+			}
+		);
+
+		if (!Array.isArray(result)) return [];
+
+		return result
+			.filter((item) => Boolean(item?.slug) && Boolean(item?.title) && Boolean(item?.type))
+			.map((item) => ({
+				type: item.type as UnifiedSearchResultType,
+				title: item.title ?? "",
+				slug: item.slug ?? "",
+				excerpt: normalizeExcerpt(item.excerpt),
+			}));
+	} catch (error) {
+		console.error("Sanity searchAll failed", { term: normalizedTerm, limit, error });
 		return [];
 	}
 }

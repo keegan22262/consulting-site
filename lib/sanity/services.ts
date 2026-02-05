@@ -22,6 +22,10 @@ export type ServiceDetail = ServiceListItem & {
 	description?: string;
 	offerings?: string[];
 	outcomes?: string[];
+	/** Optional derived sections from the Service body. */
+	approach?: string;
+	expectations?: string;
+	additionalCapabilities?: string;
 	/** Optional: future expansion for cross-linking related insights. */
 	relatedInsights?: RelatedInsightListItem[];
 	/** Optional: future expansion for hierarchy. */
@@ -53,6 +57,8 @@ type PortableTextChild = {
 
 type PortableTextBlock = {
 	_type?: string;
+	style?: string;
+	listItem?: string;
 	children?: PortableTextChild[];
 };
 
@@ -130,6 +136,90 @@ function portableTextToPlainText(blocks: PortableTextBlock[] | undefined): strin
 	return lines.join("\n\n");
 }
 
+function portableTextBlockToText(block: PortableTextBlock): string {
+	if (!block || block._type !== "block" || !Array.isArray(block.children)) return "";
+	return block.children
+		.map((child) => (typeof child?.text === "string" ? child.text : ""))
+		.join("")
+		.trim();
+}
+
+function parseServiceBody(blocks: PortableTextBlock[] | undefined): {
+	description: string;
+	offerings: string[];
+	outcomes: string[];
+	approach?: string;
+	expectations?: string;
+	additionalCapabilities?: string;
+} {
+	if (!Array.isArray(blocks)) {
+		return { description: "", offerings: [], outcomes: [] };
+	}
+
+	const descriptionParts: string[] = [];
+	const offerings: string[] = [];
+	const outcomes: string[] = [];
+	const approachParts: string[] = [];
+	const expectationsParts: string[] = [];
+	const additionalCapabilitiesParts: string[] = [];
+
+	let section:
+		| "description"
+		| "offerings"
+		| "outcomes"
+		| "approach"
+		| "expectations"
+		| "additional"
+		| "other" = "description";
+
+	for (const block of blocks) {
+		if (!block || block._type !== "block") continue;
+		const text = portableTextBlockToText(block);
+		if (!text) continue;
+
+		const isHeading = block.style === "h2" || block.style === "h3";
+		if (isHeading) {
+			const normalized = text.toLowerCase();
+			if (normalized.includes("offering")) section = "offerings";
+			else if (normalized.includes("outcome")) section = "outcomes";
+			else if (normalized.includes("approach")) section = "approach";
+			else if (normalized.includes("expect")) section = "expectations";
+			else if (normalized.includes("capabil") || normalized.includes("additional")) section = "additional";
+			else section = "other";
+			continue;
+		}
+
+		const isBullet = block.listItem === "bullet";
+		if (isBullet) {
+			if (section === "outcomes") outcomes.push(text);
+			else if (section === "offerings") offerings.push(text);
+			else if (section === "description" || section === "other") offerings.push(text);
+			else if (section === "approach") approachParts.push(text);
+			else if (section === "expectations") expectationsParts.push(text);
+			else if (section === "additional") additionalCapabilitiesParts.push(text);
+			continue;
+		}
+
+		if (section === "approach") approachParts.push(text);
+		else if (section === "expectations") expectationsParts.push(text);
+		else if (section === "additional") additionalCapabilitiesParts.push(text);
+		else descriptionParts.push(text);
+	}
+
+	const approach = approachParts.join(" ").trim();
+	const expectations = expectationsParts.join(" ").trim();
+	const additionalCapabilities = additionalCapabilitiesParts.join(" ").trim();
+
+	return {
+		description: descriptionParts.join(" ").trim(),
+		offerings,
+		outcomes,
+		approach: approach || undefined,
+		expectations: expectations || undefined,
+		additionalCapabilities: additionalCapabilities || undefined,
+	};
+}
+
 export const getAllServices = cache(async (): Promise<ServiceListItem[]> => {
 	if (!sanityClient) return [];
 
@@ -181,6 +271,9 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetai
 
 		if (!result || !result.slug) return null;
 
+		const parsedBody = parseServiceBody(result.body);
+		const description = parsedBody.description || portableTextToPlainText(result.body);
+
 		const parentService = mapServiceSummary(result.parentService) ?? undefined;
 		const subServices = Array.isArray(result.subServices)
 			? result.subServices
@@ -194,9 +287,12 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetai
 			slug: result.slug ?? "",
 			summary: result.summary ?? "",
 			category: result.domain ?? "",
-			description: portableTextToPlainText(result.body),
-			offerings: [],
-			outcomes: [],
+			description,
+			offerings: parsedBody.offerings,
+			outcomes: parsedBody.outcomes,
+			approach: parsedBody.approach,
+			expectations: parsedBody.expectations,
+			additionalCapabilities: parsedBody.additionalCapabilities,
 			relatedInsights: mapRelatedInsights(result.relatedInsights) ?? [],
 			parentService,
 			subServices: normalizedSubServices,
@@ -206,4 +302,11 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetai
 		console.error("Sanity getServiceBySlug failed", { slug, error });
 		return null;
 	}
+});
+
+const FEATURED_SERVICES_COUNT = 3;
+
+export const getFeaturedServices = cache(async (): Promise<ServiceListItem[]> => {
+	const items = await getAllServices();
+	return items.slice(0, FEATURED_SERVICES_COUNT);
 });
