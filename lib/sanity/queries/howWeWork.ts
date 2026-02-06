@@ -1,7 +1,5 @@
 import "server-only";
 
-import { cache } from "react";
-
 import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 
@@ -64,13 +62,10 @@ function normalizePrinciples(value: unknown): HowWeWorkPrinciple[] {
  * Fetches the first document of type `howWeWork`.
  * Returns null when the document does not exist or Sanity is not configured.
  */
-export const getHowWeWork = cache(async (): Promise<HowWeWork | null> => {
+export const getHowWeWork = async (): Promise<HowWeWork | null> => {
 	if (!sanityClient) return null;
 
-	const result = await sanityFetch<HowWeWorkRecord | null>(HOW_WE_WORK_QUERY, undefined, {
-		revalidate: 3600,
-		tags: ["sanity:howWeWork"],
-	});
+	const result = await sanityFetch<HowWeWorkRecord | null>(HOW_WE_WORK_QUERY, undefined, {});
 
 	if (!result) return null;
 
@@ -82,4 +77,4 @@ export const getHowWeWork = cache(async (): Promise<HowWeWork | null> => {
 		intro: normalizePortableText(result.intro),
 		principles: normalizePrinciples(result.principles),
 	};
-});
+};

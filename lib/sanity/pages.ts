@@ -1,9 +1,8 @@
 import "server-only";
 
-import { cache } from "react";
-
 import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
+import { isNextDynamicServerUsageError } from "@/lib/sanity/nextErrors";
 import { PUBLISHED_HOME_PAGE_QUERY, PUBLISHED_PAGE_BY_SLUG_QUERY } from "@/lib/sanity/queries";
 
 type PortableTextBlock = { _type: string } & Record<string, unknown>;
@@ -45,7 +44,7 @@ export type PublishedHomePage = {
 	sectionIntros?: HomePageSectionIntro[];
 };
 
-export const getPublishedPageBySlug = cache(async (slug: string): Promise<PublishedPage | null> => {
+export const getPublishedPageBySlug = async (slug: string): Promise<PublishedPage | null> => {
 	const normalizedSlug = slug?.trim();
 	if (!normalizedSlug) return null;
 	if (!sanityClient) return null;
@@ -65,10 +64,12 @@ export const getPublishedPageBySlug = cache(async (slug: string): Promise<Publis
 
 		return result;
 	} catch (error) {
-		console.error("Sanity getPageBySlug failed", { slug: normalizedSlug, error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity getPageBySlug failed", { slug: normalizedSlug, error });
+		}
 		return null;
 	}
-});
+};
 
 function normalizeString(value: unknown): string | undefined {
 	if (typeof value !== "string") return undefined;
@@ -192,7 +193,9 @@ export const getPublishedHomePage = async (): Promise<PublishedHomePage | null> 
 			sectionIntros: normalizeSectionIntros(result.sectionIntros),
 		};
 	} catch (error) {
-		console.error("Sanity getPublishedHomePage failed", { error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity getPublishedHomePage failed", { error });
+		}
 		return null;
 	}
 };

@@ -2,6 +2,7 @@ import "server-only";
 
 import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
+import { isNextDynamicServerUsageError } from "@/lib/sanity/nextErrors";
 import {
 	SEARCH_PUBLISHED_INSIGHTS_QUERY,
 	SEARCH_PUBLISHED_SERVICES_QUERY,
@@ -98,7 +99,9 @@ export async function searchServices(
 					}))
 			: [];
 	} catch (error) {
-		console.error("Sanity searchServices failed", { term: normalizedTerm, domain, error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity searchServices failed", { term: normalizedTerm, domain, error });
+		}
 		return [];
 	}
 }
@@ -141,7 +144,9 @@ export async function searchInsights(
 					}))
 			: [];
 	} catch (error) {
-		console.error("Sanity searchInsights failed", { term: normalizedTerm, theme, error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity searchInsights failed", { term: normalizedTerm, theme, error });
+		}
 		return [];
 	}
 }
@@ -191,7 +196,9 @@ export async function searchAll(
 				excerpt: normalizeExcerpt(item.excerpt),
 			}));
 	} catch (error) {
-		console.error("Sanity searchAll failed", { term: normalizedTerm, limit, error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity searchAll failed", { term: normalizedTerm, limit, error });
+		}
 		return [];
 	}
 }

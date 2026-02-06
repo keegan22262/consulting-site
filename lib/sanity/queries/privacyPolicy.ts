@@ -1,7 +1,5 @@
 import "server-only";
 
-import { cache } from "react";
-
 import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 
@@ -39,13 +37,13 @@ function normalizePortableText(value: unknown): PortableTextBlock[] {
  * Fetches the first document of type `privacyPolicy`.
  * Returns null when the document does not exist or Sanity is not configured.
  */
-export const getPrivacyPolicy = cache(async (): Promise<PrivacyPolicy | null> => {
+export const getPrivacyPolicy = async (): Promise<PrivacyPolicy | null> => {
 	if (!sanityClient) return null;
 
 	const result = await sanityFetch<PrivacyPolicyRecord | null>(
 		PRIVACY_POLICY_QUERY,
 		undefined,
-		{ revalidate: 3600, tags: ["sanity:legal", "sanity:privacyPolicy"] }
+		{}
 	);
 
 	if (!result) return null;
@@ -57,4 +55,4 @@ export const getPrivacyPolicy = cache(async (): Promise<PrivacyPolicy | null> =>
 	if (!title || !lastUpdated || content.length === 0) return null;
 
 	return { title, lastUpdated, content };
-});
+};

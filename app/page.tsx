@@ -8,7 +8,7 @@ import Container from "../components/layout/Container";
 import { getPublishedHomePage } from "@/lib/sanity/pages";
 import { PortableText } from "@portabletext/react";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Home",

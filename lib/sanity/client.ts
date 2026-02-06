@@ -58,6 +58,6 @@ export const sanityClient: SanityClient | null = (() => {
 		projectId: config.projectId,
 		dataset: config.dataset,
 		apiVersion: config.apiVersion,
-		useCdn: process.env.NODE_ENV === "production",
+		useCdn: false,
 	});
 })();

@@ -1,9 +1,8 @@
 import "server-only";
 
-import { cache } from "react";
-
 import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
+import { isNextDynamicServerUsageError } from "@/lib/sanity/nextErrors";
 import {
 	ALL_PUBLISHED_SERVICES_QUERY,
 	PUBLISHED_SERVICE_BY_SLUG_EXPANDED_QUERY,
@@ -224,14 +223,11 @@ function parseServiceBody(blocks: PortableTextBlock[] | undefined): {
 	};
 }
 
-export const getAllServices = cache(async (): Promise<ServiceListItem[]> => {
+export const getAllServices = async (): Promise<ServiceListItem[]> => {
 	if (!sanityClient) return [];
 
 	try {
-		const result = await sanityFetch<PublishedServiceRecord[]>(ALL_PUBLISHED_SERVICES_QUERY, {}, {
-			revalidate: 600,
-			tags: ["sanity:services"],
-		});
+		const result = await sanityFetch<PublishedServiceRecord[]>(ALL_PUBLISHED_SERVICES_QUERY, {}, {});
 
 		const items = Array.isArray(result)
 			? result
@@ -245,18 +241,16 @@ export const getAllServices = cache(async (): Promise<ServiceListItem[]> => {
 					}))
 			: [];
 
-		if (process.env.SANITY_DEBUG === "true") {
-			console.log("Sanity getAllServices result", { count: items.length, sample: items[0] });
-		}
-
 		return items;
 	} catch (error) {
-		console.error("Sanity getAllServices failed", { error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity getAllServices failed", { error });
+		}
 		return [];
 	}
-});
+};
 
-export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetail | null> => {
+export const getServiceBySlug = async (slug: string): Promise<ServiceDetail | null> => {
 	if (!slug) return null;
 	if (!sanityClient) return null;
 
@@ -264,15 +258,8 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetai
 		const result = await sanityFetch<PublishedServiceRecord | null>(
 			PUBLISHED_SERVICE_BY_SLUG_EXPANDED_QUERY,
 			{ slug },
-			{
-				revalidate: 600,
-				tags: ["sanity:services", `sanity:service:${slug}`],
-			}
+			{}
 		);
-
-		if (process.env.SANITY_DEBUG === "true") {
-			console.log("Sanity getServiceBySlug result", { slug, found: Boolean(result) });
-		}
 
 		if (!result || !result.slug) return null;
 
@@ -305,14 +292,16 @@ export const getServiceBySlug = cache(async (slug: string): Promise<ServiceDetai
 			overviewSections: mapOverviewSections(result.overviewSections),
 		};
 	} catch (error) {
-		console.error("Sanity getServiceBySlug failed", { slug, error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity getServiceBySlug failed", { slug, error });
+		}
 		return null;
 	}
-});
+};
 
 const FEATURED_SERVICES_COUNT = 3;
 
-export const getFeaturedServices = cache(async (): Promise<ServiceListItem[]> => {
+export const getFeaturedServices = async (): Promise<ServiceListItem[]> => {
 	const items = await getAllServices();
 	return items.slice(0, FEATURED_SERVICES_COUNT);
-});
+};

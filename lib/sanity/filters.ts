@@ -2,6 +2,7 @@ import "server-only";
 
 import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
+import { isNextDynamicServerUsageError } from "@/lib/sanity/nextErrors";
 import {
 	PUBLISHED_INSIGHT_THEMES_QUERY,
 	PUBLISHED_SERVICE_DOMAINS_QUERY,
@@ -36,7 +37,9 @@ export async function getPublishedServiceDomains(): Promise<string[]> {
 
 		return domains.sort((a, b) => a.localeCompare(b));
 	} catch (error) {
-		console.error("Sanity getPublishedServiceDomains failed", { error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity getPublishedServiceDomains failed", { error });
+		}
 		return [];
 	}
 }
@@ -64,7 +67,9 @@ export async function getPublishedInsightThemes(): Promise<InsightThemeOption[]>
 					.filter((item): item is InsightThemeOption => Boolean(item))
 			: [];
 	} catch (error) {
-		console.error("Sanity getPublishedInsightThemes failed", { error });
+		if (!isNextDynamicServerUsageError(error)) {
+			console.error("Sanity getPublishedInsightThemes failed", { error });
+		}
 		return [];
 	}
 }
