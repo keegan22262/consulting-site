@@ -188,6 +188,12 @@ export const PUBLISHED_HOME_PAGE_QUERY = `
   ctaText,
   companyDescription,
   operatingApproach,
+  problems,
+  differentiation,
+  capabilitiesIntro,
+  capabilityClusters,
+  audiences,
+  workingProcess,
   heroCTA {
     label,
     href

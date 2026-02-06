@@ -81,5 +81,100 @@ export const page = defineType({
       of: [{ type: "block" }],
       fieldset: "homepage",
     }),
+    defineField({
+      name: "problems",
+      title: "Problems",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Title",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "description",
+              title: "Description",
+              type: "text",
+              rows: 3,
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+        },
+      ],
+      fieldset: "homepage",
+    }),
+    defineField({
+      name: "differentiation",
+      title: "Differentiation",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({
+              name: "label",
+              title: "Label",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "explanation",
+              title: "Explanation",
+              type: "text",
+              rows: 3,
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+        },
+      ],
+      fieldset: "homepage",
+    }),
+    defineField({
+      name: "audiences",
+      title: "Audiences",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            defineField({
+              name: "name",
+              title: "Name",
+              type: "string",
+            }),
+            defineField({
+              name: "qualifier",
+              title: "Qualifier",
+              type: "string",
+            }),
+          ],
+        },
+      ],
+      fieldset: "homepage",
+    }),
+    defineField({
+      name: "capabilitiesIntro",
+      title: "Capabilities Intro",
+      type: "string",
+      fieldset: "homepage",
+    }),
+    defineField({
+      name: "capabilityClusters",
+      title: "Capability Clusters",
+      type: "array",
+      of: [{ type: "string" }],
+      fieldset: "homepage",
+    }),
+    defineField({
+      name: "workingProcess",
+      title: "Working Process",
+      type: "array",
+      of: [{ type: "block" }],
+      fieldset: "homepage",
+    }),
   ],
 });

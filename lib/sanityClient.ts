@@ -19,9 +19,9 @@ type SanityConfig = {
 };
 
 function getSanityConfig(): SanityConfig | null {
-	const projectId = process.env.SANITY_PROJECT_ID;
-	const dataset = process.env.SANITY_DATASET;
-	const apiVersion = process.env.SANITY_API_VERSION;
+	const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+	const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+	const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION;
 
 	if (!projectId || !dataset || !apiVersion) return null;
 	return { projectId, dataset, apiVersion };
@@ -52,9 +52,9 @@ export async function sanityFetch<T>(
 ): Promise<T> {
 	if (!sanityClient) {
 		const missing = [
-			!process.env.SANITY_PROJECT_ID ? "SANITY_PROJECT_ID" : null,
-			!process.env.SANITY_DATASET ? "SANITY_DATASET" : null,
-			!process.env.SANITY_API_VERSION ? "SANITY_API_VERSION" : null,
+			!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ? "NEXT_PUBLIC_SANITY_PROJECT_ID" : null,
+			!process.env.NEXT_PUBLIC_SANITY_DATASET ? "NEXT_PUBLIC_SANITY_DATASET" : null,
+			!process.env.NEXT_PUBLIC_SANITY_API_VERSION ? "NEXT_PUBLIC_SANITY_API_VERSION" : null,
 		].filter(Boolean);
 
 		throw new Error(

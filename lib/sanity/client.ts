@@ -14,9 +14,9 @@ function readEnv(name: string): string {
 }
 
 function getSanityConfig(): SanityConfig | null {
-	const projectId = readEnv("SANITY_PROJECT_ID");
-	const dataset = readEnv("SANITY_DATASET");
-	const apiVersion = readEnv("SANITY_API_VERSION");
+	const projectId = readEnv("NEXT_PUBLIC_SANITY_PROJECT_ID");
+	const dataset = readEnv("NEXT_PUBLIC_SANITY_DATASET");
+	const apiVersion = readEnv("NEXT_PUBLIC_SANITY_API_VERSION");
 
 	if (!projectId || !dataset || !apiVersion) return null;
 	return { projectId, dataset, apiVersion };
@@ -28,9 +28,9 @@ function warnIfMissingConfig() {
 	if (hasWarned) return;
 
 	const missing = [
-		!readEnv("SANITY_PROJECT_ID") ? "SANITY_PROJECT_ID" : null,
-		!readEnv("SANITY_DATASET") ? "SANITY_DATASET" : null,
-		!readEnv("SANITY_API_VERSION") ? "SANITY_API_VERSION" : null,
+		!readEnv("NEXT_PUBLIC_SANITY_PROJECT_ID") ? "NEXT_PUBLIC_SANITY_PROJECT_ID" : null,
+		!readEnv("NEXT_PUBLIC_SANITY_DATASET") ? "NEXT_PUBLIC_SANITY_DATASET" : null,
+		!readEnv("NEXT_PUBLIC_SANITY_API_VERSION") ? "NEXT_PUBLIC_SANITY_API_VERSION" : null,
 	].filter(Boolean);
 
 	if (missing.length === 0) return;

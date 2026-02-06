@@ -35,6 +35,12 @@ export type PublishedHomePage = {
 	ctaText?: string;
 	companyDescription?: PortableTextBlock[];
 	operatingApproach?: PortableTextBlock[];
+	problems?: { title: string; description: string }[];
+	differentiation?: { label: string; explanation: string }[];
+	capabilitiesIntro?: string;
+	capabilityClusters?: string[];
+	audiences?: { name?: string; qualifier?: string }[];
+	workingProcess?: PortableTextBlock[];
 	heroCTA?: HomePageCTA;
 	sectionIntros?: HomePageSectionIntro[];
 };
@@ -75,6 +81,56 @@ function normalizePortableText(value: unknown): PortableTextBlock[] | undefined 
 	return value.length > 0 ? (value as PortableTextBlock[]) : undefined;
 }
 
+function normalizeStringArray(value: unknown): string[] | undefined {
+	if (!Array.isArray(value)) return undefined;
+	const items = value
+		.map((item) => (typeof item === "string" ? item.trim() : ""))
+		.filter((item) => item.length > 0);
+	return items.length > 0 ? items : undefined;
+}
+
+function normalizeProblems(value: unknown): { title: string; description: string }[] | undefined {
+	if (!Array.isArray(value)) return undefined;
+	const items: { title: string; description: string }[] = [];
+	for (const record of value) {
+		if (!record || typeof record !== "object") continue;
+		const anyRecord = record as Record<string, unknown>;
+		const title = normalizeString(anyRecord.title) ?? "";
+		const description = normalizeString(anyRecord.description) ?? "";
+		if (!title || !description) continue;
+		items.push({ title, description });
+	}
+	return items.length > 0 ? items : undefined;
+}
+
+function normalizeDifferentiation(value: unknown): { label: string; explanation: string }[] | undefined {
+	if (!Array.isArray(value)) return undefined;
+	const items: { label: string; explanation: string }[] = [];
+	for (const record of value) {
+		if (!record || typeof record !== "object") continue;
+		const anyRecord = record as Record<string, unknown>;
+		const label = normalizeString(anyRecord.label) ?? "";
+		const explanation = normalizeString(anyRecord.explanation) ?? "";
+		if (!label || !explanation) continue;
+		items.push({ label, explanation });
+	}
+	return items.length > 0 ? items : undefined;
+}
+
+function normalizeAudiences(value: unknown): { name?: string; qualifier?: string }[] | undefined {
+	if (!Array.isArray(value)) return undefined;
+	const items: { name?: string; qualifier?: string }[] = [];
+	for (const record of value) {
+		if (!record || typeof record !== "object") continue;
+		const anyRecord = record as Record<string, unknown>;
+		const name = normalizeString(anyRecord.name);
+		const qualifier = normalizeString(anyRecord.qualifier);
+		if (!name && !qualifier) continue;
+		items.push({ name, qualifier });
+	}
+	return items.length > 0 ? items : undefined;
+}
+
 function normalizeSectionIntros(value: unknown): HomePageSectionIntro[] {
 	if (!Array.isArray(value)) return [];
 
@@ -95,7 +151,7 @@ function normalizeSectionIntros(value: unknown): HomePageSectionIntro[] {
 	return intros;
 }
 
-export const getPublishedHomePage = cache(async (): Promise<PublishedHomePage | null> => {
+export const getPublishedHomePage = async (): Promise<PublishedHomePage | null> => {
 	if (!sanityClient) return null;
 
 	try {
@@ -126,6 +182,12 @@ export const getPublishedHomePage = cache(async (): Promise<PublishedHomePage | 
 			ctaText: normalizeString(result.ctaText),
 			companyDescription: normalizePortableText(result.companyDescription),
 			operatingApproach: normalizePortableText(result.operatingApproach),
+			problems: normalizeProblems(result.problems),
+			differentiation: normalizeDifferentiation(result.differentiation),
+			capabilitiesIntro: normalizeString(result.capabilitiesIntro),
+			capabilityClusters: normalizeStringArray(result.capabilityClusters),
+			audiences: normalizeAudiences(result.audiences),
+			workingProcess: normalizePortableText(result.workingProcess),
 			heroCTA,
 			sectionIntros: normalizeSectionIntros(result.sectionIntros),
 		};
@@ -133,7 +195,7 @@ export const getPublishedHomePage = cache(async (): Promise<PublishedHomePage | 
 		console.error("Sanity getPublishedHomePage failed", { error });
 		return null;
 	}
-});
+};
 
 // Backward-compatible alias (older imports may still reference this name).
 export const getPageBySlug = getPublishedPageBySlug;
