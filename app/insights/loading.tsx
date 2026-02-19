@@ -22,13 +22,13 @@ export default function Loading() {
 		<main>
 			<section aria-label="Loading insights">
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						<h1 className="text-4xl leading-tight">Insights</h1>
 						<p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-700">
 							Loading insights.
 						</p>
 
-						<div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+						<div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 							{Array.from({ length: 4 }).map((_, index) => (
 								<SkeletonCard key={index} />
 							))}

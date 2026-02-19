@@ -1,3 +1,4 @@
+@config "../tailwind.config.ts";
 @import "tailwindcss";
 
 html {
@@ -11,7 +12,7 @@ html {
 }
 
 :root {
-  --background: #ffffff;
+  --background: #ffffff96;
   --foreground: #171717;
 }
 
@@ -35,18 +36,48 @@ body {
 
 @layer base {
   h1 {
-    @apply text-4xl font-semibold tracking-tight leading-tight;
+    @apply text-4xl font-semibold tracking-tight leading-tight text-slate-900;
   }
 
   h2 {
-    @apply text-2xl font-semibold tracking-tight leading-snug;
+    @apply text-2xl font-medium tracking-tight leading-snug text-slate-900;
   }
 
   h3 {
-    @apply text-lg font-semibold tracking-tight leading-snug;
+    @apply text-lg font-medium tracking-tight leading-snug text-slate-900;
   }
 
   p {
-    @apply leading-relaxed;
+    @apply leading-relaxed text-slate-700;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium tracking-tight transition-colors duration-fast ease-out motion-reduce:transition-none;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-brand text-white hover:bg-brand-hover;
+  }
+
+  .btn-secondary {
+    @apply border border-border bg-transparent text-text hover:bg-background-muted hover:border-border-strong;
+  }
+
+  .btn-text {
+    @apply bg-transparent text-brand hover:text-brand-hover hover:bg-background-muted;
+  }
+
+  .card-hover {
+    @apply transition-shadow duration-fast ease-in-out motion-reduce:transition-none;
+  }
+}
+
+@media (hover: hover) {
+  .card-hover:hover {
+    @apply shadow-md;
   }
 }

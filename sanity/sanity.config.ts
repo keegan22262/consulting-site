@@ -4,21 +4,13 @@ import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemaTypes";
 import { deskStructure } from "./deskStructure";
 
-function readEnv(name: string): string {
-  return (process.env[name] || "").trim();
-}
-
-const projectId = readEnv("SANITY_PROJECT_ID") || readEnv("NEXT_PUBLIC_SANITY_PROJECT_ID");
-const dataset = readEnv("SANITY_DATASET") || readEnv("NEXT_PUBLIC_SANITY_DATASET");
-const apiVersion = readEnv("SANITY_API_VERSION") || readEnv("NEXT_PUBLIC_SANITY_API_VERSION");
-
 export default defineConfig({
   name: "default",
   title: "Consulting Site Studio",
 
-  projectId,
-  dataset,
-  apiVersion,
+  projectId: "cwdgyz8l",
+  dataset: "production",
+  apiVersion: "2024-01-01",
 
   plugins: [deskTool({ structure: deskStructure }), visionTool()],
 
@@ -29,7 +21,17 @@ export default defineConfig({
         (template) =>
           template.schemaType !== "siteSettings" &&
           template.schemaType !== "howWeWork" &&
-          template.schemaType !== "privacyPolicy"
+          template.schemaType !== "privacyPolicy" &&
+          template.schemaType !== "clientsAndIndustries" &&
+          template.schemaType !== "careersPage" &&
+          template.schemaType !== "contactPage" &&
+          template.schemaType !== "companyPositioning" &&
+          template.schemaType !== "deliveryModel" &&
+          template.schemaType !== "internalStrategy" &&
+          template.schemaType !== "coreTeam" &&
+          template.schemaType !== "capabilityStack" &&
+          template.schemaType !== "growthStrategy" &&
+          template.schemaType !== "joinUs"
       ),
   },
 });

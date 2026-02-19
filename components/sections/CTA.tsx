@@ -22,32 +22,32 @@ export default function CTA({
   return (
     <section aria-labelledby="cta-title">
       <Container>
-        <div className="py-22">
-          <div className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-slate-50 px-6 py-12 text-center sm:px-10">
-            <h2 id="cta-title" className="mx-auto max-w-3xl font-medium">
+				<div className="py-20 md:py-28">
+          <div className="mx-auto max-w-4xl rounded-2xl bg-slate-50 px-6 py-14 text-center sm:px-12">
+            <h2 id="cta-title" className="mx-auto max-w-3xl">
               {heading}
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl">
+            <p className="mx-auto mt-4 max-w-prose">
               {subheading}
             </p>
-            <div className="mt-8">
+            <div className="mt-10">
           {contactContext ? (
             <ContactTrigger
               context={contactContext}
-              className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-6 py-3 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-7 py-3.5 text-sm font-medium text-white transition-colors duration-fast motion-reduce:transition-none hover:bg-slate-900 hover:border-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
             >
               {buttonText}
             </ContactTrigger>
           ) : (
             <Link
               href={href}
-              className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-6 py-3 text-sm font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-7 py-3.5 text-sm font-medium text-white transition-colors duration-fast motion-reduce:transition-none hover:bg-slate-900 hover:border-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
             >
               {buttonText}
             </Link>
           )}
             </div>
-            <p className="mt-4 text-xs leading-5 text-slate-600">
+            <p className="mt-5 text-xs leading-5 text-slate-600">
               Formal contact channels will be published soon.
             </p>
           </div>

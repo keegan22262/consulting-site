@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import Container from "../layout/Container";
 import InsightCard from "./InsightCard";
+import Reveal from "../ui/Reveal";
 
 import { getLatestInsights } from "@/lib/sanityInsights";
 
@@ -23,16 +24,18 @@ export default async function InsightsTeaser({
   return (
     <section aria-labelledby="insights-teaser-title">
       <Container>
-        <div className="py-18">
+				<div className="py-16 md:py-24">
+        <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <h2 id="insights-teaser-title">{title}</h2>
-			{intro ? <p className="mt-4">{intro}</p> : null}
+            {intro ? <p className="mt-4">{intro}</p> : null}
             <p className="mt-4">
-				<Link href={linkHref}>{linkLabel}</Link>
+              <Link href={linkHref}>{linkLabel}</Link>
             </p>
           </div>
+        </Reveal>
 
-          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
             {latestInsights.map((insight) => (
               <InsightCard
                 key={insight.slug}

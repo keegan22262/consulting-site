@@ -6,55 +6,56 @@ export const howWeWork = defineType({
 	type: "document",
 	fields: [
 		defineField({
-			name: "title",
-			title: "Title",
-			type: "string",
-			initialValue: "How We Work",
-			validation: (Rule) => Rule.required(),
-		}),
-		defineField({
 			name: "intro",
 			title: "Intro",
-			type: "array",
-			of: [{ type: "block" }],
-			description: "Short intro copy (portable text).",
+			type: "string",
+			description: "Short introductory statement for the How We Work page.",
+			validation: (rule) => rule.required(),
 		}),
 		defineField({
-			name: "principles",
-			title: "Principles",
+			name: "steps",
+			title: "Steps",
 			type: "array",
+			description: "Exactly 4 engagement steps describing how a project unfolds.",
 			of: [
 				{
 					type: "object",
-					name: "principle",
+					name: "step",
 					fields: [
 						defineField({
 							name: "title",
 							title: "Title",
 							type: "string",
-							validation: (Rule) => Rule.required(),
+							validation: (rule) => rule.required(),
 						}),
 						defineField({
 							name: "description",
 							title: "Description",
-							type: "text",
-							rows: 3,
+							type: "string",
+							validation: (rule) => rule.required(),
 						}),
 					],
 					preview: {
 						select: { title: "title" },
 						prepare(selection) {
-							return { title: selection.title || "Principle" };
+							return { title: selection.title || "Step" };
 						},
 					},
 				},
 			],
+			validation: (rule) => rule.required().min(4).max(4),
 		}),
 		defineField({
-			name: "ctaText",
-			title: "CTA Text",
+			name: "deliveryModel",
+			title: "Delivery Model",
 			type: "string",
-			description: "Optional call-to-action text used on the homepage or section footer.",
+			description: "Brief description of the engagement or delivery model.",
+		}),
+		defineField({
+			name: "partnerships",
+			title: "Partnerships",
+			type: "string",
+			description: "Brief description of partnership approach or philosophy.",
 		}),
 	],
 	preview: {

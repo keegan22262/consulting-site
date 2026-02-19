@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import Container from "@/components/layout/Container";
 import ServiceCard from "@/components/sections/ServiceCard";
+import AnimatedSection from "@/components/ui/AnimatedSection";
 import { getInsightBySlug } from "@/lib/sanityInsights";
 
 type PageProps = {
@@ -69,7 +70,7 @@ export default async function InsightDetailPage({ params }: PageProps) {
 		return (
 			<main>
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						<p>Insight not found.</p>
 					</div>
 				</Container>
@@ -85,59 +86,65 @@ export default async function InsightDetailPage({ params }: PageProps) {
 	return (
 		<main>
 			<Container>
-				<article className="py-18">
-					<header className="mx-auto max-w-[90ch]">
-						<h1 className="text-4xl leading-tight tracking-tight text-slate-900">
-							{insight.title}
-						</h1>
-						<div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">
-							<time dateTime={insight.date}>{insight.date}</time>
-							<span className="text-slate-300" aria-hidden="true">
-								•
-							</span>
-							<span>{insight.category}</span>
-						</div>
-						<p className="mt-6 text-lg leading-relaxed text-slate-700">
-							{headerSummary}
-						</p>
-					</header>
+				<article className="py-16 md:py-24">
+					<AnimatedSection staggerIndex={0}>
+						<header className="mx-auto max-w-2xl">
+							<h1 className="text-4xl leading-tight tracking-tight">
+								{insight.title}
+							</h1>
+							<div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">
+								<time dateTime={insight.date}>{insight.date}</time>
+								<span className="text-slate-300" aria-hidden="true">
+									•
+								</span>
+								<span>{insight.category}</span>
+							</div>
+							<p className="mt-6 text-lg leading-relaxed text-slate-700">
+								{headerSummary}
+							</p>
+						</header>
+					</AnimatedSection>
 
-					<div className="mx-auto mt-10 max-w-[90ch] space-y-6 text-base leading-7 text-slate-800">
-						{paragraphs.map((paragraph) => (
-							<p key={paragraph}>{paragraph}</p>
-						))}
-					</div>
+					<AnimatedSection staggerIndex={1}>
+						<div className="mx-auto mt-10 max-w-prose space-y-6 text-base leading-7 text-slate-800">
+							{paragraphs.map((paragraph) => (
+								<p key={paragraph}>{paragraph}</p>
+							))}
+						</div>
+					</AnimatedSection>
 
 					{hasRelatedServices ? (
-						<section aria-labelledby="related-services-title" className="mt-12 border-t border-slate-200 pt-10">
-							<div className="mx-auto max-w-[90ch]">
-								<div className="flex items-baseline justify-between gap-6">
-									<h2
-										id="related-services-title"
-										className="text-xl font-semibold tracking-tight text-slate-900"
-									>
-										Related Services
-									</h2>
-									<Link className="text-sm text-slate-700" href="/insights">
-										Back to insights
-									</Link>
+						<AnimatedSection staggerIndex={2}>
+							<section aria-labelledby="related-services-title" className="mt-12 pt-10">
+								<div className="mx-auto max-w-2xl">
+									<div className="flex items-baseline justify-between gap-6">
+										<h2
+											id="related-services-title"
+											className="text-xl font-medium tracking-tight text-slate-900"
+										>
+											Related Services
+										</h2>
+										<Link className="text-sm text-slate-700" href="/insights">
+											Back to insights
+										</Link>
+									</div>
 								</div>
-							</div>
 
-							<div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-								{relatedServices
-									.filter((service) => Boolean(service?.slug))
-									.map((service) => (
-										<ServiceCard
-											key={service.slug}
-											id={service.slug}
-											title={service.title}
-											summary={service.summary ?? ""}
-											category={service.category ?? ""}
-										/>
-									))}
-							</div>
-						</section>
+								<div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+									{relatedServices
+										.filter((service) => Boolean(service?.slug))
+										.map((service) => (
+											<ServiceCard
+												key={service.slug}
+												id={service.slug}
+												title={service.title}
+												summary={service.summary ?? ""}
+												category={service.category ?? ""}
+											/>
+										))}
+								</div>
+							</section>
+						</AnimatedSection>
 					) : null}
 				</article>
 			</Container>

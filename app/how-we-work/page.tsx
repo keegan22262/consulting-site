@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import Container from "../../components/layout/Container";
+import { getHowWeWork } from "@/lib/sanity/queries/howWeWork";
 
 export const metadata: Metadata = {
 	title: "How We Work",
@@ -18,7 +19,7 @@ type Step = {
 	description: string;
 };
 
-const steps: Step[] = [
+const fallbackSteps: Step[] = [
 	{
 		title: "Understand",
 		description:
@@ -41,20 +42,25 @@ const steps: Step[] = [
 	},
 ];
 
-export default function HowWeWorkPage() {
+const fallbackIntro =
+	"Engagements are designed to be structured, practical, and proportionate to your needs. We focus on improving decision quality, aligning stakeholders, and supporting accountable delivery.";
+
+export default async function HowWeWorkPage() {
+	const data = await getHowWeWork();
+
+	const intro = data?.intro || fallbackIntro;
+	const steps: Step[] = data?.steps && data.steps.length > 0 ? data.steps : fallbackSteps;
+
 	return (
 		<main>
 			<section aria-labelledby="how-we-work-title">
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						<header className="mx-auto max-w-3xl space-y-4">
 							<h1 id="how-we-work-title" className="text-4xl leading-tight">
 								How We Work
 							</h1>
-							<p className="text-lg leading-relaxed">
-								Engagements are designed to be structured, practical, and proportionate to your needs. We focus on
-								improving decision quality, aligning stakeholders, and supporting accountable delivery.
-							</p>
+							<p className="text-lg leading-relaxed">{intro}</p>
 							<p className="leading-relaxed text-slate-600">
 								This is a general model. Scope and depth are tailored to context and objectives.
 							</p>
@@ -71,7 +77,7 @@ export default function HowWeWorkPage() {
 								</p>
 							</div>
 
-							<ol className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2">
+							<ol className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
 								{steps.map((step, index) => (
 									<li key={step.title}>
 										<article className="rounded-xl border border-slate-200 bg-white p-6">
@@ -79,11 +85,11 @@ export default function HowWeWorkPage() {
 												<p className="text-xs font-medium uppercase tracking-wide text-slate-600">
 													Step {index + 1}
 												</p>
-												<h3 className="mt-3 text-sm font-semibold tracking-tight text-slate-900">
+												<h3 className="mt-2 text-sm font-medium tracking-tight text-slate-900">
 													{step.title}
 												</h3>
 										</header>
-										<p className="mt-3 text-sm leading-6 text-slate-600">{step.description}</p>
+										<p className="mt-2 text-sm leading-6 text-slate-600">{step.description}</p>
 									</article>
 								</li>
 								))}

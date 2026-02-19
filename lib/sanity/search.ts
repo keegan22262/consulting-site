@@ -13,7 +13,7 @@ import type { InsightListItem } from "@/lib/sanity/insights";
 import type { ServiceListItem } from "@/lib/sanity/services";
 
 export type SearchServicesOptions = {
-	domain?: string;
+	category?: string;
 };
 
 export type SearchInsightsOptions = {
@@ -30,7 +30,7 @@ type PublishedServiceSearchRecord = {
 	title?: string;
 	slug?: string;
 	summary?: string;
-	domain?: string;
+	category?: string;
 };
 
 type PublishedInsightSearchRecord = {
@@ -74,9 +74,9 @@ export async function searchServices(
 	if (!normalizedTerm) return [];
 	if (!sanityClient) return [];
 
-	const domain = normalizeOptionalFilter(options?.domain);
+	const category = normalizeOptionalFilter(options?.category);
 	const params: Record<string, unknown> = { term: normalizedTerm };
-	if (domain) params.domain = domain;
+	if (category) params.category = category;
 
 	try {
 		const result = await sanityFetch<PublishedServiceSearchRecord[]>(
@@ -95,12 +95,12 @@ export async function searchServices(
 						title: item.title ?? "",
 						slug: item.slug ?? "",
 						summary: item.summary ?? "",
-						category: item.domain ?? "",
-					}))
+							category: item.category ?? "",
+						}))
 			: [];
 	} catch (error) {
 		if (!isNextDynamicServerUsageError(error)) {
-			console.error("Sanity searchServices failed", { term: normalizedTerm, domain, error });
+			console.error("Sanity searchServices failed", { term: normalizedTerm, category, error });
 		}
 		return [];
 	}

@@ -1,4 +1,5 @@
 import Container from "../layout/Container";
+import Reveal from "../ui/Reveal";
 
 type TrustIndicator = {
   title: string;
@@ -41,25 +42,24 @@ export default function TrustSignals({
   return (
     <section aria-labelledby="trust-signals-title">
       <Container>
-        <div className="py-18">
+				<div className="py-16 md:py-24">
+        <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <h2 id="trust-signals-title">{title}</h2>
-            <p className="mt-4">
-				{intro}
-            </p>
+            <p className="mt-4">{intro}</p>
           </div>
+        </Reveal>
 
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
             {indicators.map((indicator) => (
-              <article
-                key={indicator.title}
-                className="rounded-xl border border-slate-200 bg-white p-6"
-              >
-                <h3 className="text-sm font-semibold tracking-tight text-slate-900">
-                  {indicator.title}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{indicator.description}</p>
-              </article>
+						<Reveal key={indicator.title} className="h-full">
+							<article className="card-hover flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6">
+								<h3 className="text-sm font-medium tracking-tight text-slate-900">
+									{indicator.title}
+								</h3>
+								<p className="mt-2 text-sm leading-6 text-slate-600">{indicator.description}</p>
+							</article>
+						</Reveal>
             ))}
           </div>
         </div>

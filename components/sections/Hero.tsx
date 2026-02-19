@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import Container from "../layout/Container";
+import Enter from "../ui/Enter";
 
 type HeroProps = {
 	title?: string;
@@ -23,21 +24,26 @@ export default function Hero({
   return (
     <section aria-labelledby="hero-title">
       <Container>
-        <div className="flex flex-col items-center py-18 text-center">
+			<div className="flex flex-col items-center py-24 md:py-32 text-center">
+        <Enter>
           <h1 id="hero-title" className="max-w-3xl">
-				{title}
+            {title}
           </h1>
+        </Enter>
 
-          <p className="mt-6 max-w-2xl">
-				{subtitle}
+        <Enter>
+          <p className="mt-6 max-w-prose">
+            {subtitle}
           </p>
+        </Enter>
 
+        <Enter>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
               href={ctaHref}
               className="inline-flex items-center justify-center px-6 py-3"
             >
-				{ctaLabel}
+              {ctaLabel}
             </Link>
             {secondaryCtaLabel && secondaryCtaHref ? (
               <a
@@ -48,6 +54,7 @@ export default function Hero({
               </a>
             ) : null}
           </div>
+        </Enter>
         </div>
       </Container>
     </section>

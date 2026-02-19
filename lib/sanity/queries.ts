@@ -3,25 +3,17 @@
 /** Fetch all published services (for list pages). */
 export const ALL_PUBLISHED_SERVICES_QUERY = `
 *[_type == "service" && status == "published"]
-| order(domain asc, title asc)
+| order(coalesce(order, 999) asc, title asc)
 {
   "id": _id,
   title,
   "slug": slug.current,
+  category,
   summary,
-  body,
-  domain,
-
-  // Optional future fields (safe if absent in schema/documents)
-  "relatedInsights": coalesce(
-    (relatedInsights[]-> {
-      title,
-      "slug": slug.current,
-      status
-    })[status == "published"]{ title, slug },
-    []
-  ),
-  "overviewSections": coalesce(overviewSections, [])
+  targetClients,
+  "focusAreas": coalesce(focusAreas, []),
+  approach,
+  order
 }
 `;
 
@@ -32,59 +24,28 @@ export const PUBLISHED_SERVICE_BY_SLUG_QUERY = `
   "id": _id,
   title,
   "slug": slug.current,
+  category,
   summary,
-  body,
-  domain,
-
-  // Optional future fields (safe if absent in schema/documents)
-  "relatedInsights": coalesce(
-    (relatedInsights[]-> {
-      title,
-      "slug": slug.current,
-      status
-    })[status == "published"]{ title, slug },
-    []
-  ),
-  "overviewSections": coalesce(overviewSections, [])
+  targetClients,
+  "focusAreas": coalesce(focusAreas, []),
+  approach,
+  order
 }
 `;
 
-/** Fetch a single published service by slug, including optional future relationship fields. */
+/** Fetch a single published service by slug (full detail). */
 export const PUBLISHED_SERVICE_BY_SLUG_EXPANDED_QUERY = `
 *[_type == "service" && status == "published" && slug.current == $slug][0]
 {
   "id": _id,
   title,
   "slug": slug.current,
+  category,
   summary,
-  body,
-  domain,
-
-  // Optional future fields (safe if absent in schema/documents)
-  "relatedInsights": coalesce(relatedInsights[]-> {
-    title,
-    "slug": slug.current,
-    status
-  }, []),
-
-  "parentService": parentService-> {
-    title,
-    "slug": slug.current,
-    summary,
-    domain
-  },
-
-  "subServices": *[_type == "service" && status == "published" && parentService._ref == ^._id]
-    | order(title asc)
-    {
-      title,
-      "slug": slug.current,
-      summary,
-      domain
-    },
-
-  // Optional future fields (safe if absent in schema/documents)
-  "overviewSections": coalesce(overviewSections, [])
+  targetClients,
+  "focusAreas": coalesce(focusAreas, []),
+  approach,
+  order
 }
 `;
 
@@ -249,7 +210,7 @@ export const UNIFIED_SEARCH_QUERY = `
 }
 `;
 
-/** Search published services by text (title + summary), with optional domain filter. */
+/** Search published services by text (title + summary), with optional category filter. */
 export const SEARCH_PUBLISHED_SERVICES_QUERY = `
 *[
   _type == "service" &&
@@ -259,26 +220,14 @@ export const SEARCH_PUBLISHED_SERVICES_QUERY = `
     title match ("*" + $term + "*") ||
     summary match ("*" + $term + "*")
   ) &&
-  (!defined($domain) || domain == $domain)
+  (!defined($category) || category == $category)
 ]
-| order(domain asc, title asc)
+| order(coalesce(order, 999) asc, title asc)
 {
   title,
   "slug": slug.current,
-  summary,
-  body,
-  domain,
-
-  // Optional cross-links (safe if absent in schema/documents)
-  "relatedInsights": coalesce(
-    (relatedInsights[]-> {
-      title,
-      "slug": slug.current,
-      status
-    })[status == "published"]{ title, slug },
-    []
-  ),
-  "overviewSections": coalesce(overviewSections, [])
+  category,
+  summary
 }
 `;
 
@@ -319,9 +268,9 @@ export const SEARCH_PUBLISHED_INSIGHTS_QUERY = `
 }
 `;
 
-/** Fetch distinct domains used by published services (for filters). */
-export const PUBLISHED_SERVICE_DOMAINS_QUERY = `
-array::unique(*[_type == "service" && status == "published" && defined(domain)].domain)
+/** Fetch distinct categories used by published services (for filters). */
+export const PUBLISHED_SERVICE_CATEGORIES_QUERY = `
+array::unique(*[_type == "service" && status == "published" && defined(category)].category)
 `;
 
 /** Fetch published insight themes (for filters). */

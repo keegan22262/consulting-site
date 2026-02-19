@@ -5,7 +5,7 @@ import InsightCard from "@/components/sections/InsightCard";
 import ServiceCard from "@/components/sections/ServiceCard";
 import {
 	getPublishedInsightThemes,
-	getPublishedServiceDomains,
+	getPublishedServiceCategories,
 } from "@/lib/sanity/filters";
 import { searchInsights, searchServices } from "@/lib/sanity/search";
 
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 type SearchPageProps = {
 	searchParams?: {
 		q?: string | string[];
-		domain?: string | string[];
+		category?: string | string[];
 		theme?: string | string[];
 	};
 };
@@ -32,15 +32,15 @@ function getSingleParam(value: string | string[] | undefined): string {
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
 	const q = getSingleParam(searchParams?.q).trim();
-	const domain = getSingleParam(searchParams?.domain).trim();
+	const category = getSingleParam(searchParams?.category).trim();
 	const theme = getSingleParam(searchParams?.theme).trim();
 
 	const hasQuery = q.length > 0;
 
-	const [domains, themes, services, insights] = await Promise.all([
-		getPublishedServiceDomains(),
+	const [categories, themes, services, insights] = await Promise.all([
+		getPublishedServiceCategories(),
 		getPublishedInsightThemes(),
-		hasQuery ? searchServices(q, { domain }) : Promise.resolve([]),
+		hasQuery ? searchServices(q, { category }) : Promise.resolve([]),
 		hasQuery ? searchInsights(q, { theme }) : Promise.resolve([]),
 	]);
 	const hasAnyResults = services.length > 0 || insights.length > 0;
@@ -49,14 +49,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 		<main>
 			<section aria-labelledby="search-title">
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						<header className="mx-auto max-w-3xl space-y-4">
 							<h1 id="search-title" className="text-4xl leading-tight">
 								Search
 							</h1>
-							<p className="text-lg leading-relaxed">
-								Search across services and insights.
-							</p>
+							<p className="text-lg leading-relaxed">Search across services and insights.</p>
 						</header>
 
 						<div className="mx-auto mt-8 max-w-3xl">
@@ -85,19 +83,19 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 									<div className="space-y-1">
 										<label
-											htmlFor="domain"
+											htmlFor="category"
 											className="text-sm font-medium text-slate-900"
 										>
-											Domain (Services)
+											Category (Services)
 										</label>
 										<select
-											id="domain"
-											name="domain"
-											defaultValue={domain}
+											id="category"
+											name="category"
+											defaultValue={category}
 											className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
 										>
-											<option value="">All domains</option>
-											{domains.map((value) => (
+											<option value="">All categories</option>
+											{categories.map((value) => (
 												<option key={value} value={value}>
 													{value}
 												</option>
@@ -131,56 +129,64 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 						</div>
 
 						{hasQuery && !hasAnyResults ? (
-							<div className="mx-auto mt-10 max-w-3xl rounded-lg border border-slate-200 bg-white px-4 py-3">
+							<div className="mx-auto mt-10 max-w-3xl">
 								<p className="text-sm leading-relaxed text-slate-700">No results found.</p>
 							</div>
-						) : null}
-
-						{services.length > 0 ? (
-							<section aria-labelledby="search-services-title" className="mt-12">
-								<div className="mx-auto max-w-3xl">
-									<h2 id="search-services-title" className="text-2xl leading-snug">
-										Services
-									</h2>
-								</div>
-								<div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-									{services.map((service) => (
-										<ServiceCard
-											key={service.slug}
-											id={service.slug}
-											title={service.title}
-											summary={service.summary}
-											category={service.category ?? ""}
-										/>
-									))}
-								</div>
-							</section>
-						) : null}
-
-						{insights.length > 0 ? (
-							<section aria-labelledby="search-insights-title" className="mt-12">
-								<div className="mx-auto max-w-3xl">
-									<h2 id="search-insights-title" className="text-2xl leading-snug">
-										Insights
-									</h2>
-								</div>
-								<div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-									{insights.map((insight) => (
-										<InsightCard
-											key={insight.slug}
-											slug={insight.slug}
-											title={insight.title}
-											summary={insight.summary}
-											category={insight.category ?? ""}
-											date={insight.date ?? ""}
-										/>
-									))}
-								</div>
-							</section>
 						) : null}
 					</div>
 				</Container>
 			</section>
+
+			{services.length > 0 ? (
+				<section aria-labelledby="search-services-title">
+					<Container>
+						<div className="py-16 md:py-24">
+							<div className="mx-auto max-w-3xl">
+								<h2 id="search-services-title" className="text-2xl leading-snug">
+									Services
+								</h2>
+							</div>
+							<div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+								{services.map((service) => (
+									<ServiceCard
+										key={service.slug}
+										id={service.slug}
+										title={service.title}
+										summary={service.summary}
+										category={service.category ?? ""}
+									/>
+								))}
+							</div>
+						</div>
+					</Container>
+				</section>
+			) : null}
+
+			{insights.length > 0 ? (
+				<section aria-labelledby="search-insights-title">
+					<Container>
+						<div className="py-16 md:py-24">
+							<div className="mx-auto max-w-3xl">
+								<h2 id="search-insights-title" className="text-2xl leading-snug">
+									Insights
+								</h2>
+							</div>
+							<div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+								{insights.map((insight) => (
+									<InsightCard
+										key={insight.slug}
+										slug={insight.slug}
+										title={insight.title}
+										summary={insight.summary}
+										category={insight.category ?? ""}
+										date={insight.date ?? ""}
+									/>
+								))}
+							</div>
+						</div>
+					</Container>
+				</section>
+			) : null}
 		</main>
 	);
 }

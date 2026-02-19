@@ -20,7 +20,7 @@ export default async function ServicesPage() {
 		<main>
 			<section aria-labelledby="services-page-title">
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						<h1 id="services-page-title" className="text-4xl leading-tight">
 							Our Services
 						</h1>
@@ -34,7 +34,7 @@ export default async function ServicesPage() {
 							</div>
 						) : (
 							<section aria-label="Service cards" className="mt-10">
-								<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+								<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 									{fetchedServices.map((service) => (
 										<ServiceCard
 											key={service.slug}

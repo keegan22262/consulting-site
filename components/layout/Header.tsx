@@ -11,19 +11,20 @@ type NavItem = {
   href: string;
 };
 
+const navLinkClassName =
+  "transition-colors duration-fast motion-reduce:transition-none hover:underline hover:decoration-slate-300 underline-offset-4 focus-visible:underline focus-visible:decoration-slate-300";
+
 const navigation = {
   brand: { label: "Firm Name", href: "/" },
   primary: [
-    { label: "About", href: "/about" },
+    { label: "Home", href: "/" },
     { label: "Services", href: "/services" },
-    { label: "Careers", href: "/careers" },
-    { label: "Contact us", href: "/contact" },
+    { label: "How We Work", href: "/how-we-work" },
+    { label: "Insights", href: "/insights" },
   ] satisfies NavItem[],
   more: {
     label: "More",
     items: [
-      { label: "Insights", href: "/insights" },
-      { label: "How We Work", href: "/how-we-work" },
       { label: "Search", href: "/search" },
       { label: "Privacy", href: "/privacy" },
       { label: "Terms", href: "/terms" },
@@ -38,6 +39,7 @@ const navigation = {
 export default function Header() {
   const router = useRouter();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const menuId = useId();
   const moreButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -51,6 +53,16 @@ export default function Header() {
     if (!isSearchOpen) return;
     searchInputRef.current?.focus();
   }, [isSearchOpen]);
+
+  useEffect(() => {
+    const updateScrollState = () => {
+      setIsScrolled(window.scrollY > 8);
+    };
+
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollState);
+  }, []);
 
   useEffect(() => {
     if (!isSearchOpen) return;
@@ -69,22 +81,31 @@ export default function Header() {
   }
 
   return (
-    <header>
+    <header
+      className={
+        "border-b border-transparent bg-transparent transition-colors duration-[220ms] motion-reduce:transition-none" +
+        (isScrolled ? " bg-white/90 border-border" : "")
+      }
+    >
       <nav aria-label="Primary">
         <div className="mx-auto flex max-w-content items-center justify-between px-6 py-4">
           <div className="shrink-0">
-            <Link href={navigation.brand.href}>{navigation.brand.label}</Link>
+            <Link href={navigation.brand.href} className={navLinkClassName}>
+              {navigation.brand.label}
+            </Link>
           </div>
 
           <ul className="flex flex-wrap items-center justify-end gap-x-6 gap-y-2">
             {navigation.primary.map((item) => (
               <li key={item.href} className="whitespace-nowrap">
                 {item.href === "/contact" ? (
-                  <ContactTrigger className="inline-flex items-center justify-center">
+                  <ContactTrigger className={`inline-flex items-center justify-center ${navLinkClassName}`}>
                     {item.label}
                   </ContactTrigger>
                 ) : (
-                  <Link href={item.href}>{item.label}</Link>
+                  <Link href={item.href} className={navLinkClassName}>
+                    {item.label}
+                  </Link>
                 )}
               </li>
             ))}
@@ -158,7 +179,7 @@ export default function Header() {
                       <Link
                         href={item.href}
                         role="menuitem"
-                        className="block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:outline-none"
+                        className="block rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors duration-fast motion-reduce:transition-none hover:bg-slate-50 focus:bg-slate-50 focus:outline-none"
                         onClick={() => setIsMoreOpen(false)}
                       >
                         {item.label}
@@ -219,7 +240,7 @@ export default function Header() {
             className="relative mx-auto mt-24 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-lg"
           >
             <div className="flex items-start justify-between gap-4">
-              <h2 id={`${searchDialogId}-title`} className="text-base font-semibold tracking-tight">
+              <h2 id={`${searchDialogId}-title`} className="text-base font-medium tracking-tight">
                 {navigation.search.label}
               </h2>
               <button

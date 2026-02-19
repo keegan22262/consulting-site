@@ -35,7 +35,7 @@ export default async function PrivacyPolicyPage() {
 		<main>
 			<section aria-labelledby="privacy-policy-title">
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						{policy ? (
 							<>
 								<header className="mx-auto max-w-3xl space-y-4">
@@ -47,7 +47,7 @@ export default async function PrivacyPolicyPage() {
 									</p>
 								</header>
 
-								<div className="mx-auto mt-10 max-w-3xl space-y-4">
+								<div className="mx-auto mt-10 max-w-prose space-y-4">
 									<PortableText
 										value={policy.content}
 										components={{
@@ -68,7 +68,7 @@ export default async function PrivacyPolicyPage() {
 									</h1>
 								</header>
 
-								<div className="mx-auto mt-10 max-w-3xl rounded-lg border border-slate-200 bg-white px-4 py-3">
+										<div className="mx-auto mt-10 max-w-prose">
 									<p className="text-sm leading-relaxed text-slate-700">
 										Privacy policy content is not yet available.
 									</p>

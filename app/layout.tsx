@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import ContactModalProvider from "../components/modals/ContactModalProvider";
+import PageTransition from "../components/ui/PageTransition";
 import "./globals.css";
 
 const inter = Inter({
@@ -39,7 +40,9 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <ContactModalProvider>
           <Header />
-          <main>{children}</main>
+          <main>
+            <PageTransition>{children}</PageTransition>
+          </main>
           <Footer />
         </ContactModalProvider>
       </body>

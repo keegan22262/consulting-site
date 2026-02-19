@@ -3,33 +3,34 @@ import "server-only";
 import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 
-type PortableTextBlock = { _type: string } & Record<string, unknown>;
-
 type HowWeWorkRecord = {
-	title?: unknown;
 	intro?: unknown;
-	principles?: unknown;
+	steps?: unknown;
+	deliveryModel?: unknown;
+	partnerships?: unknown;
 };
 
-export type HowWeWorkPrinciple = {
+export type HowWeWorkStep = {
 	title: string;
 	description: string;
 };
 
 export type HowWeWork = {
-	title: string;
-	intro: PortableTextBlock[];
-	principles: HowWeWorkPrinciple[];
+	intro: string;
+	steps: HowWeWorkStep[];
+	deliveryModel: string;
+	partnerships: string;
 };
 
 const HOW_WE_WORK_QUERY = `
 *[_type == "howWeWork"][0]{
-  title,
   intro,
-  "principles": coalesce(principles, [])[]{
+  "steps": coalesce(steps, [])[]{
     title,
     description
-  }
+  },
+  deliveryModel,
+  partnerships
 }
 `;
 
@@ -37,25 +38,21 @@ function normalizeString(value: unknown): string {
 	return typeof value === "string" ? value.trim() : "";
 }
 
-function normalizePortableText(value: unknown): PortableTextBlock[] {
-	return Array.isArray(value) ? (value as PortableTextBlock[]) : [];
-}
-
-function normalizePrinciples(value: unknown): HowWeWorkPrinciple[] {
+function normalizeSteps(value: unknown): HowWeWorkStep[] {
 	if (!Array.isArray(value)) return [];
 
-	const principles: HowWeWorkPrinciple[] = [];
+	const steps: HowWeWorkStep[] = [];
 	for (const item of value) {
 		if (!item || typeof item !== "object") continue;
 		const record = item as Record<string, unknown>;
 		const title = normalizeString(record.title);
 		if (!title) continue;
-		principles.push({
+		steps.push({
 			title,
 			description: normalizeString(record.description),
 		});
 	}
-	return principles;
+	return steps;
 }
 
 /**
@@ -69,12 +66,13 @@ export const getHowWeWork = async (): Promise<HowWeWork | null> => {
 
 	if (!result) return null;
 
-	const title = normalizeString(result.title);
-	if (!title) return null;
+	const intro = normalizeString(result.intro);
+	if (!intro) return null;
 
 	return {
-		title,
-		intro: normalizePortableText(result.intro),
-		principles: normalizePrinciples(result.principles),
+		intro,
+		steps: normalizeSteps(result.steps),
+		deliveryModel: normalizeString(result.deliveryModel),
+		partnerships: normalizeString(result.partnerships),
 	};
 };

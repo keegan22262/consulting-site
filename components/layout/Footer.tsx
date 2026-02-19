@@ -1,23 +1,21 @@
 import Link from "next/link";
 
 import { getSocialLinks } from "@/lib/sanity/settings";
-import ContactTrigger from "../modals/ContactTrigger";
 
 const firmName = "Firm Name";
 
 const footerLinks = [
   { label: "About", href: "/about" },
-  { label: "How We Work", href: "/how-we-work" },
-  { label: "Services", href: "/services" },
-  { label: "Insights", href: "/insights" },
   { label: "Careers", href: "/careers" },
-  { label: "Contact us", href: "/contact" },
 ] as const;
 
 const legalLinks = [
-  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
 ] as const;
+
+const footerLinkClassName =
+  "transition-colors duration-fast motion-reduce:transition-none hover:underline hover:decoration-slate-300 underline-offset-4 focus-visible:underline focus-visible:decoration-slate-300";
 
 function hasAnySocialLink(links: {
   linkedinUrl?: string;
@@ -42,7 +40,7 @@ function SocialIconLink({ label, href, children }: SocialIconProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors duration-fast motion-reduce:transition-none hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
     >
       <span className="sr-only">{label}</span>
       {children}
@@ -65,13 +63,9 @@ export default async function Footer() {
             <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
               {footerLinks.map((link) => (
                 <li key={link.href} className="whitespace-nowrap">
-                  {link.href === "/contact" ? (
-                    <ContactTrigger className="inline-flex items-center justify-center">
-                      {link.label}
-                    </ContactTrigger>
-                  ) : (
-                    <Link href={link.href}>{link.label}</Link>
-                  )}
+                  <Link href={link.href} className={footerLinkClassName}>
+                    {link.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -88,7 +82,9 @@ export default async function Footer() {
               <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
                 {legalLinks.map((link) => (
                   <li key={link.href} className="whitespace-nowrap">
-                    <Link href={link.href}>{link.label}</Link>
+                    <Link href={link.href} className={footerLinkClassName}>
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

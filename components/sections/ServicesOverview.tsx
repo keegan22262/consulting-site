@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import Container from "../layout/Container";
 import ServiceCard from "./ServiceCard";
+import Reveal from "../ui/Reveal";
 
 import { getFeaturedServices } from "@/lib/sanityServices";
 
@@ -23,16 +24,16 @@ export default async function ServicesOverview({
   return (
     <section aria-labelledby="services-overview-title">
       <Container>
-        <div className="py-18">
-          <div className="mx-auto max-w-3xl text-center">
+				<div className="py-16 md:py-24">
+				<Reveal>
+					<div className="mx-auto max-w-3xl text-center">
 						<h2 id="services-overview-title">{title}</h2>
-				{intro ? (
-					<p className="mt-4">{intro}</p>
-				) : null}
-            <p className="mt-4">
-					<Link href={linkHref}>{linkLabel}</Link>
-            </p>
-          </div>
+						{intro ? <p className="mt-4">{intro}</p> : null}
+						<p className="mt-4">
+							<Link href={linkHref}>{linkLabel}</Link>
+						</p>
+					</div>
+				</Reveal>
 
 				{featuredServices.length === 0 ? (
 					<div className="mx-auto mt-10 max-w-3xl text-center">
@@ -41,7 +42,7 @@ export default async function ServicesOverview({
 						</p>
 					</div>
 				) : (
-					<div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+					<div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 						{featuredServices.map((service) => (
 							<ServiceCard
 								key={service.slug}

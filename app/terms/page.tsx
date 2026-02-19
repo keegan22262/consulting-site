@@ -35,7 +35,7 @@ export default async function TermsPage() {
 		<main>
 			<section aria-labelledby="terms-title">
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						{terms ? (
 							<>
 								<header className="mx-auto max-w-3xl space-y-4">
@@ -47,7 +47,7 @@ export default async function TermsPage() {
 									</p>
 								</header>
 
-								<div className="mx-auto mt-10 max-w-3xl space-y-4">
+								<div className="mx-auto mt-10 max-w-prose space-y-4">
 									<PortableText
 										value={terms.content}
 										components={{
@@ -68,7 +68,7 @@ export default async function TermsPage() {
 									</h1>
 								</header>
 
-								<div className="mx-auto mt-10 max-w-3xl rounded-lg border border-slate-200 bg-white px-4 py-3">
+										<div className="mx-auto mt-10 max-w-prose">
 									<p className="text-sm leading-relaxed text-slate-700">
 										Terms content is not yet available.
 									</p>

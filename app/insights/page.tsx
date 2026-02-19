@@ -30,7 +30,7 @@ export default async function InsightsPage() {
 		<main>
 			<section aria-labelledby="insights-page-title">
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						<h1 id="insights-page-title" className="text-4xl leading-tight">
 								Insights
 						</h1>
@@ -40,7 +40,7 @@ export default async function InsightsPage() {
 						</p>
 
 						{hasError ? (
-							<div className="mt-10 max-w-2xl rounded-lg border border-slate-200 bg-white px-4 py-3">
+							<div className="mt-10 max-w-2xl">
 								<p className="text-sm leading-relaxed text-slate-700">
 									Insights are unavailable at this time.
 								</p>
@@ -53,7 +53,7 @@ export default async function InsightsPage() {
 							</div>
 						) : (
 							<section aria-label="Insight cards" className="mt-10">
-								<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+								<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
 									{fetchedInsights.map((insight) => (
 										<InsightCard
 											key={insight.slug}

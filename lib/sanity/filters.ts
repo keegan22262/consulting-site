@@ -5,7 +5,7 @@ import { sanityFetch } from "@/lib/sanity/fetch";
 import { isNextDynamicServerUsageError } from "@/lib/sanity/nextErrors";
 import {
 	PUBLISHED_INSIGHT_THEMES_QUERY,
-	PUBLISHED_SERVICE_DOMAINS_QUERY,
+	PUBLISHED_SERVICE_CATEGORIES_QUERY,
 } from "@/lib/sanity/queries";
 
 export type InsightThemeOption = {
@@ -22,23 +22,23 @@ function normalizeString(value: unknown): string {
 	return typeof value === "string" ? value.trim() : "";
 }
 
-export async function getPublishedServiceDomains(): Promise<string[]> {
+export async function getPublishedServiceCategories(): Promise<string[]> {
 	if (!sanityClient) return [];
 
 	try {
-		const result = await sanityFetch<unknown>(PUBLISHED_SERVICE_DOMAINS_QUERY, {}, {
+		const result = await sanityFetch<unknown>(PUBLISHED_SERVICE_CATEGORIES_QUERY, {}, {
 			revalidate: 3600,
-			tags: ["sanity:services", "sanity:filters:domains"],
+			tags: ["sanity:services", "sanity:filters:categories"],
 		});
 
-		const domains = Array.isArray(result)
+		const categories = Array.isArray(result)
 			? result.map((value) => normalizeString(value)).filter(Boolean)
 			: [];
 
-		return domains.sort((a, b) => a.localeCompare(b));
+		return categories.sort((a, b) => a.localeCompare(b));
 	} catch (error) {
 		if (!isNextDynamicServerUsageError(error)) {
-			console.error("Sanity getPublishedServiceDomains failed", { error });
+			console.error("Sanity getPublishedServiceCategories failed", { error });
 		}
 		return [];
 	}

@@ -9,16 +9,19 @@
     "lint": "eslint",
     "studio:dev": "npm --prefix sanity run dev",
     "studio:build": "npm --prefix sanity run build",
-    "studio:start": "npm --prefix sanity run start"
+    "studio:start": "npm --prefix sanity run start",
+    "studio:deploy": "npm --prefix sanity run deploy"
   },
   "dependencies": {
     "@portabletext/react": "^6.0.2",
     "@sanity/client": "^7.14.1",
+    "motion": "^12.34.2",
     "next": "16.1.5",
     "nodemailer": "^7.0.11",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "resend": "^6.9.1"
+    "resend": "^6.9.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -26,8 +29,8 @@
     "@types/nodemailer": "^7.0.9",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.5",
+    "eslint": "^10.0.0",
+    "eslint-config-next": "^0.2.4",
     "sanity": "^5.7.0",
     "tailwindcss": "^4",
     "typescript": "^5"

@@ -156,7 +156,7 @@ export default async function AboutPage() {
 		<main>
 			<section aria-labelledby="about-title">
 				<Container>
-					<div className="py-18">
+					<div className="py-16 md:py-24">
 						<header className="mx-auto max-w-3xl space-y-4">
 							<h1 id="about-title" className="text-4xl leading-tight">
 								{title}
@@ -173,8 +173,8 @@ export default async function AboutPage() {
 
 			<section aria-label="About details">
 				<Container>
-					<div className="py-18">
-						<div className="mx-auto max-w-3xl space-y-12">
+					<div className="py-16 md:py-24">
+						<div className="mx-auto max-w-prose space-y-12">
 							<section aria-labelledby="mission-title" className="space-y-3">
 								<h2 id="mission-title" className="text-2xl leading-snug">
 									Our Mission

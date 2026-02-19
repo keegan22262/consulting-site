@@ -148,7 +148,7 @@ export default function ContactModal({ open, onClose, context }: ContactModalPro
 				>
 					<div className="flex items-start justify-between gap-6 bg-slate-900 px-6 py-5 text-white">
 						<div className="space-y-1">
-							<h2 id={`${dialogId}-title`} className="text-lg font-semibold tracking-tight">
+							<h2 id={`${dialogId}-title`} className="text-lg font-medium tracking-tight">
 								Get in touch
 							</h2>
 							<p id={`${dialogId}-description`} className="text-sm text-slate-200">

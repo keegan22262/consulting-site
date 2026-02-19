@@ -10,7 +10,7 @@ export const service = defineType({
 			title: "Title",
 			type: "string",
 			description:
-				"Clear service name used across the site. Use concise, consulting-style phrasing (e.g., “Strategy”, “Digital Transformation”).",
+				"Clear service name. Use concise, consulting-style phrasing.",
 			validation: (rule) => rule.required(),
 		}),
 		defineField({
@@ -18,7 +18,7 @@ export const service = defineType({
 			title: "Slug",
 			type: "slug",
 			description:
-				"URL identifier generated from the title. Keep stable after publishing to avoid broken links.",
+				"URL identifier generated from the title. Keep stable after publishing.",
 			options: {
 				source: "title",
 				maxLength: 96,
@@ -27,104 +27,62 @@ export const service = defineType({
 			validation: (rule) => rule.required(),
 		}),
 		defineField({
-			name: "summary",
-			title: "Summary",
-			type: "text",
-			description:
-				"Short overview used in cards and listings. Aim for 1–2 sentences, outcomes-led, no jargon.",
-			rows: 3,
-			validation: (rule) => rule.required().max(280),
-		}),
-		defineField({
-			name: "body",
-			title: "Body",
-			type: "array",
-			description:
-				"Long-form consulting content. Keep structure disciplined: lead with what it is, when to use it, and what outcomes clients can expect.",
-			of: [
-				{
-					type: "block",
-					styles: [
-						{ title: "Normal", value: "normal" },
-						{ title: "Heading", value: "h2" },
-						{ title: "Subheading", value: "h3" },
-						{ title: "Quote", value: "blockquote" },
-					],
-					lists: [
-						{ title: "Bullet", value: "bullet" },
-						{ title: "Numbered", value: "number" },
-					],
-					marks: {
-						decorators: [
-							{ title: "Strong", value: "strong" },
-							{ title: "Emphasis", value: "em" },
-						],
-						annotations: [
-							{
-								name: "link",
-								title: "Link",
-								type: "object",
-								fields: [
-									defineField({
-										name: "href",
-										title: "URL",
-										type: "url",
-										validation: (rule) =>
-											rule.required().uri({ scheme: ["http", "https", "mailto"] }),
-									}),
-								],
-							},
-						],
-					},
-				},
-			],
-			validation: (rule) => rule.required(),
-		}),
-		defineField({
-			name: "domain",
-			title: "Domain",
+			name: "category",
+			title: "Category",
 			type: "string",
-			description:
-				"High-level grouping for navigation and reporting. Keep broad and stable (e.g., Strategy, Advisory, Digital).",
+			description: "Practice area grouping for navigation and filtering.",
 			options: {
 				list: [
-					{ title: "Strategy", value: "Strategy" },
-					{ title: "Advisory", value: "Advisory" },
-					{ title: "Digital", value: "Digital" },
-					{ title: "Risk", value: "Risk" },
-					{ title: "People", value: "People" },
+					{ title: "Strategy & Transformation", value: "strategy-transformation" },
+					{ title: "Digital & AI", value: "digital-ai" },
+					{ title: "Financial, Risk & Tax", value: "financial-risk-tax" },
+					{ title: "People, ESG & Public", value: "people-esg-public" },
 				],
 				layout: "dropdown",
 			},
 			validation: (rule) => rule.required(),
 		}),
 		defineField({
-			name: "relatedInsights",
-			title: "Related Insights",
-			type: "array",
-			description:
-				"Optional: link relevant insights/case notes that provide context or supporting analysis for this service.",
-			of: [
-				{
-					type: "reference",
-					to: [{ type: "insight" }],
-				},
-			],
+			name: "summary",
+			title: "Summary",
+			type: "string",
+			description: "One-sentence overview used in cards and listings.",
+			validation: (rule) => rule.required().max(200),
 		}),
 		defineField({
-			name: "parentService",
-			title: "Parent Service",
-			type: "reference",
+			name: "targetClients",
+			title: "Target Clients",
+			type: "string",
 			description:
-				"Optional: use to model sub-services (e.g., a specialized offering under a broader service).",
-			to: [{ type: "service" }],
+				"Who this service is for (e.g., CFOs navigating M&A complexity).",
+		}),
+		defineField({
+			name: "focusAreas",
+			title: "Focus Areas",
+			type: "array",
+			description: "Key capabilities or topics covered by this service.",
+			of: [{ type: "string" }],
+			options: { layout: "tags" },
+		}),
+		defineField({
+			name: "approach",
+			title: "Approach",
+			type: "text",
+			description:
+				"Short paragraph on methodology or working style for this service.",
+			rows: 4,
+		}),
+		defineField({
+			name: "order",
+			title: "Order",
+			type: "number",
+			description: "Display order in listings. Lower numbers appear first.",
 		}),
 		defineField({
 			name: "status",
 			title: "Status",
 			type: "string",
-			description:
-				"Publishing control for safe editorial workflow. Use Draft until the content and links are reviewed.",
+			description: "Publishing control. Use Draft until content is reviewed.",
 			options: {
 				list: [
 					{ title: "Draft", value: "draft" },
@@ -137,19 +95,37 @@ export const service = defineType({
 			validation: (rule) => rule.required(),
 		}),
 	],
+	orderings: [
+		{
+			title: "Display Order",
+			name: "orderAsc",
+			by: [{ field: "order", direction: "asc" }],
+		},
+		{
+			title: "Title",
+			name: "titleAsc",
+			by: [{ field: "title", direction: "asc" }],
+		},
+	],
 	initialValue: {
 		status: "draft",
 	},
 	preview: {
 		select: {
 			title: "title",
-			subtitle: "domain",
+			subtitle: "category",
 		},
 		prepare(selection) {
 			const { title, subtitle } = selection as { title?: string; subtitle?: string };
+			const categoryLabels: Record<string, string> = {
+				"strategy-transformation": "Strategy & Transformation",
+				"digital-ai": "Digital & AI",
+				"financial-risk-tax": "Financial, Risk & Tax",
+				"people-esg-public": "People, ESG & Public",
+			};
 			return {
 				title: title || "Untitled service",
-				subtitle: subtitle ? `Domain: ${subtitle}` : "Domain not set",
+				subtitle: subtitle ? categoryLabels[subtitle] ?? subtitle : "No category",
 			};
 		},
 	},

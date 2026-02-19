@@ -1,12 +1,9 @@
 import Container from "../../../components/layout/Container";
 import CTA from "../../../components/sections/CTA";
-import InsightCard from "../../../components/sections/InsightCard";
-import ServiceContent from "../../../components/sections/ServiceContent";
 import Link from "next/link";
 import type { Metadata } from "next";
 
 import { getServiceBySlug } from "@/lib/sanityServices";
-import { getAllInsights } from "@/lib/sanityInsights";
 
 export async function generateMetadata(
   { params }: ServiceDetailsPageProps
@@ -58,7 +55,7 @@ export default async function ServiceDetailsPage({
     return (
       <main>
         <Container>
-          <section className="py-18" aria-labelledby="service-not-found-title">
+          <section className="py-16 md:py-24" aria-labelledby="service-not-found-title">
             <header className="space-y-4">
               <h1 id="service-not-found-title" className="text-3xl leading-tight">
                 Service not found
@@ -78,49 +75,11 @@ export default async function ServiceDetailsPage({
     );
   }
 
-  const executiveSummary = service.summary;
-
-  const relatedInsightSlugs = (service.relatedInsights ?? [])
-    .map((item) => item?.slug)
-    .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
-
-  type RelatedInsightForRender = {
-    title: string;
-    slug: string;
-    summary: string;
-    category?: string;
-    date?: string;
-  };
-
-  let relatedInsightsForRender: RelatedInsightForRender[] = [];
-  if (relatedInsightSlugs.length > 0) {
-    const allInsights = await getAllInsights();
-    const bySlug = new Map(allInsights.map((insight) => [insight.slug, insight] as const));
-
-    relatedInsightsForRender = relatedInsightSlugs
-      .map((slugValue) => {
-        const fromIndex = bySlug.get(slugValue);
-        if (fromIndex) return fromIndex;
-
-        const fallback = (service.relatedInsights ?? []).find((item) => item?.slug === slugValue);
-        if (!fallback) return null;
-
-        return {
-          title: fallback.title,
-          slug: fallback.slug,
-          summary: fallback.summary,
-          category: fallback.category,
-          date: fallback.date,
-        };
-      })
-      .filter((value): value is RelatedInsightForRender => value !== null);
-  }
-
   return (
     <main>
       <Container>
-        <section className="py-18" aria-labelledby="service-title">
-          <div className="mx-auto max-w-3xl space-y-12">
+        <section className="py-16 md:py-24" aria-labelledby="service-title">
+          <div className="mx-auto max-w-2xl space-y-12">
             <header className="space-y-4">
               <p>
                 <Link href="/services" className="text-sm underline underline-offset-4">
@@ -133,37 +92,31 @@ export default async function ServiceDetailsPage({
               <h1 id="service-title" className="text-4xl leading-tight">
                 {service.title}
               </h1>
-              <p className="text-lg leading-relaxed">{executiveSummary}</p>
+              <p className="text-lg leading-relaxed">{service.summary}</p>
             </header>
 
-            <section aria-labelledby="service-content-title" className="space-y-4">
-              <h2 id="service-content-title" className="text-2xl leading-snug">
-                What We Do
-              </h2>
-              <ServiceContent
-                description={service.description ?? ""}
-                offerings={service.offerings ?? []}
-                outcomes={service.outcomes ?? []}
-              />
-            </section>
-
-            {relatedInsightsForRender.length > 0 ? (
-              <section aria-labelledby="service-related-insights-title" className="space-y-4">
-                <h2 id="service-related-insights-title" className="text-2xl leading-snug">
-                  Related Insights
+            {service.targetClients ? (
+              <section aria-labelledby="service-target-clients-title" className="space-y-4">
+                <h2 id="service-target-clients-title" className="text-2xl leading-snug">
+                  Who This Is For
                 </h2>
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-                  {relatedInsightsForRender.map((insight) => (
-                    <InsightCard
-                      key={insight.slug}
-                      slug={insight.slug}
-                      title={insight.title}
-                      summary={insight.summary}
-                      category={insight.category ?? ""}
-                      date={insight.date ?? ""}
-                    />
+                <p className="leading-relaxed">{service.targetClients}</p>
+              </section>
+            ) : null}
+
+            {service.focusAreas && service.focusAreas.length > 0 ? (
+              <section aria-labelledby="service-focus-areas-title" className="space-y-4">
+                <h2 id="service-focus-areas-title" className="text-2xl leading-snug">
+                  Focus Areas
+                </h2>
+                <ul className="space-y-2">
+                  {service.focusAreas.map((area) => (
+                    <li key={area} className="flex gap-3 text-slate-700">
+                      <span aria-hidden="true" className="text-slate-400">&bull;</span>
+                      <span>{area}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </section>
             ) : null}
 
@@ -175,43 +128,19 @@ export default async function ServiceDetailsPage({
                 <p className="leading-relaxed">{service.approach}</p>
               </section>
             ) : null}
-
-            {service.expectations ? (
-              <section aria-labelledby="service-expect-title" className="space-y-4">
-                <h2 id="service-expect-title" className="text-2xl leading-snug">
-                  What You Can Expect
-                </h2>
-                <p className="leading-relaxed">{service.expectations}</p>
-              </section>
-            ) : null}
-
-            {service.additionalCapabilities ? (
-              <section
-                aria-labelledby="service-additional-capabilities-title"
-                className="space-y-3 border-t border-slate-200 pt-8"
-              >
-                <h2
-                  id="service-additional-capabilities-title"
-                  className="text-base font-semibold tracking-tight text-slate-900"
-                >
-                  Additional Capabilities
-                </h2>
-                <p className="text-sm leading-6 text-slate-600">{service.additionalCapabilities}</p>
-              </section>
-            ) : null}
           </div>
         </section>
       </Container>
 
       <CTA
         heading={`Discuss ${service.title}`}
-        subheading={`Share your objectives for ${service.category}. We’ll respond with a clear next step.`}
+        subheading={`Share your objectives for ${service.category}. We'll respond with a clear next step.`}
         buttonText="Schedule a consultation"
-			contactContext={{
-				inquiryType: "service",
-				relatedServiceId: service.id,
-				relatedServiceTitle: service.title,
-			}}
+        contactContext={{
+          inquiryType: "service",
+          relatedServiceId: service.id,
+          relatedServiceTitle: service.title,
+        }}
       />
     </main>
   );
