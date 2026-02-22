@@ -1,10 +1,23 @@
 import { NextRequest } from "next/server"
 import nodemailer from "nodemailer"
+import { checkRateLimit } from "@/lib/security/rateLimit"
 
 export const runtime = "nodejs"
 
 export async function POST(req: NextRequest) {
   try {
+    const ip =
+      req.headers.get("x-forwarded-for") ??
+      req.headers.get("x-real-ip") ??
+      "unknown"
+
+    if (!checkRateLimit(ip, 5, 10 * 60 * 1000)) {
+      return Response.json(
+        { success: false, error: "Too many requests." },
+        { status: 429 }
+      )
+    }
+
     const body = await req.json()
     const name = body?.name
     const email = body?.email
