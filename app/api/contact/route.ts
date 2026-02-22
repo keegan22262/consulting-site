@@ -11,6 +11,11 @@ export async function POST(req: NextRequest) {
     const message = body?.message
     const inquiryType = body?.inquiryType
 
+    // Honeypot protection
+    if (body?.company) {
+      return Response.json({ success: true })
+    }
+
     if (!name || !email || !message || !inquiryType) {
       return Response.json(
         { success: false, error: "Missing required fields." },
