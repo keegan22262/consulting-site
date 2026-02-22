@@ -1,152 +1,110 @@
+
 import type { Metadata } from "next";
 import Link from "next/link";
-
 import Container from "@/components/layout/Container";
-import ServiceCard from "@/components/sections/ServiceCard";
-import AnimatedSection from "@/components/ui/AnimatedSection";
 import { getInsightBySlug } from "@/lib/sanityInsights";
 
-type PageProps = {
-	params: {
+export const revalidate = 300;
+
+type InsightDetailsPageProps = {
+	params: Promise<{
 		slug: string;
-	};
+	}>;
 };
 
-type PortableTextChild = {
-	text?: string;
-};
-
-type PortableTextBlock = {
-	_type?: string;
-	style?: string;
-	listItem?: string;
-	children?: PortableTextChild[];
-};
-
-function blockToText(block: PortableTextBlock): string {
-	if (!Array.isArray(block.children)) return "";
-	return block.children
-		.map((child) => (typeof child?.text === "string" ? child.text : ""))
-		.join("")
-		.trim();
-}
-
-function portableTextToParagraphs(blocks: PortableTextBlock[] | undefined): string[] {
-	if (!Array.isArray(blocks)) return [];
-
-	return blocks
-		.filter((block) => block?._type === "block" && !block.listItem)
-		.map((block) => blockToText(block))
-		.filter((text) => Boolean(text));
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-	const normalizedSlug = (params.slug || "").trim();
+export async function generateMetadata(
+	{ params }: InsightDetailsPageProps
+): Promise<Metadata> {
+	const { slug } = await params;
+	const normalizedSlug = slug.trim();
 	const insight = normalizedSlug ? await getInsightBySlug(normalizedSlug) : null;
 
-	if (!insight) {
+	if (!normalizedSlug || !insight) {
 		return {
-			title: "Insight not found",
-			description: "The requested insight could not be found.",
-			robots: { index: false, follow: false },
+			title: "Insight Not Found",
+			description: "The requested insight could not be located.",
+			openGraph: {
+				title: "Insight Not Found",
+				description: "The requested insight could not be located.",
+			},
+			alternates: {
+				canonical: `/insights/${normalizedSlug}`,
+			},
 		};
 	}
 
+	const safeTitle = (insight.title || "").trim() || "Insight";
+	const safeDescription =
+		"Research, analysis, and perspective on strategy, risk, and transformation.";
+
 	return {
-		title: insight.title,
-		description: "Read our latest research-informed perspective.",
+		title: safeTitle,
+		description: safeDescription,
 		openGraph: {
-			title: insight.title,
-			description: "Read our latest research-informed perspective.",
+			title: safeTitle,
+			description: safeDescription,
+		},
+		alternates: {
+			canonical: `/insights/${normalizedSlug}`,
 		},
 	};
 }
 
-export default async function InsightDetailPage({ params }: PageProps) {
-	const normalizedSlug = (params.slug || "").trim();
+export default async function InsightDetailsPage({
+	params,
+}: InsightDetailsPageProps) {
+	const { slug } = await params;
+	const normalizedSlug = slug.trim();
 	const insight = normalizedSlug ? await getInsightBySlug(normalizedSlug) : null;
 
-	if (!insight) {
+	if (!normalizedSlug || !insight) {
 		return (
 			<main>
 				<Container>
-					<div className="py-16 md:py-24">
-						<p>Insight not found.</p>
-					</div>
+					<section className="py-16 md:py-24" aria-labelledby="insight-not-found-title">
+						<header className="space-y-4">
+							<h1 id="insight-not-found-title" className="text-3xl leading-tight">
+								Insight not found
+							</h1>
+							<p className="max-w-2xl leading-relaxed">
+								The requested insight could not be located.
+							</p>
+							<p>
+								<Link href="/insights" className="text-sm underline underline-offset-4">
+									View all insights
+								</Link>
+							</p>
+						</header>
+					</section>
 				</Container>
 			</main>
 		);
 	}
 
-	const paragraphs = portableTextToParagraphs(insight.content as PortableTextBlock[] | undefined);
-	const headerSummary = paragraphs[0] ?? "";
-	const relatedServices = Array.isArray(insight.relatedServices) ? insight.relatedServices : [];
-	const hasRelatedServices = relatedServices.length > 0;
-
 	return (
 		<main>
 			<Container>
-				<article className="py-16 md:py-24">
-					<AnimatedSection staggerIndex={0}>
-						<header className="mx-auto max-w-2xl">
-							<h1 className="text-4xl leading-tight tracking-tight">
+				<section className="py-16 md:py-24" aria-labelledby="insight-title">
+					<div className="mx-auto max-w-2xl space-y-12">
+						<header className="space-y-4">
+							<p>
+								<Link href="/insights" className="text-sm underline underline-offset-4">
+									Back to insights
+								</Link>
+							</p>
+							<p className="text-xs uppercase tracking-wide">
+								{insight.category}
+							</p>
+							<h1 id="insight-title" className="text-4xl leading-tight">
 								{insight.title}
 							</h1>
-							<div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">
-								<time dateTime={insight.date}>{insight.date}</time>
-								<span className="text-slate-300" aria-hidden="true">
-									•
-								</span>
-								<span>{insight.category}</span>
-							</div>
-							<p className="mt-6 text-lg leading-relaxed text-slate-700">
-								{headerSummary}
-							</p>
 						</header>
-					</AnimatedSection>
-
-					<AnimatedSection staggerIndex={1}>
-						<div className="mx-auto mt-10 max-w-prose space-y-6 text-base leading-7 text-slate-800">
-							{paragraphs.map((paragraph) => (
-								<p key={paragraph}>{paragraph}</p>
-							))}
+						<div className="mt-6 text-lg leading-relaxed text-slate-700">
+							{insight.category ? `Category: ${insight.category}` : "No summary available."}
 						</div>
-					</AnimatedSection>
-
-					{hasRelatedServices ? (
-						<AnimatedSection staggerIndex={2}>
-							<section aria-labelledby="related-services-title" className="mt-12 pt-10">
-								<div className="mx-auto max-w-2xl">
-									<div className="flex items-baseline justify-between gap-6">
-										<h2
-											id="related-services-title"
-											className="text-xl font-medium tracking-tight text-slate-900"
-										>
-											Related Services
-										</h2>
-										<Link className="text-sm text-slate-700" href="/insights">
-											Back to insights
-										</Link>
-									</div>
-								</div>
-
-								<div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-									{relatedServices
-										.filter((service) => Boolean(service?.slug))
-										.map((service) => (
-											<ServiceCard
-												key={service.slug}
-												id={service.slug}
-												title={service.title}
-												summary={service.summary ?? ""}
-												category={service.category ?? ""}
-											/>
-										))}
-								</div>
-							</section>
-						</AnimatedSection>
-					) : null}
-				</article>
+						{/* Add more insight details here as needed */}
+					</div>
+				</section>
 			</Container>
 		</main>
 	);

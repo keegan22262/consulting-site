@@ -11,6 +11,9 @@ export const metadata: Metadata = {
 		title: "Contact",
 		description: "How to reach us.",
 	},
+	alternates: {
+		canonical: "/contact",
+	},
 };
 
 const fallbackTitle = "Contact Us";
@@ -57,3 +60,4 @@ export default async function ContactPage() {
 		</main>
 	);
 }
+export const revalidate = 300;

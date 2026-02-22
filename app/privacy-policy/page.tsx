@@ -16,6 +16,9 @@ export const metadata: Metadata = {
 		title: "Privacy Policy",
 		description: "Privacy Policy.",
 	},
+	alternates: {
+		canonical: "/privacy-policy",
+	},
 };
 
 function formatLastUpdated(value: string): string {
@@ -27,6 +30,7 @@ function formatLastUpdated(value: string): string {
 		day: "2-digit",
 	}).format(date);
 }
+export const revalidate = 300;
 
 export default async function PrivacyPolicyPage() {
 	const policy = await getPrivacyPolicy();

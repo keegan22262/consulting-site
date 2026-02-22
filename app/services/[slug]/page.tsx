@@ -2,8 +2,15 @@ import Container from "../../../components/layout/Container";
 import CTA from "../../../components/sections/CTA";
 import Link from "next/link";
 import type { Metadata } from "next";
-
 import { getServiceBySlug } from "@/lib/sanityServices";
+
+export const revalidate = 300;
+
+type ServiceDetailsPageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
 
 export async function generateMetadata(
   { params }: ServiceDetailsPageProps
@@ -20,13 +27,16 @@ export async function generateMetadata(
         title: "Service Not Found",
         description: "The requested service could not be located.",
       },
+      alternates: {
+        canonical: `/services/${normalizedSlug}`,
+      },
     };
   }
 
   const safeTitle = (service.title || "").trim() || "Service";
   const safeDescription =
-		(service.summary || "").trim() ||
-		"Consulting services focused on clear decisions and measurable outcomes.";
+    (service.summary || "").trim() ||
+    "Consulting services focused on clear decisions and measurable outcomes.";
 
   return {
     title: safeTitle,
@@ -35,14 +45,11 @@ export async function generateMetadata(
       title: safeTitle,
       description: safeDescription,
     },
+    alternates: {
+      canonical: `/services/${normalizedSlug}`,
+    },
   };
 }
-
-type ServiceDetailsPageProps = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
 
 export default async function ServiceDetailsPage({
   params,

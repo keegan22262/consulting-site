@@ -26,6 +26,7 @@ function blockToText(block: PortableTextBlock): string {
 		.join("")
 		.trim();
 }
+export const revalidate = 300;
 
 function extractAboutContent(blocks: PortableTextBlock[] | undefined) {
 	const introParts: string[] = [];
@@ -112,6 +113,9 @@ export async function generateMetadata(): Promise<Metadata> {
 				title,
 				description,
 			},
+			alternates: {
+				canonical: "/about",
+			},
 		};
 	} catch {
 		return {
@@ -120,6 +124,9 @@ export async function generateMetadata(): Promise<Metadata> {
 			openGraph: {
 				title: DEFAULT_ABOUT_TITLE,
 				description: DEFAULT_ABOUT_DESCRIPTION,
+			},
+			alternates: {
+				canonical: "/about",
 			},
 		};
 	}

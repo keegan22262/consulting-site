@@ -12,6 +12,9 @@ export const metadata: Metadata = {
 		description:
 			"A practical engagement approach designed to improve decision quality, align stakeholders, and support accountable execution.",
 	},
+	alternates: {
+		canonical: "/how-we-work",
+	},
 };
 
 type Step = {
@@ -101,4 +104,6 @@ export default async function HowWeWorkPage() {
 		</main>
 	);
 }
+
+export const revalidate = 300;
 
