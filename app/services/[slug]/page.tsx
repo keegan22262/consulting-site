@@ -82,6 +82,23 @@ export default async function ServiceDetailsPage({
     );
   }
 
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.title,
+    description: service.summary ?? "",
+    provider: {
+      "@type": "Organization",
+      name: "Rill Singh Consulting",
+      url: process.env.NEXT_PUBLIC_SITE_URL,
+    },
+    areaServed: {
+      "@type": "Place",
+      name: "Global",
+    },
+    url: process.env.NEXT_PUBLIC_SITE_URL + "/services/" + slug,
+  };
+
   return (
     <main>
       <Container>
@@ -101,7 +118,6 @@ export default async function ServiceDetailsPage({
               </h1>
               <p className="text-lg leading-relaxed">{service.summary}</p>
             </header>
-
             {service.targetClients ? (
               <section aria-labelledby="service-target-clients-title" className="space-y-4">
                 <h2 id="service-target-clients-title" className="text-2xl leading-snug">
@@ -110,7 +126,6 @@ export default async function ServiceDetailsPage({
                 <p className="leading-relaxed">{service.targetClients}</p>
               </section>
             ) : null}
-
             {service.focusAreas && service.focusAreas.length > 0 ? (
               <section aria-labelledby="service-focus-areas-title" className="space-y-4">
                 <h2 id="service-focus-areas-title" className="text-2xl leading-snug">
@@ -126,7 +141,6 @@ export default async function ServiceDetailsPage({
                 </ul>
               </section>
             ) : null}
-
             {service.approach ? (
               <section aria-labelledby="service-approach-title" className="space-y-4">
                 <h2 id="service-approach-title" className="text-2xl leading-snug">
@@ -135,10 +149,13 @@ export default async function ServiceDetailsPage({
                 <p className="leading-relaxed">{service.approach}</p>
               </section>
             ) : null}
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+            />
           </div>
         </section>
       </Container>
-
       <CTA
         heading={`Discuss ${service.title}`}
         subheading={`Share your objectives for ${service.category}. We'll respond with a clear next step.`}
