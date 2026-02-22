@@ -81,6 +81,27 @@ export default async function InsightDetailsPage({
 		);
 	}
 
+	const articleSchema = {
+		"@context": "https://schema.org",
+		"@type": "Article",
+		headline: insight.title,
+		description: insight.title ?? "",
+		author: {
+			"@type": "Organization",
+			name: "Rill Singh Consulting",
+		},
+		publisher: {
+			"@type": "Organization",
+			name: "Rill Singh Consulting",
+			logo: {
+				"@type": "ImageObject",
+				url: process.env.NEXT_PUBLIC_SITE_URL + "/logo.png",
+			},
+		},
+		datePublished: insight.date ?? "",
+		mainEntityOfPage: process.env.NEXT_PUBLIC_SITE_URL + "/insights/" + normalizedSlug,
+	};
+
 	return (
 		<main>
 			<Container>
@@ -103,6 +124,10 @@ export default async function InsightDetailsPage({
 							{insight.category ? `Category: ${insight.category}` : "No summary available."}
 						</div>
 						{/* Add more insight details here as needed */}
+						<script
+							type="application/ld+json"
+							dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+						/>
 					</div>
 				</section>
 			</Container>
