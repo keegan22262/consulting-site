@@ -1,36 +1,40 @@
+import { NextRequest } from "next/server";
+import { checkRateLimit } from "@/lib/security/rateLimit";
 import { searchAll } from "@/lib/sanity/search";
 
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 
-function getSingle(value: string | null): string {
-	return (value ?? "").trim();
-}
+export async function POST(req: NextRequest) {
+  try {
+    const ip =
+      req.headers.get("x-forwarded-for") ??
+      req.headers.get("x-real-ip") ??
+      "unknown";
 
-function parseLimit(value: string | null): number {
-	if (!value) return 20;
-	const parsed = Number(value);
-	if (!Number.isFinite(parsed)) return 20;
-	return Math.max(1, Math.min(50, Math.floor(parsed)));
-}
+    if (!checkRateLimit(ip, 10, 5 * 60 * 1000)) {
+      return Response.json(
+        { success: false, error: "Too many requests." },
+        { status: 429 }
+      );
+    }
 
-export async function GET(request: Request): Promise<Response> {
-	try {
-		const url = new URL(request.url);
-		const q = getSingle(url.searchParams.get("q"));
-		const limit = parseLimit(url.searchParams.get("limit"));
+    const body = await req.json();
+    const query = (body?.q ?? "").trim();
 
-		if (!q) {
-			return Response.json({ query: q, results: [] }, { status: 200 });
-		}
+    if (!query || query.length < 2 || query.length > 100) {
+      return Response.json(
+        { success: false, error: "Invalid search query." },
+        { status: 400 }
+      );
+    }
 
-		const results = await searchAll(q, { limit });
-		return Response.json({ query: q, results }, { status: 200 });
-	} catch (error) {
-		console.error("GET /api/search failed", { error });
-		return Response.json(
-			{ query: "", results: [], error: "Internal server error" },
-			{ status: 500 }
-		);
-	}
+    const results = await searchAll(query);
+
+    return Response.json({ success: true, results });
+  } catch {
+    return Response.json(
+      { success: false, error: "Internal server error." },
+      { status: 500 }
+    );
+  }
 }
