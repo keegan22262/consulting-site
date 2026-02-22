@@ -35,8 +35,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Rill Singh Consulting",
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+    logo: process.env.NEXT_PUBLIC_SITE_URL + "/logo.png",
+    sameAs: [],
+  };
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+      </head>
       <body className={`${inter.className} antialiased`}>
         <ContactModalProvider>
           <Header />
