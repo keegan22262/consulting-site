@@ -16,6 +16,9 @@ export const metadata: Metadata = {
 		title: "Search",
 		description: "Search services and insights.",
 	},
+	alternates: {
+		canonical: "/search",
+	},
 };
 
 type SearchPageProps = {
@@ -29,6 +32,7 @@ type SearchPageProps = {
 function getSingleParam(value: string | string[] | undefined): string {
 	return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
+export const revalidate = 300;
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
 	const q = getSingleParam(searchParams?.q).trim();
