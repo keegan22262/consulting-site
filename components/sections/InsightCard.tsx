@@ -3,11 +3,14 @@ import Link from "next/link";
 import Reveal from "../ui/Reveal";
 
 type InsightCardProps = {
-  slug: string;
-  title: string;
-  summary: string;
-  category: string;
-  date: string;
+	slug: string;
+	title: string;
+	summary: string;
+	category: string;
+	date: string;
+	documentType?: string;
+	domain?: string;
+	readingTime?: string;
 };
 
 function formatInsightDate(date: string) {
@@ -24,8 +27,10 @@ function formatInsightDate(date: string) {
   }).format(parsed);
 }
 
-export default function InsightCard({ slug, title, summary, category, date }: InsightCardProps) {
-  return (
+export default function InsightCard(props: InsightCardProps) {
+	const { slug, title, summary, category, date, documentType, domain, readingTime } = props;
+	const meta = [documentType, domain, readingTime].filter(Boolean);
+	return (
 		<Reveal className="h-full">
 			<article className="card-hover flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6">
 				<header>
@@ -47,10 +52,15 @@ export default function InsightCard({ slug, title, summary, category, date }: In
 							{title}
 						</Link>
 					</h3>
+					{meta.length > 0 && (
+						<p className="mt-1 text-xs text-slate-500">
+							{meta.join(" · ")}
+						</p>
+					)}
 				</header>
 
 				<p className="mt-2 text-sm leading-6 text-slate-600">{summary}</p>
 			</article>
 		</Reveal>
-  );
+	);
 }

@@ -15,6 +15,9 @@ export type InsightListItem = {
 	category?: string;
 	summary: string;
 	date?: string;
+	documentType?: string;
+	domain?: string;
+	readingTime?: string;
 };
 
 type PortableTextBlock = Record<string, unknown>;

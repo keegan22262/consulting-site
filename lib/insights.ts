@@ -7,6 +7,12 @@ export type Insight = {
 	category: string;
 	content: string;
 	related: string[];
+
+	// Newly added optional fields
+	documentType?: string;
+	domain?: string;
+	readingTime?: string;
+	sourceUrl?: string;
 };
 
 /**

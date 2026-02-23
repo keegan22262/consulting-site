@@ -176,5 +176,13 @@ export const page = defineType({
       of: [{ type: "block" }],
       fieldset: "homepage",
     }),
+    defineField({
+      name: "industries",
+      title: "Featured Industries",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "industry" }] }],
+      description: "Select industries to feature on the homepage",
+      fieldset: "homepage",
+    }),
   ],
 });

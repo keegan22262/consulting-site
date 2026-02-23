@@ -158,6 +158,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 										title={service.title}
 										summary={service.summary}
 										category={service.category ?? ""}
+										engagementType={service.engagementType}
+										timeHorizon={service.timeHorizon}
+										operationalScope={service.operationalScope}
 									/>
 								))}
 							</div>
@@ -184,6 +187,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 										summary={insight.summary}
 										category={insight.category ?? ""}
 										date={insight.date ?? ""}
+										documentType={insight.documentType}
+										domain={insight.domain}
+										readingTime={insight.readingTime}
 									/>
 								))}
 							</div>

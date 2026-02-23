@@ -39,6 +39,11 @@ export type Service = {
 	/** Optional: future hierarchy support for sub-services. */
 	parentServiceId?: string;
 	subServiceIds?: string[];
+
+	// Newly added optional fields
+	engagementType?: string;
+	timeHorizon?: string;
+	operationalScope?: string;
 };
 
 export type ServiceOverviewSection = {

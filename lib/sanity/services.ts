@@ -14,6 +14,9 @@ export type ServiceListItem = {
 	slug: string;
 	summary: string;
 	category?: string;
+	engagementType?: string;
+	timeHorizon?: string;
+	operationalScope?: string;
 };
 
 export type ServiceDetail = ServiceListItem & {
@@ -23,6 +26,9 @@ export type ServiceDetail = ServiceListItem & {
 	order?: number;
 	/** Optional: future expansion for cross-linking related insights. */
 	relatedInsights?: RelatedInsightListItem[];
+	engagementType?: string;
+	timeHorizon?: string;
+	operationalScope?: string;
 };
 
 export type RelatedInsightListItem = {
