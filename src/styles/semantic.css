@@ -1,0 +1,31 @@
+@layer base {
+  :root {
+    /* BACKGROUND */
+    --bg-primary: #FAFAFA;
+    --bg-inverse: #0A0A0A;
+
+    /* TEXT */
+    --text-primary: #0A0A0A;
+    --text-secondary: #525252;
+    --text-muted: #737373;
+    --text-inverse: #FAFAFA;
+
+    /* BORDER */
+    --border-subtle: #E5E5E5;
+    --border-strong: #D4D4D4;
+
+    /* ACCENT */
+    --accent-primary: #1B3A5C;
+    --accent-hover: #132B45;
+
+    /* SPACING */
+    --section-vertical: 96px;
+    --container-padding: 24px;
+
+    /* RADIUS */
+    --radius-card: 4px;
+
+    /* SHADOW */
+    --shadow-card-hover: 0 1px 4px rgba(0,0,0,0.06);
+  }
+}

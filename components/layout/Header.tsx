@@ -83,7 +83,7 @@ export default function Header() {
   return (
     <header
       className={
-        "border-b border-transparent bg-transparent transition-colors duration-[220ms] motion-reduce:transition-none" +
+        "border-b border-transparent bg-transparent transition-colors duration-220 motion-reduce:transition-none" +
         (isScrolled ? " bg-white/90 border-accent-700" : "")
       }
     >
