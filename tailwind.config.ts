@@ -52,6 +52,17 @@ const config: Config = {
       fontSize: extract(tokens.font.size),
       lineHeight: extract(tokens.font.line),
       letterSpacing: extract(tokens.font.tracking),
+
+      // Motion tokens from Figma
+      transitionDuration: {
+        fast: '120ms',
+        normal: '200ms',
+        slow: '320ms',
+      },
+      transitionTimingFunction: {
+        standard: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        emphasized: 'cubic-bezier(0.2, 0, 0, 1)',
+      },
     },
   },
   plugins: [],
