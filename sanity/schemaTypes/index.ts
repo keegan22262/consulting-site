@@ -50,3 +50,20 @@ export interface Industry {
   tags?: string[];
   order?: number;
 }
+
+export interface Homepage {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  summary?: string;
+  tags?: string[];
+  order?: number;
+  industries?: {
+    _id: string;
+    title: string;
+    slug: { current: string };
+    summary?: string;
+    tags?: string[];
+    order?: number;
+  }[];
+}
