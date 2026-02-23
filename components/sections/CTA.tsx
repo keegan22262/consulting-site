@@ -34,14 +34,14 @@ export default function CTA({
           {contactContext ? (
             <ContactTrigger
               context={contactContext}
-              className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-7 py-3.5 text-sm font-medium text-white transition-colors duration-fast motion-reduce:transition-none hover:bg-slate-900 hover:border-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-7 py-3.5 text-sm font-medium text-white transition-colors duration-200 motion-reduce:transition-none hover:bg-slate-900 hover:border-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
             >
               {buttonText}
             </ContactTrigger>
           ) : (
             <Link
               href={href}
-              className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-7 py-3.5 text-sm font-medium text-white transition-colors duration-fast motion-reduce:transition-none hover:bg-slate-900 hover:border-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-800 bg-slate-800 px-7 py-3.5 text-sm font-medium text-white transition-colors duration-200 motion-reduce:transition-none hover:bg-slate-900 hover:border-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
             >
               {buttonText}
             </Link>

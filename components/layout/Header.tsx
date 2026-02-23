@@ -12,7 +12,7 @@ type NavItem = {
 };
 
 const navLinkClassName =
-  "transition-colors duration-fast motion-reduce:transition-none hover:underline hover:decoration-slate-300 underline-offset-4 focus-visible:underline focus-visible:decoration-slate-300";
+  "transition-colors duration-200 motion-reduce:transition-none hover:underline hover:decoration-slate-300 underline-offset-4 focus-visible:underline focus-visible:decoration-slate-300";
 
 const navigation = {
   brand: { label: "Firm Name", href: "/" },
@@ -84,7 +84,7 @@ export default function Header() {
     <header
       className={
         "border-b border-transparent bg-transparent transition-colors duration-[220ms] motion-reduce:transition-none" +
-        (isScrolled ? " bg-white/90 border-border" : "")
+        (isScrolled ? " bg-white/90 border-accent-700" : "")
       }
     >
       <nav aria-label="Primary">
@@ -179,7 +179,7 @@ export default function Header() {
                       <Link
                         href={item.href}
                         role="menuitem"
-                        className="block rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors duration-fast motion-reduce:transition-none hover:bg-slate-50 focus:bg-slate-50 focus:outline-none"
+                        className="block rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors duration-200 motion-reduce:transition-none hover:bg-slate-50 focus:bg-slate-50 focus:outline-none"
                         onClick={() => setIsMoreOpen(false)}
                       >
                         {item.label}

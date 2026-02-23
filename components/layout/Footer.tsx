@@ -15,7 +15,7 @@ const legalLinks = [
 ] as const;
 
 const footerLinkClassName =
-  "transition-colors duration-fast motion-reduce:transition-none hover:underline hover:decoration-slate-300 underline-offset-4 focus-visible:underline focus-visible:decoration-slate-300";
+  "transition-colors duration-200 motion-reduce:transition-none hover:underline hover:decoration-slate-300 underline-offset-4 focus-visible:underline focus-visible:decoration-slate-300";
 
 function hasAnySocialLink(links: {
   linkedinUrl?: string;
@@ -40,7 +40,7 @@ function SocialIconLink({ label, href, children }: SocialIconProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors duration-fast motion-reduce:transition-none hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-500 transition-colors duration-200 motion-reduce:transition-none hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-300"
     >
       <span className="sr-only">{label}</span>
       {children}

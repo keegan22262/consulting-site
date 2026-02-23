@@ -54,25 +54,25 @@ body {
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium tracking-tight transition-colors duration-fast ease-out motion-reduce:transition-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium tracking-tight transition-colors duration-200 ease-out motion-reduce:transition-none;
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2;
     @apply disabled:pointer-events-none disabled:opacity-50;
   }
 
   .btn-primary {
-    @apply bg-brand text-white hover:bg-brand-hover;
+    @apply text-white hover:bg-accent-800;
   }
 
   .btn-secondary {
-    @apply border border-border bg-transparent text-text hover:bg-background-muted hover:border-border-strong;
+    @apply border border-accent-700 bg-transparent text-neutral-700 hover:border-accent-800;
   }
 
   .btn-text {
-    @apply bg-transparent text-brand hover:text-brand-hover hover:bg-background-muted;
+    @apply bg-transparent text-accent-700 hover:text-accent-800;
   }
 
   .card-hover {
-    @apply transition-shadow duration-fast ease-in-out motion-reduce:transition-none;
+    @apply transition-shadow duration-200 ease-in-out motion-reduce:transition-none;
   }
 }
 
