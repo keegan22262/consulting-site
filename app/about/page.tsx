@@ -1,5 +1,5 @@
-import Container from "../../components/layout/Container";
-import TrustSignals from "../../components/sections/TrustSignals";
+
+
 import type { Metadata } from "next";
 
 import { getPublishedPageBySlug } from "@/lib/sanity/pages";
@@ -162,7 +162,7 @@ export default async function AboutPage() {
 	return (
 		<main>
 			<section aria-labelledby="about-title">
-				<Container>
+				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						<header className="mx-auto max-w-3xl space-y-4">
 							<h1 id="about-title" className="text-4xl leading-tight">
@@ -173,13 +173,13 @@ export default async function AboutPage() {
 							</p>
 						</header>
 					</div>
-				</Container>
+				</div>
 			</section>
 
-			<TrustSignals />
+
 
 			<section aria-label="About details">
-				<Container>
+				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						<div className="mx-auto max-w-prose space-y-12">
 							<section aria-labelledby="mission-title" className="space-y-3">
@@ -218,7 +218,7 @@ export default async function AboutPage() {
 							</section>
 						</div>
 					</div>
-				</Container>
+				</div>
 			</section>
 		</main>
 	);

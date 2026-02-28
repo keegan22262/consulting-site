@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 
-import Container from "@/components/layout/Container";
-import InsightCard from "@/components/sections/InsightCard";
-import ServiceCard from "@/components/sections/ServiceCard";
+import IndustryCard from "@/components-v2/ui/IndustryCard";
+import ServiceCard from "@/components-v2/ui/ServiceCard";
 import {
 	getPublishedInsightThemes,
 	getPublishedServiceCategories,
@@ -52,7 +51,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 	return (
 		<main>
 			<section aria-labelledby="search-title">
-				<Container>
+			<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						<header className="mx-auto max-w-3xl space-y-4">
 							<h1 id="search-title" className="text-4xl leading-tight">
@@ -138,12 +137,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 							</div>
 						) : null}
 					</div>
-				</Container>
+			</div>
 			</section>
 
 			{services.length > 0 ? (
 				<section aria-labelledby="search-services-title">
-					<Container>
+				<div className="max-w-7xl mx-auto px-6">
 						<div className="py-16 md:py-24">
 							<div className="mx-auto max-w-3xl">
 								<h2 id="search-services-title" className="text-2xl leading-snug">
@@ -151,27 +150,26 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 								</h2>
 							</div>
 							<div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-								{services.map((service) => (
-									<ServiceCard
-										key={service.slug}
-										id={service.slug}
-										title={service.title}
-										summary={service.summary}
-										category={service.category ?? ""}
-										engagementType={service.engagementType}
-										timeHorizon={service.timeHorizon}
-										operationalScope={service.operationalScope}
-									/>
-								))}
+								   {services.map((service, index) => (
+									   <ServiceCard
+										   key={service.slug}
+										   slug={service.slug}
+										   title={service.title}
+										   focusAreas={service.summary}
+										   approach={service.summary}
+										   index={index}
+									   />
+									   // Note: v2 ServiceCard expects focusAreas and approach, but only summary is available from searchServices. If more detail is needed, update searchServices to include those fields.
+								   ))}
 							</div>
 						</div>
-					</Container>
+					</div>
 				</section>
 			) : null}
 
 			{insights.length > 0 ? (
 				<section aria-labelledby="search-insights-title">
-					<Container>
+					<div className="max-w-7xl mx-auto px-6">
 						<div className="py-16 md:py-24">
 							<div className="mx-auto max-w-3xl">
 								<h2 id="search-insights-title" className="text-2xl leading-snug">
@@ -179,22 +177,18 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 								</h2>
 							</div>
 							<div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-								{insights.map((insight) => (
-									<InsightCard
-										key={insight.slug}
-										slug={insight.slug}
-										title={insight.title}
-										summary={insight.summary}
-										category={insight.category ?? ""}
-										date={insight.date ?? ""}
-										documentType={insight.documentType}
-										domain={insight.domain}
-										readingTime={insight.readingTime}
-									/>
-								))}
+								   {insights.map((insight) => (
+									   <IndustryCard
+										   key={insight.slug}
+										   title={insight.title}
+										   description={insight.summary}
+										   href={`/insights/${insight.slug}`}
+									   />
+									   // Note: v2 IndustryCard expects title, description, href. Only summary is available for description from searchInsights.
+								   ))}
 							</div>
 						</div>
-					</Container>
+					</div>
 				</section>
 			) : null}
 		</main>

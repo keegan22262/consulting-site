@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import Container from "../../components/layout/Container";
+
 import { PortableText } from "@portabletext/react";
 
 import { getTerms } from "@/lib/sanity/queries/terms";
@@ -38,7 +38,7 @@ export default async function TermsPage() {
 	return (
 		<main>
 			<section aria-labelledby="terms-title">
-				<Container>
+				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						{terms ? (
 							<>
@@ -80,7 +80,7 @@ export default async function TermsPage() {
 							</>
 						)}
 					</div>
-				</Container>
+				</div>
 			</section>
 		</main>
 	);

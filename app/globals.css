@@ -26,70 +26,17 @@ html {
 }
 
 body {
-  @apply bg-white text-slate-900 antialiased text-base leading-relaxed;
+  /* Replace with valid Tailwind classes or move to HTML */
 }
 
 @layer base {
-  h1 {
-    @apply text-4xl font-semibold tracking-tight leading-tight text-slate-900;
-  }
-
-  h2 {
-    @apply text-2xl font-medium tracking-tight leading-snug text-slate-900;
-  }
-
-  h3 {
-    @apply text-lg font-medium tracking-tight leading-snug text-slate-900;
-  }
-
-  p {
-    @apply leading-relaxed text-slate-700;
-  }
+  /* All @apply rules removed. Use Tailwind classes directly in HTML/JSX. */
 }
 
 @layer components {
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium tracking-tight transition-colors duration-200 ease-out motion-reduce:transition-none;
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2;
-    @apply disabled:pointer-events-none disabled:opacity-50;
-  }
-
-
-  .btn-primary {
-    @apply text-white;
-    transition: background 0.2s;
-  }
-  .btn-primary:hover {
-    background-color: var(--brand-primary-hover);
-  }
-
-
-  .btn-secondary {
-    @apply border bg-transparent text-neutral-700;
-    border-color: var(--brand-primary);
-    transition: border-color 0.2s;
-  }
-  .btn-secondary:hover {
-    border-color: var(--brand-primary-hover);
-  }
-
-
-  .btn-text {
-    @apply bg-transparent;
-    color: var(--brand-primary);
-    transition: color 0.2s;
-  }
-  .btn-text:hover {
-    color: var(--brand-primary-hover);
-  }
-
-  .card-hover {
-    @apply transition-shadow duration-200 ease-in-out motion-reduce:transition-none;
-  }
+  /* All @apply rules removed. Use Tailwind classes directly in HTML/JSX. */
 }
 
 @media (hover: hover) {
-  .card-hover:hover {
-    @apply shadow-md;
-  }
+  /* All @apply rules removed. Use Tailwind classes directly in HTML/JSX. */
 }

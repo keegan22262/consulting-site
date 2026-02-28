@@ -1,6 +1,6 @@
 "use client";
 
-import Container from "../../components/layout/Container";
+
 
 type ErrorProps = {
 	error: Error & { digest?: string };
@@ -11,7 +11,7 @@ export default function Error({ reset }: ErrorProps) {
 	return (
 		<main>
 			<section aria-label="Services error">
-				<Container>
+				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24 max-w-2xl">
 						<h1 className="text-3xl leading-tight tracking-tight">
 							Our Services
@@ -29,7 +29,7 @@ export default function Error({ reset }: ErrorProps) {
 							</button>
 						</div>
 					</div>
-				</Container>
+				</div>
 			</section>
 		</main>
 	);

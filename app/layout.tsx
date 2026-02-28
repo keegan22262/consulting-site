@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
-import ContactModalProvider from "../components/modals/ContactModalProvider";
-import PageTransition from "../components/ui/PageTransition";
+
+import ClientLayout from "./ClientLayout";
 import "./globals.css";
 
 const inter = Inter({
@@ -54,13 +52,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <ContactModalProvider>
-          <Header />
-          <main>
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <Footer />
-        </ContactModalProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

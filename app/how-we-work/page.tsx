@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import Container from "../../components/layout/Container";
+
 import { getHowWeWork } from "@/lib/sanity/queries/howWeWork";
 
 export const metadata: Metadata = {
@@ -57,7 +57,7 @@ export default async function HowWeWorkPage() {
 	return (
 		<main>
 			<section aria-labelledby="how-we-work-title">
-				<Container>
+				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						<header className="mx-auto max-w-3xl space-y-4">
 							<h1 id="how-we-work-title" className="text-4xl leading-tight">
@@ -99,7 +99,7 @@ export default async function HowWeWorkPage() {
 							</ol>
 						</section>
 					</div>
-				</Container>
+				</div>
 			</section>
 		</main>
 	);

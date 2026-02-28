@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import Container from "../../components/layout/Container";
+
 import ContactForm from "./ContactForm";
 import { getContactPage } from "@/lib/sanity/queries/contactPage";
 
@@ -32,7 +32,7 @@ export default async function ContactPage() {
 	return (
 		<main>
 			<section aria-labelledby="contact-title">
-				<Container>
+				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						<header className="mx-auto max-w-3xl space-y-4">
 							<h1 id="contact-title" className="text-4xl leading-tight">
@@ -55,7 +55,7 @@ export default async function ContactPage() {
 							</div>
 						</section>
 					</div>
-				</Container>
+				</div>
 			</section>
 		</main>
 	);

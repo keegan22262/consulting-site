@@ -1,4 +1,4 @@
-import Container from "../../components/layout/Container";
+
 
 function SkeletonCard() {
 	return (
@@ -21,7 +21,7 @@ export default function Loading() {
 	return (
 		<main>
 			<section aria-label="Loading insights">
-				<Container>
+				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						<h1 className="text-4xl leading-tight">Insights</h1>
 						<p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-700">
@@ -34,7 +34,7 @@ export default function Loading() {
 							))}
 						</div>
 					</div>
-				</Container>
+				</div>
 			</section>
 		</main>
 	);

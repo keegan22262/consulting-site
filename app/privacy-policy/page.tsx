@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import Container from "../../components/layout/Container";
+
 import { PortableText } from "@portabletext/react";
 
 import { getPrivacyPolicy } from "@/lib/sanity/queries/privacyPolicy";
@@ -38,7 +38,7 @@ export default async function PrivacyPolicyPage() {
 	return (
 		<main>
 			<section aria-labelledby="privacy-policy-title">
-				<Container>
+				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						{policy ? (
 							<>
@@ -80,7 +80,7 @@ export default async function PrivacyPolicyPage() {
 							</>
 						)}
 					</div>
-				</Container>
+				</div>
 			</section>
 		</main>
 	);
