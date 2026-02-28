@@ -1,114 +1,54 @@
-import { defineField, defineType } from "sanity";
+import { defineType, defineField } from 'sanity';
 
 export const insight = defineType({
-	name: "insight",
-	title: "Insight",
-	type: "document",
+	name: 'insight',
+	title: 'Insight',
+	type: 'document',
 	fields: [
+		defineField({ name: 'title', title: 'Title', type: 'string', validation: rule => rule.required() }),
+		defineField({ name: 'slug', title: 'Slug', type: 'slug' }),
+		defineField({ name: 'summary', title: 'Summary', type: 'text' }),
+		defineField({ name: 'category', title: 'Category', type: 'string' }),
+		defineField({ name: 'date', title: 'Date', type: 'datetime' }),
+		defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
+		defineField({ name: 'relatedServices', title: 'Related Services', type: 'array', of: [{ type: 'reference', to: [{ type: 'service' }] }] }),
+		defineField({ name: 'readTime', title: 'Read Time', type: 'string' }),
+		defineField({ name: 'summaryPoints', title: 'Summary Points', type: 'array', of: [{ type: 'string' }] }),
 		defineField({
-			name: "title",
-			title: "Title",
-			type: "string",
-			description:
-				"Clear, consulting-style headline. Use one idea per insight; avoid internal acronyms.",
-			validation: (rule) => rule.required(),
-		}),
-		defineField({
-			name: "slug",
-			title: "Slug",
-			type: "slug",
-			description:
-				"URL identifier generated from the title. Keep stable after publishing to avoid broken links.",
-			options: {
-				source: "title",
-				maxLength: 96,
-				isUnique: (value, context) => context.defaultIsUnique(value, context),
-			},
-			validation: (rule) => rule.required(),
-		}),
-		defineField({
-			name: "summary",
-			title: "Summary",
-			type: "text",
-			description:
-				"Short executive summary used in lists and previews. Aim for 1–2 sentences; lead with the outcome or key finding.",
-			rows: 3,
-			validation: (rule) => rule.required().max(280),
-		}),
-		defineField({
-			name: "category",
-			title: "Category",
-			type: "string",
-			description:
-				"Primary lens for grouping insights. Keep this stable to support long-term navigation and reporting.",
-			options: {
-				list: [
-					{ title: "Strategy", value: "Strategy" },
-					{ title: "Digital", value: "Digital" },
-					{ title: "ESG", value: "ESG" },
-					{ title: "Tax", value: "Tax" },
-					{ title: "Public Sector", value: "PublicSector" },
-				],
-				layout: "dropdown",
-			},
-			validation: (rule) => rule.required(),
-		}),
-		defineField({
-			name: "date",
-			title: "Date",
-			type: "date",
-			description:
-				"Publication date used for sorting and display. Default is today; adjust to the intended publish date.",
-			initialValue: () => new Date().toISOString().slice(0, 10),
-			validation: (rule) => rule.required(),
-		}),
-		defineField({
-			name: "content",
-			title: "Content",
-			type: "array",
-			description:
-				"Main body. Use headings and lists to keep structure clear. Avoid marketing filler; prefer evidence and practical guidance.",
-			of: [{ type: "block" }],
-			validation: (rule) => rule.required(),
-		}),
-		defineField({
-			name: "relatedServices",
-			title: "Related Services",
-			type: "array",
-			description:
-				"Optional links to relevant services. Only relate services that are genuinely supported by the insight content.",
+			name: 'sections',
+			title: 'Article Sections',
+			type: 'array',
 			of: [
 				{
-					type: "reference",
-					to: [{ type: "service" }],
-				},
-			],
+					type: 'object',
+					fields: [
+						{ name: 'id', title: 'ID', type: 'string' },
+						{ name: 'heading', title: 'Heading', type: 'string' },
+						{ name: 'body', title: 'Body', type: 'array', of: [{ type: 'block' }] }
+					]
+				}
+			]
 		}),
+		defineField({ name: 'pullQuote', title: 'Pull Quote', type: 'text' }),
 		defineField({
-			name: "status",
-			title: "Status",
-			type: "string",
-			description:
-				"Publishing control. Draft items are for internal review and should not be treated as publish-ready. Use Published only after content, dates, and links are reviewed.",
-			options: {
-				list: [
-					{ title: "Draft", value: "draft" },
-					{ title: "Published", value: "published" },
-				],
-				layout: "radio",
-				direction: "horizontal",
-			},
-			initialValue: "draft",
-			validation: (rule) => rule.required(),
+			name: 'dataHighlights',
+			title: 'Data Highlights',
+			type: 'array',
+			of: [
+				{
+					type: 'object',
+					fields: [
+						{ name: 'label', title: 'Label', type: 'string' },
+						{ name: 'value', title: 'Value', type: 'string' }
+					]
+				}
+			]
 		}),
-	],
-	initialValue: {
-		status: "draft",
-	},
-	preview: {
-		select: {
-			title: "title",
-			subtitle: "category",
-		},
-	},
+		defineField({ name: 'industryTags', title: 'Industry Tags', type: 'array', of: [{ type: 'reference', to: [{ type: 'industry' }] }] }),
+		defineField({ name: 'serviceTags', title: 'Service Tags', type: 'array', of: [{ type: 'reference', to: [{ type: 'service' }] }] }),
+		defineField({ name: 'relatedSlugs', title: 'Related Insights', type: 'array', of: [{ type: 'reference', to: [{ type: 'insight' }] }] }),
+		defineField({ name: 'heroImage', title: 'Hero Image', type: 'image', options: { hotspot: true } })
+	]
 });
+
+export default insight;

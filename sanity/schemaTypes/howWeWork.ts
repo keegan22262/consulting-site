@@ -5,58 +5,12 @@ export const howWeWork = defineType({
 	title: "How We Work",
 	type: "document",
 	fields: [
-		defineField({
-			name: "intro",
-			title: "Intro",
-			type: "string",
-			description: "Short introductory statement for the How We Work page.",
-			validation: (rule) => rule.required(),
-		}),
-		defineField({
-			name: "steps",
-			title: "Steps",
-			type: "array",
-			description: "Exactly 4 engagement steps describing how a project unfolds.",
-			of: [
-				{
-					type: "object",
-					name: "step",
-					fields: [
-						defineField({
-							name: "title",
-							title: "Title",
-							type: "string",
-							validation: (rule) => rule.required(),
-						}),
-						defineField({
-							name: "description",
-							title: "Description",
-							type: "string",
-							validation: (rule) => rule.required(),
-						}),
-					],
-					preview: {
-						select: { title: "title" },
-						prepare(selection) {
-							return { title: selection.title || "Step" };
-						},
-					},
-				},
-			],
-			validation: (rule) => rule.required().min(4).max(4),
-		}),
-		defineField({
-			name: "deliveryModel",
-			title: "Delivery Model",
-			type: "string",
-			description: "Brief description of the engagement or delivery model.",
-		}),
-		defineField({
-			name: "partnerships",
-			title: "Partnerships",
-			type: "string",
-			description: "Brief description of partnership approach or philosophy.",
-		}),
+		defineField({ name: 'intro', title: 'Intro', type: 'text' }),
+		defineField({ name: 'steps', title: 'Steps', type: 'array', of: [{ type: 'string' }] }),
+		defineField({ name: 'deliveryModel', title: 'Delivery Model', type: 'reference', to: [{ type: 'deliveryModel' }] }),
+		defineField({ name: 'partnerships', title: 'Partnerships', type: 'array', of: [{ type: 'string' }] }),
+		defineField({ name: 'headline', title: 'Headline', type: 'string' }),
+		defineField({ name: 'metrics', title: 'Metrics', type: 'array', of: [ { type: 'object', fields: [ { name: 'label', title: 'Label', type: 'string' }, { name: 'value', title: 'Value', type: 'string' } ] } ] })
 	],
 	preview: {
 		prepare() {
@@ -64,3 +18,4 @@ export const howWeWork = defineType({
 		},
 	},
 });
+export default howWeWork;

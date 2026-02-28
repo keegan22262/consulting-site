@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+export const dynamic = 'force-dynamic';
 
 import IndustryCard from "@/components-v2/ui/IndustryCard";
 import ServiceCard from "@/components-v2/ui/ServiceCard";

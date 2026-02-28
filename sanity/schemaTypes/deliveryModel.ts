@@ -5,23 +5,25 @@ export const deliveryModel = defineType({
 	title: "Delivery Model",
 	type: "document",
 	fields: [
+		defineField({ name: 'targetMarket', title: 'Target Market', type: 'string' }),
+		defineField({ name: 'serviceDelivery', title: 'Service Delivery', type: 'string' }),
+		defineField({ name: 'overline', title: 'Overline', type: 'string' }),
+		defineField({ name: 'heading', title: 'Heading', type: 'string' }),
+		defineField({ name: 'description', title: 'Description', type: 'text' }),
 		defineField({
-			name: "targetMarket",
-			title: "Target Market",
-			type: "array",
-			description: "Target market segments the firm serves. Minimum 3.",
-			of: [{ type: "string" }],
-			options: { layout: "tags" },
-			validation: (rule) => rule.required().min(3),
-		}),
-		defineField({
-			name: "serviceDelivery",
-			title: "Service Delivery",
-			type: "array",
-			description: "Service delivery methods or channels. Minimum 3.",
-			of: [{ type: "string" }],
-			options: { layout: "tags" },
-			validation: (rule) => rule.required().min(3),
+			name: 'phases',
+			title: 'Phases',
+			type: 'array',
+			of: [
+				{
+					type: 'object',
+					fields: [
+						{ name: 'number', title: 'Phase Number', type: 'string' },
+						{ name: 'name', title: 'Name', type: 'string' },
+						{ name: 'body', title: 'Body', type: 'text' }
+					]
+				}
+			]
 		}),
 	],
 	preview: {
@@ -30,3 +32,5 @@ export const deliveryModel = defineType({
 		},
 	},
 });
+
+export default deliveryModel;

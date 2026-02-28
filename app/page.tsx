@@ -1,4 +1,5 @@
 import HeroSection from "@/components-v2/sections/HeroSection";
+export const dynamic = 'force-dynamic';
 import ServicesGridSection from "@/components-v2/sections/ServicesGridSection";
 import CTABlock from "@/components-v2/sections/CTABlock";
 

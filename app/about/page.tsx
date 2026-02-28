@@ -1,6 +1,7 @@
 
 
 import type { Metadata } from "next";
+export const dynamic = 'force-dynamic';
 
 import { getPublishedPageBySlug } from "@/lib/sanity/pages";
 
