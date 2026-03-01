@@ -1,34 +1,28 @@
+import { sanityClient } from "@/lib/sanity/client";
+import { getAllInsightsQuery } from "@/lib/sanity/queries/insight";
 
-import InsightsHeroSection from "@/components-v2/sections/InsightsHeroSection";
-import InsightsGridSection from "@/components-v2/sections/InsightsGridSection";
+export const dynamic = "force-dynamic";
 
-const insightsMock = [
-  {
-    slug: "institutionalizing-growth",
-    category: "Capital Strategy",
-    title: "Institutionalizing Growth Architecture",
-    excerpt: "How boards structure capital deployment for sustainable expansion."
-  },
-  {
-    slug: "platform-operating-models",
-    category: "Digital Transformation",
-    title: "Platform-Led Operating Models",
-    excerpt: "Architecting digital core systems for scale and resilience."
-  },
-  {
-    slug: "governance-discipline",
-    category: "Governance",
-    title: "Board-Level Capital Discipline",
-    excerpt: "Embedding institutional governance across complex organizations."
-  }
-];
+export default async function InsightsPage() {
+  const insights = await sanityClient.fetch(getAllInsightsQuery);
 
-export default async function Page() {
   return (
-    <>
-      <InsightsHeroSection />
-      <InsightsGridSection insights={insightsMock} />
-    </>
+    <main className="py-20">
+      <div className="mx-auto max-w-7xl px-6 sm:px-8">
+        <h1 className="text-3xl font-semibold">Insights</h1>
+        <div className="mt-10 space-y-6">
+          {insights?.map((insight: any) => (
+            <div key={insight._id} className="rounded-xl border p-6">
+              <h2 className="text-xl font-medium">{insight.title}</h2>
+              {insight.summary && (
+                <p className="mt-3 text-sm text-muted-foreground">
+                  {insight.summary}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
   );
 }
-

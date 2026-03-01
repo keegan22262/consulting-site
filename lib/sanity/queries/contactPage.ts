@@ -35,7 +35,7 @@ function normalizeString(value: unknown): string {
  * Returns null when the document does not exist or Sanity is not configured.
  */
 export const getContactPage = async (): Promise<ContactPage | null> => {
-	if (!sanityClient) return null;
+	// sanityClient is always defined
 
 	const result = await sanityFetch<ContactPageRecord | null>(CONTACT_PAGE_QUERY, undefined, {});
 

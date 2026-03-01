@@ -72,7 +72,7 @@ export async function searchServices(
 ): Promise<ServiceListItem[]> {
 	const normalizedTerm = normalizeTerm(term);
 	if (!normalizedTerm) return [];
-	if (!sanityClient) return [];
+	// sanityClient is always defined
 
 	const category = normalizeOptionalFilter(options?.category);
 	const params: Record<string, unknown> = { term: normalizedTerm };
@@ -116,7 +116,7 @@ export async function searchInsights(
 ): Promise<InsightListItem[]> {
 	const normalizedTerm = normalizeTerm(term);
 	if (!normalizedTerm) return [];
-	if (!sanityClient) return [];
+	// sanityClient is always defined
 
 	const theme = normalizeOptionalFilter(options?.theme);
 	const params: Record<string, unknown> = { term: normalizedTerm };
@@ -171,7 +171,7 @@ export async function searchAll(
 ): Promise<UnifiedSearchResult[]> {
 	const normalizedTerm = normalizeTerm(term);
 	if (!normalizedTerm) return [];
-	if (!sanityClient) return [];
+	// sanityClient is always defined
 
 	const limit = normalizeLimit(options?.limit);
 

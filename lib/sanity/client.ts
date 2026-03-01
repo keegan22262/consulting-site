@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient } from "@sanity/client";
-import type { SanityClient } from "@sanity/client";
+// import type { SanityClient } from "@sanity/client";
 
 type SanityConfig = {
 	projectId: string;
@@ -9,37 +9,31 @@ type SanityConfig = {
 	apiVersion: string;
 };
 
-function readEnv(name: string): string {
-	return (process.env[name] || "").trim();
-}
 
-function getSanityConfig(): SanityConfig | null {
-	const projectId = readEnv("NEXT_PUBLIC_SANITY_PROJECT_ID");
-	const dataset = readEnv("NEXT_PUBLIC_SANITY_DATASET");
-	const apiVersion = readEnv("NEXT_PUBLIC_SANITY_API_VERSION");
-
-	if (!projectId || !dataset || !apiVersion) return null;
-	return { projectId, dataset, apiVersion };
-}
 
 let hasWarned = false;
 
-function warnIfMissingConfig() {
-	if (hasWarned) return;
 
-	const missing = [
-		!readEnv("NEXT_PUBLIC_SANITY_PROJECT_ID") ? "NEXT_PUBLIC_SANITY_PROJECT_ID" : null,
-		!readEnv("NEXT_PUBLIC_SANITY_DATASET") ? "NEXT_PUBLIC_SANITY_DATASET" : null,
-		!readEnv("NEXT_PUBLIC_SANITY_API_VERSION") ? "NEXT_PUBLIC_SANITY_API_VERSION" : null,
-	].filter(Boolean);
 
-	if (missing.length === 0) return;
-	hasWarned = true;
-	console.warn(
-		`Sanity client is not configured (missing env vars: ${missing.join(", ")}). Sanity queries will be skipped.`
-	);
+
+function requiredEnv(name: string): string {
+	const value = process.env[name];
+	if (!value || value.trim() === "") {
+		throw new Error(`Missing required environment variable: ${name}`);
+	}
+	return value.trim();
 }
 
+const projectId = requiredEnv("NEXT_PUBLIC_SANITY_PROJECT_ID");
+const dataset = requiredEnv("NEXT_PUBLIC_SANITY_DATASET");
+const apiVersion = requiredEnv("NEXT_PUBLIC_SANITY_API_VERSION");
+
+export const sanityClient = createClient({
+	projectId,
+	dataset,
+	apiVersion,
+	useCdn: false,
+});
 /**
  * Server-only Sanity client for the Next.js App Router frontend.
  *
@@ -47,17 +41,3 @@ function warnIfMissingConfig() {
  * - Does not include queries or any browser-safe exposure.
  * - If env vars are missing, the client is null and fetch-layer code must handle fallback.
  */
-export const sanityClient: SanityClient | null = (() => {
-	const config = getSanityConfig();
-	if (!config) {
-		warnIfMissingConfig();
-		return null;
-	}
-
-	return createClient({
-		projectId: config.projectId,
-		dataset: config.dataset,
-		apiVersion: config.apiVersion,
-		useCdn: false,
-	});
-})();

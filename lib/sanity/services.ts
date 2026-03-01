@@ -52,7 +52,7 @@ type PublishedServiceRecord = {
 };
 
 export const getAllServices = async (): Promise<ServiceListItem[]> => {
-	if (!sanityClient) return [];
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<PublishedServiceRecord[]>(ALL_PUBLISHED_SERVICES_QUERY, {}, {});
@@ -80,7 +80,7 @@ export const getAllServices = async (): Promise<ServiceListItem[]> => {
 
 export const getServiceBySlug = async (slug: string): Promise<ServiceDetail | null> => {
 	if (!slug) return null;
-	if (!sanityClient) return null;
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<PublishedServiceRecord | null>(

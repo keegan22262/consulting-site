@@ -70,7 +70,7 @@ function mapRelatedServices(records: PublishedRelatedServiceRecord[] | undefined
 }
 
 export const getAllInsights = async (): Promise<InsightListItem[]> => {
-	if (!sanityClient) return [];
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<PublishedInsightRecord[]>(ALL_PUBLISHED_INSIGHTS_QUERY, {}, {});
@@ -97,7 +97,7 @@ export const getAllInsights = async (): Promise<InsightListItem[]> => {
 export const getLatestInsights = async (limit: number): Promise<InsightListItem[]> => {
 	const safeLimit = Number.isFinite(limit) ? Math.max(0, Math.min(50, Math.floor(limit))) : 0;
 	if (safeLimit === 0) return [];
-	if (!sanityClient) return [];
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<PublishedInsightRecord[]>(
@@ -127,7 +127,7 @@ export const getLatestInsights = async (limit: number): Promise<InsightListItem[
 
 export const getInsightBySlug = async (slug: string): Promise<InsightDetail | null> => {
 	if (!slug) return null;
-	if (!sanityClient) return null;
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<PublishedInsightRecord | null>(

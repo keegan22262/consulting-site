@@ -38,7 +38,7 @@ function normalizePortableText(value: unknown): PortableTextBlock[] {
  * Returns null when the document does not exist or Sanity is not configured.
  */
 export const getPrivacyPolicy = async (): Promise<PrivacyPolicy | null> => {
-	if (!sanityClient) return null;
+	// sanityClient is always defined
 
 	const result = await sanityFetch<PrivacyPolicyRecord | null>(
 		PRIVACY_POLICY_QUERY,

@@ -23,7 +23,7 @@ function normalizeString(value: unknown): string {
 }
 
 export async function getPublishedServiceCategories(): Promise<string[]> {
-	if (!sanityClient) return [];
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<unknown>(PUBLISHED_SERVICE_CATEGORIES_QUERY, {}, {
@@ -45,7 +45,7 @@ export async function getPublishedServiceCategories(): Promise<string[]> {
 }
 
 export async function getPublishedInsightThemes(): Promise<InsightThemeOption[]> {
-	if (!sanityClient) return [];
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<InsightThemeRecord[]>(

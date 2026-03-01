@@ -22,11 +22,7 @@ export async function sanityFetch<T>(
   params?: Record<string, unknown>,
   options?: SanityFetchOptions
 ): Promise<T> {
-  if (!sanityClient) {
-    // Keep build/runtime safe when Sanity isn't configured.
-    return null as unknown as T;
-  }
-
+  // sanityClient is always defined
   // Default to ISR with 5-minute revalidation unless overridden.
   const revalidate = typeof options?.revalidate === "number" ? options.revalidate : 300;
   const fetchOptions = { next: { revalidate } };

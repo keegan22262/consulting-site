@@ -33,8 +33,10 @@ export const metadata: Metadata = {
 
 export default async function Home() {
 	const home = await getPublishedHomePage();
+	if (process.env.NODE_ENV === "development") {
+		console.log("CMS DATA:", JSON.stringify(home, null, 2));
+	}
 
-	// Temporary mock for ServicesGridSection
 	const servicesMock = [
 		{
 			slug: "strategy-planning",
@@ -55,6 +57,7 @@ export default async function Home() {
 			approach: "Practical delivery and continuous improvement.",
 		},
 	];
+
 
 	const industriesMock = [
 		{
@@ -168,10 +171,10 @@ export default async function Home() {
 				</section>
 			) : null}
 
-			<ServicesGridSection services={servicesMock} />
 
+			<ServicesGridSection services={home?.services ?? []} />
 
-			<IndustriesOverview industries={industriesMock} />
+			<IndustriesOverview industries={home?.industries ?? []} />
 
 			<div className="py-16 md:py-24">
 				<TrustSignalsSection />

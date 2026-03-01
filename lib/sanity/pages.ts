@@ -47,7 +47,7 @@ export type PublishedHomePage = {
 export const getPublishedPageBySlug = async (slug: string): Promise<PublishedPage | null> => {
 	const normalizedSlug = slug?.trim();
 	if (!normalizedSlug) return null;
-	if (!sanityClient) return null;
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<PublishedPage | null>(
@@ -153,7 +153,7 @@ function normalizeSectionIntros(value: unknown): HomePageSectionIntro[] {
 }
 
 export const getPublishedHomePage = async (): Promise<PublishedHomePage | null> => {
-	if (!sanityClient) return null;
+	// sanityClient is always defined
 
 	try {
 		const result = await sanityFetch<Record<string, unknown> | null>(
