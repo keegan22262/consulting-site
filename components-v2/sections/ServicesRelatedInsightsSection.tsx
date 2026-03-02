@@ -2,23 +2,11 @@ import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
 import Link from "next/link";
 
-const RELATED_INSIGHTS = [
-  {
-    category: "Capital Strategy",
-    title: "Institutionalizing Growth Architecture",
-    slug: "institutionalizing-growth"
-  },
-  {
-    category: "Digital Transformation",
-    title: "Platform-Led Operating Models",
-    slug: "platform-led-operating-models"
-  },
-  {
-    category: "Governance",
-    title: "Board-Level Capital Discipline",
-    slug: "board-level-capital-discipline"
-  }
-];
+type RelatedInsight = {
+  category: string;
+  title: string;
+  slug: string;
+};
 
 function InsightMiniCard({
   category,
@@ -32,7 +20,7 @@ function InsightMiniCard({
   return (
     <Link
       href={`/insights/${slug}`}
-      className="group block bg-background-primary border border-border-subtle rounded-card overflow-hidden transition-fast ease-standard hover:shadow-sm"
+      className="group block bg-white border border-neutral-200 rounded-[12px] overflow-hidden transition duration-[200ms] ease hover:border-neutral-300 hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)]"
     >
       <div className="aspect-video bg-neutral-200" />
       <div className="p-6">
@@ -47,9 +35,13 @@ function InsightMiniCard({
   );
 }
 
-export default function ServicesRelatedInsightsSection() {
+interface ServicesRelatedInsightsSectionProps {
+  insights: RelatedInsight[];
+}
+
+export default function ServicesRelatedInsightsSection({ insights }: ServicesRelatedInsightsSectionProps) {
   return (
-    <SectionWrapper background="slate">
+    <SectionWrapper>
       <div className="flex items-center justify-between">
         <SectionHeader
           overline="Related Insights"
@@ -62,8 +54,8 @@ export default function ServicesRelatedInsightsSection() {
           Explore all insights →
         </Link>
       </div>
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {RELATED_INSIGHTS.map((insight) => (
+      <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+        {insights.slice(0, 3).map((insight) => (
           <InsightMiniCard
             key={insight.slug}
             category={insight.category}

@@ -37,12 +37,12 @@ function DeliverableBlock({
 
 export default function ServicesDeliverablesSection({ deliverables }: ServicesDeliverablesSectionProps) {
   return (
-    <SectionWrapper background="slate">
+    <SectionWrapper>
       <SectionHeader
         overline="What We Deliver"
         title="Structured Capabilities."
       />
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="rhythm-heading-grid grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
         {deliverables.map((item, index) => (
           <DeliverableBlock
             key={index}

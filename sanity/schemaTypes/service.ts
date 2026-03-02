@@ -7,6 +7,27 @@ export const service = defineType({
 	fields: [
 		defineField({ name: 'title', title: 'Title', type: 'string', validation: rule => rule.required() }),
 		defineField({ name: 'slug', title: 'Slug', type: 'string', validation: rule => rule.required().max(200) }),
+		defineField({
+			name: 'status',
+			title: 'Publication Status',
+			type: 'string',
+			options: {
+				list: [
+					{ title: 'Draft', value: 'draft' },
+					{ title: 'Published', value: 'published' }
+				],
+				layout: 'radio'
+			},
+			initialValue: 'draft',
+			validation: Rule => Rule.required()
+		}),
+		defineField({
+			name: 'featured',
+			title: 'Featured',
+			type: 'boolean',
+			initialValue: false,
+			description: 'Mark to feature on homepage selections.'
+		}),
 		defineField({ name: 'category', title: 'Category', type: 'string' }),
 		defineField({ name: 'summary', title: 'Summary', type: 'text' }),
 		defineField({ name: 'targetClients', title: 'Target Clients', type: 'string' }),

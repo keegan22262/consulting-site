@@ -7,6 +7,27 @@ export const insight = defineType({
 	fields: [
 		defineField({ name: 'title', title: 'Title', type: 'string', validation: rule => rule.required() }),
 		defineField({ name: 'slug', title: 'Slug', type: 'slug' }),
+		defineField({
+			name: 'status',
+			title: 'Publication Status',
+			type: 'string',
+			options: {
+				list: [
+					{ title: 'Draft', value: 'draft' },
+					{ title: 'Published', value: 'published' }
+				],
+				layout: 'radio'
+			},
+			initialValue: 'draft',
+			validation: Rule => Rule.required()
+		}),
+		defineField({
+			name: 'featured',
+			title: 'Featured',
+			type: 'boolean',
+			initialValue: false,
+			description: 'Mark to feature on homepage selections.'
+		}),
 		defineField({ name: 'summary', title: 'Summary', type: 'text' }),
 		defineField({ name: 'category', title: 'Category', type: 'string' }),
 		defineField({ name: 'date', title: 'Date', type: 'datetime' }),

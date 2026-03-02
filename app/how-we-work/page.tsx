@@ -23,37 +23,11 @@ type Step = {
 	description: string;
 };
 
-const fallbackSteps: Step[] = [
-	{
-		title: "Understand",
-		description:
-			"Clarify objectives, constraints, stakeholders, and the decisions that need to be made. We align on what success should mean in your context.",
-	},
-	{
-		title: "Diagnose",
-		description:
-			"Develop a clear view of the current situation—what is working, what is not, and where the real constraints sit—without unnecessary complexity.",
-	},
-	{
-		title: "Advise",
-		description:
-			"Provide practical options, trade-offs, and a recommended path. The goal is decision-ready guidance that can be acted on within operating realities.",
-	},
-	{
-		title: "Support",
-		description:
-			"Stay close to execution as needed—helping maintain alignment, remove friction, and keep focus on outcomes as work moves forward.",
-	},
-];
-
-const fallbackIntro =
-	"Engagements are designed to be structured, practical, and proportionate to your needs. We focus on improving decision quality, aligning stakeholders, and supporting accountable delivery.";
-
 export default async function HowWeWorkPage() {
 	const data = await getHowWeWork();
 
-	const intro = data?.intro || fallbackIntro;
-	const steps: Step[] = data?.steps && data.steps.length > 0 ? data.steps : fallbackSteps;
+	const intro = data?.intro || "";
+	const steps: Step[] = data?.steps && data.steps.length > 0 ? data.steps : [];
 
 	return (
 		<main>
@@ -65,9 +39,7 @@ export default async function HowWeWorkPage() {
 								How We Work
 							</h1>
 							<p className="text-lg leading-relaxed">{intro}</p>
-							<p className="leading-relaxed text-slate-600">
-								This is a general model. Scope and depth are tailored to context and objectives.
-							</p>
+							<p className="leading-relaxed text-slate-600">{""}</p>
 						</header>
 
 						<section aria-labelledby="how-we-work-steps-title" className="mt-16">
@@ -75,10 +47,7 @@ export default async function HowWeWorkPage() {
 								<h2 id="how-we-work-steps-title" className="text-2xl leading-snug">
 									A simple four-step model
 								</h2>
-								<p className="mt-3 leading-relaxed">
-									A clear structure helps teams move from ambiguity to action while keeping decisions and delivery
-									connected.
-								</p>
+								<p className="mt-3 leading-relaxed">{""}</p>
 							</div>
 
 							<ol className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">

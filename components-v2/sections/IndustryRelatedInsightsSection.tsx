@@ -16,7 +16,7 @@ function InsightMiniCard({ slug, title, category }: RelatedInsight) {
   return (
     <Link
       href={`/insights/${slug}`}
-      className="group block border border-border-subtle rounded-card p-6 transition-fast ease-standard hover:border-border-strong hover:shadow-sm"
+      className="group block border border-neutral-200 rounded-[12px] p-6 bg-white transition duration-[200ms] ease hover:border-neutral-300 hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)]"
     >
       <span className="block text-xs uppercase tracking-widest text-text-muted mb-2">
         {category}
@@ -43,7 +43,7 @@ export default function IndustryRelatedInsightsSection({ insights }: IndustryRel
           Explore all insights →
         </Link>
       </div>
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
         {insights.slice(0, 3).map((item) => (
           <InsightMiniCard
             key={item.slug}

@@ -8,6 +8,7 @@ import {
 	getPublishedServiceCategories,
 } from "@/lib/sanity/filters";
 import { searchInsights, searchServices } from "@/lib/sanity/search";
+import Button from "@/components-v2/ui/Button";
 
 export const metadata: Metadata = {
 	title: "Search",
@@ -76,12 +77,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 										className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
 										autoComplete="off"
 									/>
-									<button
-										type="submit"
-										className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-900 hover:bg-slate-50"
-									>
+									<Button variant="secondary" type="submit">
 										Search
-									</button>
+									</Button>
 								</div>
 
 								<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

@@ -1,30 +1,17 @@
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
 
-const DELIVERY_MODEL = [
-  {
-    label: "Diagnose",
-    subtitle: "Clarify strategic position",
-    body: "Structured assessment of market position, financial architecture, governance structures, and operational maturity."
-  },
-  {
-    label: "Design",
-    subtitle: "Architect institutional pathways",
-    body: "Blueprinting transformation initiatives, capital programs, operating models, and governance enhancements."
-  },
-  {
-    label: "Deliver",
-    subtitle: "Execute with discipline",
-    body: "Hands-on execution support, milestone tracking, performance oversight, and board-level reporting."
-  },
-  {
-    label: "Institutionalize",
-    subtitle: "Embed sustainable capability",
-    body: "Capability transfer, governance integration, KPI frameworks, and long-term resilience architecture."
-  }
-];
+type DeliveryPhase = {
+  label: string;
+  subtitle: string;
+  body: string;
+};
 
-export default function ServicesDeliveryModelSection() {
+interface ServicesDeliveryModelSectionProps {
+  phases: DeliveryPhase[];
+}
+
+export default function ServicesDeliveryModelSection({ phases }: ServicesDeliveryModelSectionProps) {
   return (
     <SectionWrapper>
       <SectionHeader
@@ -33,7 +20,7 @@ export default function ServicesDeliveryModelSection() {
       />
       <div className="w-12 h-0.5 bg-accent-primary mt-6 mb-12" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {DELIVERY_MODEL.map((phase, index) => (
+        {phases.map((phase, index) => (
           <div
             key={phase.label}
             className="border-t-2 border-accent-primary pt-6"

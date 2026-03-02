@@ -8,16 +8,17 @@ export interface IndustriesOverviewProps {
     description: string;
     slug: string;
   }[];
+  background?: "white" | "slate" | "primary" | "accent50" | "accent700" | "neutral50";
 }
 
-const IndustriesOverview = ({ industries }: IndustriesOverviewProps) => {
+const IndustriesOverview = ({ industries, background = "white" }: IndustriesOverviewProps) => {
   return (
-    <SectionWrapper>
+    <SectionWrapper background={background}>
       <SectionHeader
         title="Industries"
         description="We support organizations across a range of industries."
       />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-8 md:mt-12">
+      <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
         {industries.map((industry) => (
           <IndustryCard
             key={industry.slug}

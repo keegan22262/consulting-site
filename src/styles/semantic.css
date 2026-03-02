@@ -1,26 +1,63 @@
 @layer base {
   :root {
-    /* BACKGROUND */
-    --bg-primary: #FAFAFA;
-    --bg-inverse: #0A0A0A;
+    --n50: #FAFAFA;
+    --n100: #F5F5F5;
+    --n200: #E5E5E5;
+    --n300: #D4D4D4;
+    --n400: #A3A3A3;
+    --n500: #737373;
+    --n600: #525252;
+    --n700: #404040;
+    --n800: #262626;
+    --n900: #0A0A0A;
 
-    /* TEXT */
-    --text-primary: #0A0A0A;
-    --text-secondary: #525252;
-    --text-muted: #737373;
-    --text-inverse: #FAFAFA;
+    --a50: #F0F4F8;
+    --a100: #D9E4EF;
+    --a200: #B3C9DF;
+    --a300: #8DAECF;
+    --a500: #4A7196;
+    --a600: #375A80;
+    --a700: #1B3A5C;
+    --a800: #132B45;
+    --a900: #0C1C2E;
 
-    /* BORDER */
-    --border-subtle: #E5E5E5;
-    --border-strong: #D4D4D4;
+    --o500: #D97706;
+    --o600: #B45309;
+    --o700: #92400E;
 
-    /* ACCENT */
-    --accent-primary: #1B3A5C;
-    --accent-hover: #132B45;
+    --white: #FFFFFF;
+
+    --semantic-success: #1A7A3D;
+    --semantic-success-light: #EEF6F0;
+    --semantic-warning: #92610A;
+    --semantic-warning-light: #FDF6EC;
+    --semantic-error: #9B2318;
+    --semantic-error-light: #FBF0EF;
+
+    --SECTION_OVERLINE_COLOR: rgba(27,58,92,0.88);
+
+    --hero-gradient-dark: linear-gradient(to bottom, #0C1C2EB3 0%, #0C1C2ED9 60%, #0C1C2EF2 100%);
+    --hero-gradient-industries: linear-gradient(to bottom, #0C1C2EB3 0%, #0C1C2ED9 50%, #0C1C2EF2 100%);
+    --search-backdrop: rgba(10,10,10,0.5);
+    --drawer-backdrop: rgba(10,10,10,0.4);
+
+    --bg-primary: var(--n50);
+    --bg-inverse: var(--n900);
+
+    --text-primary: var(--n900);
+    --text-secondary: var(--n600);
+    --text-muted: var(--n500);
+    --text-inverse: var(--n50);
+
+    --border-subtle: var(--n200);
+    --border-strong: var(--n300);
+
+    --accent-primary: var(--a700);
+    --accent-hover: var(--a800);
 
     /* SPACING */
-    --section-vertical: 96px;
-    --container-padding: 24px;
+    --section-vertical: var(--space-96);
+    --container-padding: var(--space-24);
 
     /* RADIUS */
     --radius-card: 4px;

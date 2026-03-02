@@ -29,6 +29,20 @@ export const page = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "status",
+      title: "Publication Status",
+      type: "string",
+      options: {
+        list: [
+          { title: "Draft", value: "draft" },
+          { title: "Published", value: "published" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "draft",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "content",
       title: "Content",
       type: "array",

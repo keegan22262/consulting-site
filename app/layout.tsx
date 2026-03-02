@@ -10,21 +10,32 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com"),
+  metadataBase: new URL("https://rillsingh.com"),
   title: {
-    default: "Consulting Partners",
-    template: "%s | Consulting Partners",
+    default: "Rill Singh Limited",
+    template: "%s | Rill Singh Limited",
   },
   description:
-    "Senior-level advisory support for strategy, risk, and transformation—focused on clear decisions and measurable outcomes.",
+    "Institutional advisory across strategy, digital, finance, risk, sustainability, and public sector transformation.",
   openGraph: {
     type: "website",
-    title: {
-      default: "Consulting Partners",
-      template: "%s | Consulting Partners",
-    },
+    url: "https://rillsingh.com",
+    siteName: "Rill Singh Limited",
+    title: "Rill Singh Limited",
     description:
-      "Senior-level advisory support for strategy, risk, and transformation—focused on clear decisions and measurable outcomes.",
+      "Institutional advisory across strategy, digital, finance, risk, sustainability, and public sector transformation.",
+    images: [
+      {
+        url: "/og-default.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Rill Singh Limited",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    creator: "@rillsingh",
   },
 };
 

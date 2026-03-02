@@ -8,7 +8,6 @@ export const siteSettings = defineType({
 	type: "document",
 	// Reinforce singleton behavior in the Studio UI.
 	// The actual single-instance entry point is defined via the custom desk structure.
-	__experimental_actions: ["update", "publish"],
 	fields: [
 		defineField({
 			name: "title",

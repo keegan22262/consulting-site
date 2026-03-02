@@ -1,6 +1,7 @@
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
 import Link from "next/link";
+import ServiceCard from "@/components-v2/ui/ServiceCard";
 
 interface RelatedService {
   slug: string;
@@ -12,28 +13,9 @@ interface IndustryRelatedServicesSectionProps {
   services: RelatedService[];
 }
 
-function ServiceMiniCard({ slug, title, description }: RelatedService) {
-  return (
-    <Link
-      href={`/services/${slug}`}
-      className="group block border border-border-subtle rounded-card p-6 transition-fast ease-standard hover:border-border-strong hover:shadow-sm"
-    >
-      <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-fast">
-        {title}
-      </h3>
-      <p className="text-base text-text-secondary leading-relaxed mb-4">
-        {description}
-      </p>
-      <span className="text-sm font-medium text-accent-primary">
-        Explore service →
-      </span>
-    </Link>
-  );
-}
-
 export default function IndustryRelatedServicesSection({ services }: IndustryRelatedServicesSectionProps) {
   return (
-    <SectionWrapper background="slate">
+    <SectionWrapper>
       <div className="flex items-center justify-between">
         <SectionHeader
           overline="Related Capabilities"
@@ -46,13 +28,15 @@ export default function IndustryRelatedServicesSection({ services }: IndustryRel
           Explore all services →
         </Link>
       </div>
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {services.slice(0, 3).map((service) => (
-          <ServiceMiniCard
+      <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+        {services.slice(0, 3).map((service, index) => (
+          <ServiceCard
             key={service.slug}
             slug={service.slug}
             title={service.title}
-            description={service.description}
+            focusAreas={service.description}
+            approach={service.description}
+            index={index}
           />
         ))}
       </div>

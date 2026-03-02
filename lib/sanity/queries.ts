@@ -1,127 +1,136 @@
-// GROQ queries only (no fetching logic).
+import groq from "groq";
 
-/** Fetch all published services (for list pages). */
-export const ALL_PUBLISHED_SERVICES_QUERY = `
-*[_type == "service" && status == "published"]
-| order(coalesce(order, 999) asc, title asc)
-{
-  "id": _id,
-  title,
-  "slug": slug.current,
-  category,
-  summary,
-  targetClients,
-  "focusAreas": coalesce(focusAreas, []),
-  approach,
-  order
-}
+// Industries: fetch all industry documents for cards
+export const industriesQuery = groq`
+  *[_type == "industry" && (status == "published" || !defined(status))] | order(order asc) {
+    _id,
+    title,
+    "slug": coalesce(slug.current, slug),
+    summary,
+    tags,
+    order
+  }
 `;
 
-/** Fetch a single published service by slug (for detail pages). */
-export const PUBLISHED_SERVICE_BY_SLUG_QUERY = `
-*[_type == "service" && status == "published" && slug.current == $slug][0]
-{
-  "id": _id,
-  title,
-  "slug": slug.current,
-  category,
-  summary,
-  targetClients,
-  "focusAreas": coalesce(focusAreas, []),
-  approach,
-  order
-}
-`;
-
-/** Fetch a single published service by slug (full detail). */
-export const PUBLISHED_SERVICE_BY_SLUG_EXPANDED_QUERY = `
-*[_type == "service" && status == "published" && slug.current == $slug][0]
-{
-  "id": _id,
-  title,
-  "slug": slug.current,
-  category,
-  summary,
-  targetClients,
-  "focusAreas": coalesce(focusAreas, []),
-  approach,
-  order
-}
-`;
-
-/** Fetch all published insights, newest first (for list pages). */
-export const ALL_PUBLISHED_INSIGHTS_QUERY = `
-*[_type == "insight" && status == "published"]
-| order(publishDate desc)
-{
-  title,
-  "slug": slug.current,
-  excerpt,
-  body,
-  publishDate,
-  "themeTitle": theme->title,
-
-  // Optional cross-links (safe if absent in schema/documents)
-  "relatedServices": coalesce(
-    (relatedServices[]-> {
+export const getIndustryBySlugQuery = groq`
+  *[_type == "industry" && (status == "published" || !defined(status)) && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": coalesce(slug.current, slug),
+    summary,
+    description,
+    challenge,
+    regulatoryContext,
+    "relatedServices": coalesce(capabilities[]-> {
+      slug,
       title,
-      "slug": slug.current,
-      status
-    })[status == "published"]{ title, slug },
-    []
-  )
-}
+      "description": coalesce(summary, description)
+    }, []),
+    "relatedInsights": coalesce(relatedInsights[]-> {
+      "slug": coalesce(slug.current, slug),
+      title,
+      "category": coalesce(theme->title, category)
+    }, [])
+  }
 `;
 
-/** Fetch the latest N published insights (for home/teasers). */
-export const LATEST_PUBLISHED_INSIGHTS_QUERY = `
-*[_type == "insight" && status == "published"]
-| order(publishDate desc)
-[0...$limit]
-{
-  title,
-  "slug": slug.current,
-  excerpt,
-  publishDate,
-  "themeTitle": theme->title,
-
-  // Optional cross-links (safe if absent in schema/documents)
-  "relatedServices": coalesce(
-    (relatedServices[]-> {
-      title,
-      "slug": slug.current,
-      status
-    })[status == "published"]{ title, slug },
-    []
-  )
-}
+// 1. All Services
+export const getAllServicesQuery = groq`
+  *[_type == "service" && (status == "published" || !defined(status))] | order(title asc) {
+    _id,
+    title,
+    slug,
+    summary,
+    description,
+    offerings,
+    outcomes,
+    category,
+    engagementType,
+    timeHorizon,
+    operationalScope
+  }
 `;
 
-/** Fetch a single published insight by slug, including optional related services. */
-export const PUBLISHED_INSIGHT_BY_SLUG_EXPANDED_QUERY = `
-*[_type == "insight" && status == "published" && slug.current == $slug][0]
-{
-  title,
-  "slug": slug.current,
-  excerpt,
-  body,
-  publishDate,
-  "themeTitle": theme->title,
-
-  "relatedServices": coalesce(
-    (relatedServices[]-> {
+// 2. Service by Slug
+export const getServiceBySlugQuery = groq`
+  *[_type == "service" && (status == "published" || !defined(status)) && slug == $slug][0] {
+    _id,
+    title,
+    slug,
+    summary,
+    description,
+    targetClients,
+    focusAreas,
+    approach,
+    order,
+    deliverables,
+    "relatedIndustries": coalesce(relatedIndustries[]-> {
+      "slug": coalesce(slug.current, slug),
       title,
-      "slug": slug.current,
-      status
-    })[status == "published"]{ title, slug },
-    []
-  )
-}
+      "description": coalesce(summary, description)
+    }, []),
+    "relatedInsights": *[_type == "insight" && references(^._id) && (status == "published" || !defined(status))]
+      | order(coalesce(publishedAt, _createdAt) desc)[0...3] {
+        "slug": coalesce(slug.current, slug),
+        title,
+        "category": coalesce(theme->title, category)
+      },
+    offerings,
+    outcomes,
+    category,
+    engagementType,
+    timeHorizon,
+    operationalScope
+  }
+`;
+
+// 3. All Insights
+export const getAllInsightsQuery = groq`
+  *[_type == "insight" && (status == "published" || !defined(status))] | order(coalesce(publishedAt, _createdAt) desc) {
+    _id,
+    title,
+    "slug": coalesce(slug.current, slug),
+    summary,
+    "category": coalesce(theme->title, category),
+    "publishedAt": coalesce(publishedAt, _createdAt),
+    documentType,
+    domain,
+    readingTime,
+    sourceUrl
+  }
+`;
+
+// 4. Insight by Slug
+export const getInsightBySlugQuery = groq`
+  *[_type == "insight" && (status == "published" || !defined(status)) && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": coalesce(slug.current, slug),
+    summary,
+    "category": coalesce(theme->title, category),
+    "publishedAt": coalesce(publishedAt, _createdAt),
+    content,
+    body,
+    "relatedInsights": coalesce(relatedSlugs[]-> {
+      "slug": coalesce(slug.current, slug),
+      title,
+      "category": coalesce(theme->title, category)
+    }, []),
+    "relatedServices": coalesce(relatedServices[]-> {
+      slug,
+      title,
+      "summary": coalesce(summary, description)
+    }, []),
+    documentType,
+    domain,
+    readingTime,
+    sourceUrl
+  }
 `;
 
 /** Fetch a single published static page by slug. */
 export const PUBLISHED_PAGE_BY_SLUG_QUERY = `
-*[_type == "page" && (slug == $slug || slug.current == $slug)][0]
+*[_type == "page" && status == "published" && (slug == $slug || slug.current == $slug)][0]
 {
   title,
   "body": coalesce(body, content)
@@ -130,42 +139,10 @@ export const PUBLISHED_PAGE_BY_SLUG_QUERY = `
 
 /** Fetch a single published static page by slug (title + body only). */
 export const PUBLISHED_PAGE_TITLE_BODY_BY_SLUG_QUERY = `
-*[_type == "page" && (slug.current == $slug || slug == $slug)][0]
+*[_type == "page" && status == "published" && (slug.current == $slug || slug == $slug)][0]
 {
   title,
   body
-}
-`;
-
-/** Fetch published homepage configuration fields from the Page document with slug "home". */
-export const PUBLISHED_HOME_PAGE_QUERY = `
-*[_type == "page" && (slug.current == "home" || slug == "home")][0]
-{
-  title,
-  heroTitle,
-  heroSubtitle,
-  servicesIntro,
-  insightsIntro,
-  ctaText,
-  companyDescription,
-  operatingApproach,
-  problems,
-  differentiation,
-  capabilitiesIntro,
-  capabilityClusters,
-  audiences,
-  workingProcess,
-  heroCTA {
-    label,
-    href
-  },
-  "sectionIntros": coalesce(sectionIntros, []) {
-    sectionId,
-    title,
-    intro,
-    linkLabel,
-    linkHref
-  }
 }
 `;
 
@@ -185,10 +162,7 @@ export const UNIFIED_SEARCH_QUERY = `
 *[
   $term != "" &&
   _type in ["page", "service", "insight"] &&
-  (
-    _type == "page" ||
-    status == "published"
-  ) &&
+  (status == "published" || !defined(status)) &&
   (
     title match ("*" + $term + "*") ||
     summary match ("*" + $term + "*") ||
@@ -214,7 +188,7 @@ export const UNIFIED_SEARCH_QUERY = `
 export const SEARCH_PUBLISHED_SERVICES_QUERY = `
 *[
   _type == "service" &&
-  status == "published" &&
+  (status == "published" || !defined(status)) &&
   $term != "" &&
   (
     title match ("*" + $term + "*") ||
@@ -225,7 +199,7 @@ export const SEARCH_PUBLISHED_SERVICES_QUERY = `
 | order(coalesce(order, 999) asc, title asc)
 {
   title,
-  "slug": slug.current,
+  slug,
   category,
   summary
 }
@@ -235,7 +209,7 @@ export const SEARCH_PUBLISHED_SERVICES_QUERY = `
 export const SEARCH_PUBLISHED_INSIGHTS_QUERY = `
 *[
   _type == "insight" &&
-  status == "published" &&
+  (status == "published" || !defined(status)) &&
   $term != "" &&
   (
     title match ("*" + $term + "*") ||
@@ -268,9 +242,97 @@ export const SEARCH_PUBLISHED_INSIGHTS_QUERY = `
 }
 `;
 
+/** Back-compat: all services used by lib/sanity/services.ts */
+export const ALL_PUBLISHED_SERVICES_QUERY = `
+*[_type == "service" && (status == "published" || !defined(status))]
+| order(coalesce(order, 999) asc, title asc)
+{
+  "id": _id,
+  title,
+  slug,
+  summary,
+  category,
+  targetClients,
+  focusAreas,
+  approach,
+  order
+}
+`;
+
+/** Back-compat: service detail by slug used by lib/sanity/services.ts */
+export const PUBLISHED_SERVICE_BY_SLUG_EXPANDED_QUERY = `
+*[
+  _type == "service" &&
+  (status == "published" || !defined(status)) &&
+  slug == $slug
+][0]
+{
+  "id": _id,
+  title,
+  slug,
+  summary,
+  category,
+  targetClients,
+  focusAreas,
+  approach,
+  order
+}
+`;
+
+/** Back-compat: all insights used by lib/sanity/insights.ts */
+export const ALL_PUBLISHED_INSIGHTS_QUERY = `
+*[_type == "insight" && (status == "published" || !defined(status))]
+| order(coalesce(publishedAt, _createdAt) desc)
+{
+  title,
+  "slug": coalesce(slug.current, slug),
+  "excerpt": summary,
+  "publishDate": coalesce(publishedAt, _createdAt),
+  "themeTitle": coalesce(theme->title, category)
+}
+`;
+
+/** Back-compat: latest insights with configurable limit. */
+export const LATEST_PUBLISHED_INSIGHTS_QUERY = `
+*[_type == "insight" && (status == "published" || !defined(status))]
+| order(coalesce(publishedAt, _createdAt) desc)
+[0...$limit]
+{
+  title,
+  "slug": coalesce(slug.current, slug),
+  "excerpt": summary,
+  "publishDate": coalesce(publishedAt, _createdAt),
+  "themeTitle": coalesce(theme->title, category)
+}
+`;
+
+/** Back-compat: expanded insight by slug used by lib/sanity/insights.ts */
+export const PUBLISHED_INSIGHT_BY_SLUG_EXPANDED_QUERY = `
+*[
+  _type == "insight" &&
+  (status == "published" || !defined(status)) &&
+  slug.current == $slug
+][0]
+{
+  title,
+  "slug": coalesce(slug.current, slug),
+  body,
+  "excerpt": summary,
+  "publishDate": coalesce(publishedAt, _createdAt),
+  "themeTitle": coalesce(theme->title, category),
+  "relatedServices": coalesce(relatedServices, serviceTags)[]-> {
+    title,
+      slug,
+    summary,
+    "domain": category,
+      status
+  }
+}
+`;
+
 /** Fetch distinct categories used by published services (for filters). */
 export const PUBLISHED_SERVICE_CATEGORIES_QUERY = `
-array::unique(*[_type == "service" && status == "published" && defined(category)].category)
+array::unique(*[_type == "service" && (status == "published" || !defined(status)) && defined(category)].category)
 `;
 
 /** Fetch published insight themes (for filters). */

@@ -14,13 +14,13 @@ interface ServicesGridSectionProps {
 
 export default function ServicesGridSection({ services }: ServicesGridSectionProps) {
   return (
-    <SectionWrapper background="slate">
+    <SectionWrapper>
       <SectionHeader
         overline="Advisory Disciplines"
         title="10 Service Lines."
         description={undefined}
       />
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
         {services.map((svc, index) => (
           <ServiceCard
             key={svc.slug}

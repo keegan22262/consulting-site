@@ -9,13 +9,6 @@ type SanityConfig = {
 	apiVersion: string;
 };
 
-
-
-let hasWarned = false;
-
-
-
-
 function requiredEnv(name: string): string {
 	const value = process.env[name];
 	if (!value || value.trim() === "") {
@@ -25,14 +18,22 @@ function requiredEnv(name: string): string {
 }
 
 const projectId = requiredEnv("NEXT_PUBLIC_SANITY_PROJECT_ID");
-const dataset = requiredEnv("NEXT_PUBLIC_SANITY_DATASET");
+const datasetEnv = requiredEnv("NEXT_PUBLIC_SANITY_DATASET");
 const apiVersion = requiredEnv("NEXT_PUBLIC_SANITY_API_VERSION");
+const dataset = datasetEnv === "production" ? datasetEnv : "production";
+const useCdn = false;
+
+if (datasetEnv !== "production") {
+	console.warn(
+		`[sanity] Enforcing dataset "production" (was ${datasetEnv}). Update NEXT_PUBLIC_SANITY_DATASET if needed.`
+	);
+}
 
 export const sanityClient = createClient({
 	projectId,
 	dataset,
 	apiVersion,
-	useCdn: false,
+	useCdn,
 });
 /**
  * Server-only Sanity client for the Next.js App Router frontend.

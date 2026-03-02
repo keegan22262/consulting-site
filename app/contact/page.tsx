@@ -18,10 +18,8 @@ export const metadata: Metadata = {
 };
 
 const fallbackTitle = "Contact Us";
-const fallbackIntro =
-	"For now, the best way to reach us is via this page. Formal contact channels will be published as we approach launch.";
-const fallbackConsultationNote =
-	"If you share a brief summary of your objectives and context, we can respond with a clear next step.";
+const fallbackIntro = "";
+const fallbackConsultationNote = "";
 
 export default async function ContactPage() {
 	const data = await getContactPage();
@@ -49,7 +47,7 @@ export default async function ContactPage() {
 									Send a message
 								</h2>
 								<p className="mt-2 text-sm leading-6 text-slate-600">
-									Share a brief summary and we'll respond with a clear next step.
+									{consultationNote || ""}
 								</p>
 
 								<ContactForm />

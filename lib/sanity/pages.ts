@@ -3,7 +3,7 @@ import "server-only";
 import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 import { isNextDynamicServerUsageError } from "@/lib/sanity/nextErrors";
-import { PUBLISHED_HOME_PAGE_QUERY, PUBLISHED_PAGE_BY_SLUG_QUERY } from "@/lib/sanity/queries";
+import { PUBLISHED_PAGE_BY_SLUG_QUERY } from "@/lib/sanity/queries";
 
 type PortableTextBlock = { _type: string } & Record<string, unknown>;
 
@@ -157,8 +157,8 @@ export const getPublishedHomePage = async (): Promise<PublishedHomePage | null> 
 
 	try {
 		const result = await sanityFetch<Record<string, unknown> | null>(
-			PUBLISHED_HOME_PAGE_QUERY,
-			{},
+			PUBLISHED_PAGE_BY_SLUG_QUERY,
+			{ slug: "home" },
 			{
 				revalidate: 300,
 				tags: ["sanity:pages", "sanity:page:home"],

@@ -32,7 +32,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ open, onClose }) => {
     <div className="fixed inset-0 z-60">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40"
+        className="absolute inset-0 bg-[rgba(10,10,10,0.5)] transition-opacity duration-[200ms] ease"
         onClick={onClose}
       />
       {/* Centered panel */}
@@ -41,7 +41,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ open, onClose }) => {
         style={{ pointerEvents: "none" }}
       >
         <div
-          className="max-w-2xl w-full mx-auto mt-32 bg-white rounded-card shadow-lg p-8 transition-opacity duration-fast ease-standard"
+          className="max-w-2xl w-full mx-auto mt-32 bg-white rounded-card shadow-lg p-8 transition-opacity duration-[200ms] ease"
           style={{ pointerEvents: "auto" }}
           onClick={e => e.stopPropagation()}
         >

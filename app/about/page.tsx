@@ -6,8 +6,7 @@ export const dynamic = 'force-dynamic';
 import { getPublishedPageBySlug } from "@/lib/sanity/pages";
 
 const DEFAULT_ABOUT_TITLE = "About";
-const DEFAULT_ABOUT_DESCRIPTION =
-	"Learn how we work with leadership teams—senior-led, practical engagement models focused on clarity and outcomes.";
+const DEFAULT_ABOUT_DESCRIPTION = "About";
 
 type PortableTextChild = {
 	text?: string;
@@ -138,27 +137,12 @@ export default async function AboutPage() {
 	const cmsBody = cmsPage?.body as PortableTextBlock[] | undefined;
 	const cms = cmsPage ? extractAboutContent(cmsBody) : null;
 
-	const title = cmsPage?.title ?? "About Us";
-	const intro =
-		cms?.intro ??
-		"We provide independent, senior-level support to help leadership teams make clear decisions and execute with discipline. Our work is evidence-informed, rigorously structured, and designed to translate priorities into measurable outcomes.";
-	const mission =
-		cms?.mission ??
-		"Enable better decisions and stronger execution by bringing independence, rigor, and practical delivery to complex initiatives.";
-	const approach =
-		cms?.approach ??
-		"We work through structured assessment, stakeholder alignment, and clear decision support, then stay close to execution to remove friction and keep work moving. Deliverables are concise, traceable to decisions, and grounded in operating constraints.";
-	const whoIntro =
-		cms?.whoIntro ??
-		"We work with organizations that require clarity, alignment, and accountable execution—from growth-stage teams to established enterprises.";
-	const whoBullets =
-		cms && cms.whoBullets.length > 0
-			? cms.whoBullets.slice(0, 6)
-			: [
-				"Leadership teams shaping strategy and priorities",
-				"Functional leaders managing complex initiatives",
-				"Program owners coordinating cross-team delivery",
-			];
+	const title = cmsPage?.title ?? DEFAULT_ABOUT_TITLE;
+	const intro = cms?.intro ?? "";
+	const mission = cms?.mission ?? "";
+	const approach = cms?.approach ?? "";
+	const whoIntro = cms?.whoIntro ?? "";
+	const whoBullets = cms?.whoBullets?.slice(0, 6) ?? [];
 
 	return (
 		<main>
@@ -183,6 +167,7 @@ export default async function AboutPage() {
 				<div className="max-w-7xl mx-auto px-6">
 					<div className="py-16 md:py-24">
 						<div className="mx-auto max-w-prose space-y-12">
+							{mission ? (
 							<section aria-labelledby="mission-title" className="space-y-3">
 								<h2 id="mission-title" className="text-2xl leading-snug">
 									Our Mission
@@ -191,7 +176,9 @@ export default async function AboutPage() {
 									{mission}
 								</p>
 							</section>
+							) : null}
 
+							{approach ? (
 							<section aria-labelledby="approach-title" className="space-y-3">
 								<h2 id="approach-title" className="text-2xl leading-snug">
 									Our Approach
@@ -200,23 +187,24 @@ export default async function AboutPage() {
 									{approach}
 								</p>
 							</section>
+							) : null}
 
+							{whoIntro || whoBullets.length > 0 ? (
 							<section aria-labelledby="who-title" className="space-y-4">
 								<h2 id="who-title" className="text-2xl leading-snug">
 									Who We Work With
 								</h2>
-								<p className="leading-relaxed">
-									{whoIntro}
-								</p>
-								<ul className="space-y-3">
+								{whoIntro ? <p className="leading-relaxed">{whoIntro}</p> : null}
+								{whoBullets.length > 0 ? <ul className="space-y-3">
 									{whoBullets.map((item) => (
 										<li key={item} className="flex gap-3">
 											<span aria-hidden="true">•</span>
 											<span>{item}</span>
 										</li>
 									))}
-								</ul>
+								</ul> : null}
 							</section>
+							) : null}
 						</div>
 					</div>
 				</div>

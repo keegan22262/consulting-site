@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 
 const F = "inherit";
-const C = { a800: "#333", a700: "#555", a200: "#ccc" };
+const C = {
+  a800: "var(--a800)",
+  a700: "var(--a700)",
+  a200: "var(--a200)",
+};
 const M_DUR = "200ms";
 const M_CURVE = "ease";
 
@@ -26,7 +30,15 @@ export default function GatewayLink({ label, href }: { label: string; href: stri
       }}
     >
       {label}
-      <span style={{ fontSize: '1em' }}>→</span>
+      <span
+        style={{
+          fontSize: '1em',
+          opacity: hovered ? 1 : 0,
+          transition: `opacity ${M_DUR} ${M_CURVE}`,
+        }}
+      >
+        →
+      </span>
     </Link>
   );
 }

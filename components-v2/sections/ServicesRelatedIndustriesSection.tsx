@@ -20,7 +20,7 @@ function IndustryMiniCard({
   return (
     <Link
       href={`/industries/${slug}`}
-      className="group block border border-border-subtle rounded-card p-6 transition-fast ease-standard hover:border-border-strong hover:shadow-sm"
+      className="group block border border-neutral-200 rounded-[12px] p-6 bg-white transition duration-[200ms] ease hover:border-neutral-300 hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)]"
     >
       <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-fast">
         {title}
@@ -37,7 +37,7 @@ function IndustryMiniCard({
 
 export default function ServicesRelatedIndustriesSection({ industries }: ServicesRelatedIndustriesSectionProps) {
   return (
-    <SectionWrapper>
+    <SectionWrapper background="neutral50">
       <div className="flex items-center justify-between">
         <SectionHeader
           overline="Related Industries"
@@ -50,7 +50,7 @@ export default function ServicesRelatedIndustriesSection({ industries }: Service
           Explore all industries →
         </Link>
       </div>
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
         {industries.slice(0, 3).map((industry) => (
           <IndustryMiniCard
             key={industry.slug}

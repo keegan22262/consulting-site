@@ -9,36 +9,25 @@ interface IndustryContextSectionProps {
 
 export default function IndustryContextSection({ pressures, transformationFocus, institutionalShift }: IndustryContextSectionProps) {
   return (
-    <SectionWrapper>
-      <SectionHeader
-        overline="Sector Context"
-        title="Structural Realities."
-      />
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div>
-          <h3 className="text-sm font-semibold text-accent-primary mb-3">
-            Market Pressures
-          </h3>
-          <p className="text-base text-text-secondary leading-relaxed">
-            {pressures}
-          </p>
+    <SectionWrapper background="neutral50" padV={{ mobile: 48, tablet: 56, desktop: 72 }}>
+      <div className="mx-auto max-w-[900px]">
+        <SectionHeader overline="Sector Context" title="Structural Realities." />
+
+        <div className="rhythm-heading-grid grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-accent-primary">Market Pressures</h3>
+            <p className="text-base text-text-secondary leading-[1.7]">{pressures}</p>
+          </div>
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-accent-primary">Transformation Focus</h3>
+            <p className="text-base text-text-secondary leading-[1.7]">{transformationFocus}</p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-sm font-semibold text-accent-primary mb-3">
-            Transformation Focus
-          </h3>
-          <p className="text-base text-text-secondary leading-relaxed">
-            {transformationFocus}
-          </p>
+
+        <div className="mt-12 border-t border-border-subtle pt-10 space-y-3">
+          <h3 className="text-sm font-semibold text-accent-primary">Institutional Shift</h3>
+          <p className="text-base text-text-secondary leading-[1.7] max-w-[900px]">{institutionalShift}</p>
         </div>
-      </div>
-      <div className="mt-16 border-t border-border-subtle pt-12">
-        <h3 className="text-sm font-semibold text-accent-primary mb-3">
-          Institutional Shift
-        </h3>
-        <p className="text-base text-text-secondary leading-relaxed max-w-3xl">
-          {institutionalShift}
-        </p>
       </div>
     </SectionWrapper>
   );

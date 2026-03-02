@@ -1,5 +1,7 @@
 "use client";
 
+import Button from "@/components-v2/ui/Button";
+
 
 
 type ErrorProps = {
@@ -20,13 +22,9 @@ export default function Error({ reset }: ErrorProps) {
 							We could not load services at this time.
 						</p>
 						<div className="mt-6">
-							<button
-								type="button"
-								onClick={reset}
-								className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
-							>
+							<Button variant="secondary" onClick={reset}>
 								Try again
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>

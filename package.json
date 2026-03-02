@@ -22,6 +22,7 @@
     "next": "16.1.5",
     "next-sanity": "^11.6.12",
     "nodemailer": "^7.0.11",
+    "react-icons": "^5.2.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "resend": "^6.9.1",

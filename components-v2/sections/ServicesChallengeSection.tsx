@@ -8,31 +8,19 @@ interface ServicesChallengeSectionProps {
 
 export default function ServicesChallengeSection({ focusAreas, targetClients, approach }: ServicesChallengeSectionProps) {
   return (
-    <SectionWrapper>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-        <div className="border-l-4 border-accent-primary pl-6">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted mb-4">
-            Focus Areas
-          </h3>
-          <p className="text-base leading-relaxed text-text-secondary">
-            {focusAreas}
-          </p>
+    <SectionWrapper background="white">
+      <div className="max-w-[720px] space-y-8">
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted">Focus Areas</h3>
+          <p className="text-base leading-[1.7] text-text-secondary">{focusAreas}</p>
         </div>
-        <div className="border-l-4 border-accent-primary pl-6">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted mb-4">
-            Target Clients
-          </h3>
-          <p className="text-base leading-relaxed text-text-secondary">
-            {targetClients}
-          </p>
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted">Target Clients</h3>
+          <p className="text-base leading-[1.7] text-text-secondary">{targetClients}</p>
         </div>
-        <div className="border-l-4 border-accent-primary pl-6">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted mb-4">
-            Our Approach
-          </h3>
-          <p className="text-base leading-relaxed text-text-secondary">
-            {approach}
-          </p>
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-text-muted">Our Approach</h3>
+          <p className="text-base leading-[1.7] text-text-secondary">{approach}</p>
         </div>
       </div>
     </SectionWrapper>

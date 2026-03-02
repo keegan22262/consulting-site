@@ -37,7 +37,7 @@ export default function SectionHeader({
       )}
 
       {/* H2 Title */}
-      <h2 className="mt-1 text-2xl font-bold text-text-primary">
+      <h2 className="mt-1.5 text-2xl font-bold text-text-primary">
         {title}
       </h2>
 

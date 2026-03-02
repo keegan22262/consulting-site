@@ -1,0 +1,25 @@
+--- services ---
+digital:200
+comms:200
+finance:200
+legal:200
+people:200
+public:200
+sme:200
+strategy:200
+esg:200
+tax:200
+--- industries ---
+financial-services:500
+healthcare:500
+energy-resources:500
+industrials:500
+consumer-retail:500
+technology-digital:500
+transport-logistics:500
+public-sector:500
+real-assets:500
+private-capital:500
+education:500
+--- insights links ---
+count=0

@@ -18,6 +18,9 @@ import { capabilityStack } from './capabilityStack';
 import { growthStrategy } from './growthStrategy';
 import { joinUs } from './joinUs';
 import { industry } from './industry';
+import { deliveryPhase } from './deliveryPhase';
+import { pridePrinciple } from './pridePrinciple';
+import { trustSignal } from './trustSignal';
 
 export const schemaTypes = [
   page,
@@ -39,5 +42,8 @@ export const schemaTypes = [
   capabilityStack,
   growthStrategy,
   joinUs,
-  industry
+  industry,
+  deliveryPhase,
+  pridePrinciple,
+  trustSignal
 ];

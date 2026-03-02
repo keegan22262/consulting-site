@@ -2,8 +2,169 @@
 
 @import "../src/styles/semantic.css";
 
+:root {
+  --background: var(--n50);
+  --foreground: var(--n900);
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-128: 128px;
+
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --text-display-xl: 4rem;
+  --line-height-display-xl: 1.08;
+  --letter-spacing-display-xl: -0.015em;
+  --weight-display-xl: 600;
+
+  --text-h1: 3rem;
+  --line-height-h1: 1.12;
+  --letter-spacing-h1: -0.005em;
+  --weight-h1: 600;
+
+  --text-h2: 2rem;
+  --line-height-h2: 1.2;
+  --weight-h2: 600;
+
+  --text-h3: 1.375rem;
+  --line-height-h3: 1.25;
+  --weight-h3: 600;
+
+  --text-body-lg: 1.25rem;
+  --line-height-body-lg: 1.55;
+
+  --text-body: 1rem;
+  --line-height-body: 1.65;
+
+  --text-caption: 0.8125rem;
+  --line-height-caption: 1.5;
+}
+
+.layout-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: var(--space-24);
+  padding-right: var(--space-24);
+}
+
+.section-wrapper {
+  padding-top: var(--section-pad-mobile, var(--space-48));
+  padding-bottom: var(--section-pad-mobile, var(--space-48));
+}
+
+.hero-home {
+  padding-top: 80px;
+  padding-bottom: 48px;
+}
+
+.hero-standard {
+  padding-top: 56px;
+  padding-bottom: 48px;
+}
+
+.hero-industries {
+  padding-top: 72px;
+  padding-bottom: 56px;
+}
+
+.cta-block-pad {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+.rhythm-heading-grid {
+  margin-top: 32px;
+}
+
+.rhythm-body-cta {
+  margin-top: 40px;
+}
+
+@media (min-width: 768px) {
+  .layout-container {
+    padding-left: var(--space-32);
+    padding-right: var(--space-32);
+  }
+
+  .section-wrapper {
+    padding-top: var(--section-pad-tablet, var(--space-64));
+    padding-bottom: var(--section-pad-tablet, var(--space-64));
+  }
+
+  .hero-home {
+    padding-top: 112px;
+    padding-bottom: 64px;
+  }
+
+  .hero-standard {
+    padding-top: 80px;
+    padding-bottom: 64px;
+  }
+
+  .hero-industries {
+    padding-top: 96px;
+    padding-bottom: 72px;
+  }
+
+  .cta-block-pad {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+
+  .rhythm-heading-grid {
+    margin-top: 40px;
+  }
+
+  .rhythm-body-cta {
+    margin-top: 48px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-wrapper {
+    padding-top: var(--section-pad-desktop, var(--space-96));
+    padding-bottom: var(--section-pad-desktop, var(--space-96));
+  }
+
+  .hero-home {
+    padding-top: 144px;
+    padding-bottom: 96px;
+  }
+
+  .hero-standard {
+    padding-top: 104px;
+    padding-bottom: 80px;
+  }
+
+  .hero-industries {
+    padding-top: 128px;
+    padding-bottom: 96px;
+  }
+
+  .cta-block-pad {
+    padding-top: 96px;
+    padding-bottom: 96px;
+  }
+
+  .rhythm-heading-grid {
+    margin-top: 48px;
+  }
+
+  .rhythm-body-cta {
+    margin-top: 56px;
+  }
+}
+
 html {
   scroll-behavior: smooth;
+  font-family: var(--font-primary);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -12,21 +173,92 @@ html {
   }
 }
 
-:root {
-  --background: #ffffff96;
-  --foreground: #171717;
-}
-
-
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--n900);
+    --foreground: var(--n50);
   }
 }
 
 body {
-  /* Replace with valid Tailwind classes or move to HTML */
+  font-family: var(--font-primary) !important;
+  font-size: var(--text-body);
+  line-height: var(--line-height-body);
+}
+
+h1 {
+  font-size: var(--text-h1);
+  line-height: var(--line-height-h1);
+  letter-spacing: var(--letter-spacing-h1);
+  font-weight: var(--weight-h1);
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--weight-h2);
+}
+
+h3 {
+  font-size: var(--text-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--weight-h3);
+}
+
+p {
+  font-size: var(--text-body);
+  line-height: var(--line-height-body);
+}
+
+section.py-16.md\:py-24.bg-white.border-b.border-slate-100 h1.text-3xl.md\:text-5xl {
+  font-size: 2.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  font-weight: 600;
+}
+
+section.bg-neutral-900 h1.text-4xl.md\:text-3xl.sm\:text-2xl {
+  font-size: 2rem;
+  line-height: 1.12;
+  font-weight: 600;
+}
+
+section.bg-neutral-50 h1.text-4xl.md\:text-3xl.sm\:text-2xl.text-text-primary {
+  font-size: 2.25rem;
+  line-height: 1.12;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  section.py-16.md\:py-24.bg-white.border-b.border-slate-100 h1.text-3xl.md\:text-5xl {
+    font-size: 3rem;
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+  }
+
+  section.bg-neutral-900 h1.text-4xl.md\:text-3xl.sm\:text-2xl {
+    font-size: 2.5rem;
+  }
+
+  section.bg-neutral-50 h1.text-4xl.md\:text-3xl.sm\:text-2xl.text-text-primary {
+    font-size: 2.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  section.py-16.md\:py-24.bg-white.border-b.border-slate-100 h1.text-3xl.md\:text-5xl {
+    font-size: 4rem;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+
+  section.bg-neutral-900 h1.text-4xl.md\:text-3xl.sm\:text-2xl {
+    font-size: 3rem;
+  }
+
+  section.bg-neutral-50 h1.text-4xl.md\:text-3xl.sm\:text-2xl.text-text-primary {
+    font-size: 3.5rem;
+  }
 }
 
 @layer base {

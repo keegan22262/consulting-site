@@ -1,242 +1,314 @@
-import HeroSection from "@/components-v2/sections/HeroSection";
-export const dynamic = 'force-dynamic';
-import ServicesGridSection from "@/components-v2/sections/ServicesGridSection";
-import CTABlock from "@/components-v2/sections/CTABlock";
-
 import type { Metadata } from "next";
-
-
-
-import { getPublishedHomePage } from "@/lib/sanity/pages";
-import { PortableText } from "@portabletext/react";
-import ServiceCard from "@/components-v2/ui/ServiceCard";
-import SectionHeader from "@/components-v2/sections/SectionHeader";
+import Link from "next/link";
+import groq from "groq";
+import HeroSection from "@/components-v2/sections/HeroSection";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
-import IndustriesOverview from "@/components-v2/sections/IndustriesOverview";
+import SectionHeader from "@/components-v2/sections/SectionHeader";
+import ServiceCard from "@/components-v2/ui/ServiceCard";
+import IndustryCard from "@/components-v2/ui/IndustryCard";
+import InsightsGridSection from "@/components-v2/sections/InsightsGridSection";
+import ServicesDeliveryModelSection from "@/components-v2/sections/ServicesDeliveryModelSection";
 import TrustSignalsSection from "@/components-v2/sections/TrustSignalsSection";
+import CTABlock from "@/components-v2/sections/CTABlock";
+import { sanityClient } from "@/lib/sanity/client";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 120;
 
 export const metadata: Metadata = {
-	title: "Home",
-	description:
-		"Senior-level consulting support for strategy, risk, and transformation—focused on clear decisions and measurable outcomes.",
-	openGraph: {
-		title: "Home",
-		description:
-			"Senior-level consulting support for strategy, risk, and transformation—focused on clear decisions and measurable outcomes.",
-	},
-	alternates: {
-		canonical: "/",
-	},
+  title: "Home",
+  description: "Home",
+  alternates: {
+    canonical: "/",
+  },
+};
+
+const HOMEPAGE_SERVICES_QUERY = groq`*[_type == "service" && featured == true && (status == "published" || !defined(status))]
+  | order(order asc)[0...3] {
+    _id,
+    title,
+    "slug": coalesce(slug.current, slug),
+    summary,
+    description,
+    focusAreas,
+    approach
+  }`;
+
+const HOMEPAGE_INDUSTRIES_QUERY = groq`*[_type == "industry" && featured == true && (status == "published" || !defined(status))]
+  | order(order asc)[0...3] {
+    _id,
+    title,
+    "slug": coalesce(slug.current, slug),
+    summary,
+    description
+  }`;
+
+const HOMEPAGE_INSIGHTS_QUERY = groq`*[_type == "insight" && featured == true && (status == "published" || !defined(status))]
+  | order(date desc)[0...3] {
+    _id,
+    title,
+    "slug": coalesce(slug.current, slug),
+    summary,
+    "excerpt": coalesce(excerpt, summary, pt::text(coalesce(body, content))),
+    "category": coalesce(theme->title, category)
+  }`;
+
+const DELIVERY_PHASES_QUERY = groq`*[_type == "delivery_phase"] | order(number asc) {
+  _id,
+  label,
+  subtitle,
+  body
+}`;
+
+const PRIDE_PRINCIPLES_QUERY = groq`*[_type == "pride_principle"] | order(letter asc) {
+  _id,
+  letter,
+  title,
+  body
+}`;
+
+const TRUST_SIGNALS_QUERY = groq`*[_type == "trust_signal"] | order(coalesce(order, _createdAt) asc) {
+  _id,
+  title,
+  description
+}`;
+
+type ServiceQueryResult = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  summary?: string;
+  description?: string;
+  focusAreas?: string;
+  approach?: string;
+};
+
+type IndustryQueryResult = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  summary?: string;
+  description?: string;
+};
+
+type InsightQueryResult = {
+  _id: string;
+  title?: string;
+  slug?: string;
+  summary?: string;
+  excerpt?: string;
+  category?: string;
+};
+
+type DeliveryPhaseResult = {
+  _id: string;
+  label?: string;
+  subtitle?: string;
+  body?: string;
+};
+
+type PridePrincipleResult = {
+  _id: string;
+  letter?: string;
+  title?: string;
+  body?: string;
+};
+
+type TrustSignalResult = {
+  _id: string;
+  title?: string;
+  description?: string;
 };
 
 export default async function Home() {
-	const home = await getPublishedHomePage();
-	if (process.env.NODE_ENV === "development") {
-		console.log("CMS DATA:", JSON.stringify(home, null, 2));
-	}
+  const [servicesRaw, industriesRaw, insightsRaw, phasesRaw, principlesRaw, trustRaw] = await Promise.all([
+    sanityClient.fetch<ServiceQueryResult[]>(HOMEPAGE_SERVICES_QUERY),
+    sanityClient.fetch<IndustryQueryResult[]>(HOMEPAGE_INDUSTRIES_QUERY),
+    sanityClient.fetch<InsightQueryResult[]>(HOMEPAGE_INSIGHTS_QUERY),
+    sanityClient.fetch<DeliveryPhaseResult[]>(DELIVERY_PHASES_QUERY),
+    sanityClient.fetch<PridePrincipleResult[]>(PRIDE_PRINCIPLES_QUERY),
+    sanityClient.fetch<TrustSignalResult[]>(TRUST_SIGNALS_QUERY),
+  ]);
 
-	const servicesMock = [
-		{
-			slug: "strategy-planning",
-			title: "Strategy & Planning",
-			focusAreas: "Strategic advisory for growth, transformation, and restructuring.",
-			approach: "Evidence-based, outcome-driven planning.",
-		},
-		{
-			slug: "finance-performance",
-			title: "Finance & Performance",
-			focusAreas: "Financial modeling, performance management, and capital allocation.",
-			approach: "Disciplined financial analysis and reporting.",
-		},
-		{
-			slug: "operations-delivery",
-			title: "Operations & Delivery",
-			focusAreas: "Operational improvement, program delivery, and execution support.",
-			approach: "Practical delivery and continuous improvement.",
-		},
-	];
+  const services = (servicesRaw ?? [])
+    .filter((item): item is ServiceQueryResult & { slug: string; title: string; summary: string } =>
+      Boolean(item.slug && item.title && item.summary)
+    )
+    .map((item) => ({
+      slug: item.slug,
+      title: item.title,
+      focusAreas: Array.isArray(item.focusAreas) ? item.focusAreas.join(", ") : item.focusAreas ?? item.summary,
+      approach: item.description ?? item.approach ?? item.summary,
+      summary: item.summary,
+      description: item.description,
+    }));
 
+  const industries = (industriesRaw ?? [])
+    .filter((item): item is IndustryQueryResult & { slug: string; title: string } =>
+      Boolean(item.slug && item.title)
+    )
+    .map((item) => ({
+      slug: item.slug,
+      title: item.title,
+      description: item.summary ?? item.description ?? "",
+    }));
 
-	const industriesMock = [
-		{
-			title: "Financial Services",
-			description: "Banking & Capital Markets, Insurance, Private Equity",
-			slug: "financial-services",
-		},
-		{
-			title: "Technology & Digital",
-			description: "Enterprise Software, Fintech, Infrastructure",
-			slug: "technology-digital",
-		},
-		{
-			title: "Energy & Resources",
-			description: "Oil & Gas, Power & Utilities, Renewables",
-			slug: "energy-resources",
-		},
-	];
+  const insights = (insightsRaw ?? [])
+    .filter((item): item is InsightQueryResult & { slug: string; title: string; summary: string } =>
+      Boolean(item.slug && item.title && item.summary)
+    )
+    .map((item) => ({
+      slug: item.slug,
+      category: item.category ?? "Insight",
+      title: item.title,
+      excerpt: item.excerpt ?? item.summary,
+      summary: item.summary,
+    }));
+  const deliveryPhases = (phasesRaw ?? [])
+    .filter((item): item is DeliveryPhaseResult & { label: string; subtitle: string; body: string } =>
+      Boolean(item?.label && item?.subtitle && item?.body)
+    )
+    .map((item) => ({
+      label: item.label,
+      subtitle: item.subtitle,
+      body: item.body,
+    }));
 
-	function getSectionTitle(sectionId: string, fallback: string) {
-		const intro = home?.sectionIntros?.find((item) => item.sectionId === sectionId);
-		return intro?.title?.trim() || fallback;
-	}
+  const pridePrinciples = (principlesRaw ?? [])
+    .filter((item): item is PridePrincipleResult & { letter: string; title: string; body: string } =>
+      Boolean(item?.letter && item?.title && item?.body)
+    )
+    .map((item) => ({
+      letter: item.letter,
+      title: item.title,
+      body: item.body,
+    }));
 
-	const problemsTitle = getSectionTitle("problems", "Problems");
-	const differentiationTitle = getSectionTitle("differentiation", "Differentiation");
-	const capabilitiesTitle = getSectionTitle("capabilities", "Capabilities");
-	const audiencesTitle = getSectionTitle("audiences", "Audiences");
-	const workingProcessTitle = getSectionTitle("working-process", "Working process");
+  const trustIndicators = (trustRaw ?? [])
+    .filter((item): item is TrustSignalResult & { title: string; description: string } =>
+      Boolean(item?.title && item?.description)
+    )
+    .map((item) => ({
+      title: item.title,
+      description: item.description,
+    }));
 
-	return (
-		<>
-			<HeroSection
-				title={home?.heroTitle}
-				subtitle={home?.heroSubtitle}
-				description={undefined}
-				primaryCta={home?.heroCTA}
-				secondaryCta={undefined}
-			/>
+  if (services.length === 0) {
+    console.warn("[homepage] No featured services returned from CMS.");
+  }
+  if (industries.length === 0) {
+    console.warn("[homepage] No featured industries returned from CMS.");
+  }
+  if (insights.length === 0) {
+    console.warn("[homepage] No featured insights returned from CMS.");
+  }
+  if (deliveryPhases.length === 0) {
+    console.warn("[homepage] No delivery phases returned from CMS.");
+  }
+  if (pridePrinciples.length === 0) {
+    console.warn("[homepage] No PRIDE principles returned from CMS.");
+  }
+  if (trustIndicators.length === 0) {
+    console.warn("[homepage] No trust signals returned from CMS.");
+  }
 
-			{home?.problems && home.problems.length > 0 ? (
-				<section id="problems" aria-labelledby="problems-title" className="scroll-mt-24">
-					<div className="max-w-7xl mx-auto px-6">
-						<div className="py-16 md:py-24">
-							<header className="mx-auto max-w-3xl text-center">
-								<h2 id="problems-title">{problemsTitle}</h2>
-							</header>
-							<div className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-								{home.problems.map((problem, index) => (
-									<article
-										key={`${problem.title}-${index}`}
-										className="rounded-xl border border-slate-200 bg-white p-6"
-									>
-										<h3 className="text-sm font-medium tracking-tight text-slate-900">{problem.title}</h3>
-										<p className="mt-2 text-sm leading-6 text-slate-600">{problem.description}</p>
-									</article>
-								))}
-							</div>
-						</div>
-					</div>
-				</section>
-			) : null}
+  return (
+    <>
+      <HeroSection
+        title={insights[0]?.title ?? "Precision-led consulting for growth, transformation, and execution."}
+        subtitle={services[0]?.title ?? "Ten disciplines. One integrated practice."}
+        description={
+          insights[0]?.summary ??
+          "We help startups, SMEs, and enterprises execute complex change with disciplined delivery, measurable outcomes, and accountable teams."
+        }
+        primaryCta={{ label: "See How We Deliver", href: "/services" }}
+      />
 
-			{home?.differentiation && home.differentiation.length > 0 ? (
-				<section id="differentiation" aria-labelledby="differentiation-title" className="scroll-mt-24">
-					<div className="max-w-7xl mx-auto px-6">
-						<div className="py-16 md:py-24">
-							<header className="mx-auto max-w-3xl text-center">
-								<h2 id="differentiation-title">{differentiationTitle}</h2>
-							</header>
-							<div className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-								{home.differentiation.map((item, index) => (
-									<article
-										key={`${item.label}-${index}`}
-										className="rounded-xl border border-slate-200 bg-white p-6"
-									>
-										<h3 className="text-sm font-medium tracking-tight text-slate-900">{item.label}</h3>
-										<p className="mt-2 text-sm leading-6 text-slate-600">{item.explanation}</p>
-									</article>
-								))}
-							</div>
-						</div>
-					</div>
-				</section>
-			) : null}
+      <SectionWrapper background="neutral50">
+        <SectionHeader
+          overline="Advisory Architecture"
+          title="Ten disciplines. One integrated practice."
+          description="Each capability operates within a shared delivery framework — ensuring strategy, digital, financial, and governance workstreams are coordinated from diagnostic through handover."
+        />
+        <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+          {services.map((svc, index) => (
+            <ServiceCard
+              key={svc.slug ?? index}
+              slug={svc.slug ?? ""}
+              title={svc.title ?? "Advisory Service"}
+              focusAreas={svc.focusAreas ?? svc.summary ?? ""}
+              approach={svc.approach ?? svc.description ?? "Learn how we deliver outcomes."}
+              index={index}
+            />
+          ))}
+        </div>
+      </SectionWrapper>
 
-			{home?.capabilitiesIntro || (home?.capabilityClusters && home.capabilityClusters.length > 0) ? (
-				<section id="capabilities" aria-labelledby="capabilities-title" className="scroll-mt-24">
-					<div className="max-w-7xl mx-auto px-6">
-						<SectionWrapper>
-							<SectionHeader
-								overline="Services"
-								title="Advisory disciplines across growth, restructuring, and execution"
-								description="Integrated advisory across strategy, finance, operations, and performance transformation."
-							/>
+      <SectionWrapper background="neutral50" padV={{ mobile: 48, tablet: 56, desktop: 64 }}>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <h2 className="text-2xl font-semibold text-text-primary">Not sure where to start?</h2>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/services" className="rounded-card border border-neutral-300 px-4 py-2 text-sm font-semibold text-accent-primary hover:border-neutral-400">
+              Explore by Service
+            </Link>
+            <Link href="/industries" className="rounded-card border border-neutral-300 px-4 py-2 text-sm font-semibold text-accent-primary hover:border-neutral-400">
+              Explore by Industry
+            </Link>
+          </div>
+        </div>
+      </SectionWrapper>
 
-							{home?.capabilityClusters && home.capabilityClusters.length > 0 ? (
-								<div className="mx-auto mt-8 flex max-w-5xl flex-wrap justify-center gap-2">
-									{home.capabilityClusters.map((cluster, index) => (
-										<span
-											key={`${cluster}-${index}`}
-											className="rounded-full bg-slate-50 px-3 py-1 text-xs text-slate-700"
-										>
-											{cluster}
-										</span>
-									))}
-								</div>
-							) : null}
-						</SectionWrapper>
-					</div>
-				</section>
-			) : null}
+      <SectionWrapper background="white">
+        <SectionHeader
+          overline="Industry Coverage"
+          title="Deep sector knowledge. Continental reach."
+          description="Sector fluency calibrated to regulatory, capital, and digital realities."
+        />
+        <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+          {industries.map((industry) => (
+            <IndustryCard
+              key={industry.slug}
+              title={industry.title}
+              description={industry.description}
+              href={`/industries/${industry.slug}`}
+            />
+          ))}
+        </div>
+      </SectionWrapper>
 
+      <InsightsGridSection
+        insights={insights}
+        background="neutral50"
+        showFilters={false}
+        overline="Perspectives"
+        title="Institutional analysis. Applied insight."
+      />
 
-			<ServicesGridSection services={home?.services ?? []} />
+      <ServicesDeliveryModelSection phases={deliveryPhases} />
 
-			<IndustriesOverview industries={home?.industries ?? []} />
+      <SectionWrapper background="neutral50">
+        <SectionHeader overline="Our Philosophy" title="Built for Execution." />
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6">
+          {pridePrinciples.map((item) => (
+            <div key={item.letter} className="border-t-2 border-[var(--a700)] pt-6">
+              <div className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted mb-2">{item.letter}</div>
+              <h3 className="text-lg font-semibold text-text-primary mb-2">{item.title}</h3>
+              <p className="text-base leading-[1.6] text-text-secondary">{item.body}</p>
+            </div>
+          ))}
+        </div>
+      </SectionWrapper>
 
-			<div className="py-16 md:py-24">
-				<TrustSignalsSection />
-			</div>
+      <TrustSignalsSection indicators={trustIndicators} title="Institutional advisory. Measurable outcomes." intro={undefined} />
 
-			{home?.audiences && home.audiences.length > 0 ? (
-				<section id="audiences" aria-labelledby="audiences-title" className="scroll-mt-24">
-					<div className="max-w-7xl mx-auto px-6">
-						<div className="py-16 md:py-24">
-							<header className="mx-auto max-w-3xl text-center">
-								<h2 id="audiences-title">{audiencesTitle}</h2>
-							</header>
-							<div className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-								{home.audiences.map((audience, index) => (
-									<article
-										key={`${audience.name ?? "audience"}-${index}`}
-										className="rounded-xl border border-slate-200 bg-white p-6"
-									>
-										{audience.name ? (
-											<h3 className="text-sm font-medium tracking-tight text-slate-900">
-												{audience.name}
-											</h3>
-										) : null}
-										{audience.qualifier ? (
-											<p className="mt-2 text-sm leading-6 text-slate-600">{audience.qualifier}</p>
-										) : null}
-									</article>
-								))}
-							</div>
-						</div>
-					</div>
-				</section>
-			) : null}
-
-			{home?.workingProcess && home.workingProcess.length > 0 ? (
-				<section id="working-process" aria-labelledby="working-process-title" className="scroll-mt-24">
-					<div className="max-w-7xl mx-auto px-6">
-						<div className="py-16 md:py-24">
-							<header className="mx-auto max-w-3xl space-y-4 text-center">
-								<h2 id="working-process-title">{workingProcessTitle}</h2>
-							</header>
-							<div className="mx-auto mt-8 max-w-prose space-y-3 text-slate-700">
-								<PortableText
-									value={home.workingProcess}
-									components={{
-										block: {
-											normal: ({ children }) => <p className="leading-relaxed">{children}</p>,
-										},
-									}}
-								/>
-							</div>
-						</div>
-					</div>
-				</section>
-			) : null}
-
-			<CTABlock
-				title="Start a strategic conversation"
-				description="Engage with our advisory team to explore capital, transformation, and governance priorities."
-				primaryLabel="Contact us"
-				primaryHref="/contact"
-			/>
-		</>
-	);
+      <CTABlock
+        title="Begin a conversation with our advisory team."
+        description="Every engagement begins with a structured conversation to clarify objectives, constraints, and delivery expectations."
+        primaryLabel="Schedule an Introduction"
+        primaryHref="/contact"
+        secondaryLabel="Explore Services"
+        secondaryHref="/services"
+      />
+    </>
+  );
 }
