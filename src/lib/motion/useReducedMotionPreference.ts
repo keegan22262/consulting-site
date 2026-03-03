@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 const QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -9,16 +9,14 @@ const QUERY = "(prefers-reduced-motion: reduce)";
  * SSR-safe — defaults to `false` on the server.
  */
 export function useReducedMotionPreference(): boolean {
-	const [prefersReduced, setPrefersReduced] = useState(false);
-
-	useEffect(() => {
+	const subscribe = useCallback((onStoreChange: () => void) => {
 		const mql = window.matchMedia(QUERY);
-		setPrefersReduced(mql.matches);
-
-		const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
-		mql.addEventListener("change", handler);
-		return () => mql.removeEventListener("change", handler);
+		mql.addEventListener("change", onStoreChange);
+		return () => mql.removeEventListener("change", onStoreChange);
 	}, []);
 
-	return prefersReduced;
+	const getSnapshot = useCallback(() => window.matchMedia(QUERY).matches, []);
+	const getServerSnapshot = useCallback(() => false, []);
+
+	return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

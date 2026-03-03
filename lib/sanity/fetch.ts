@@ -28,6 +28,5 @@ export async function sanityFetch<T>(
   const fetchOptions = { next: { revalidate } };
 
   // We intentionally keep the wrapper thin; callers handle "not found" semantics.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return sanityClient.fetch<T>(query, (params ?? {}) as any, fetchOptions as any);
+  return sanityClient.fetch<T>(query, (params ?? {}) as Record<string, unknown>, fetchOptions as Record<string, unknown>);
 }
