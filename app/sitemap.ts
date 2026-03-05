@@ -19,35 +19,58 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com").replace(/\/$/, "");
   const lastModified = new Date().toISOString();
 
-  // Dynamic service slugs
-  const services = await getAllServices();
-  const serviceRoutes = services
-    .filter((s) => !!s.slug)
-    .map((s) => ({
-      url: `${baseUrl}/services/${s.slug}`,
-      lastModified,
-    }));
-
-  // Dynamic insight slugs
-  const insights = await getAllInsights();
-  const insightRoutes = insights
-    .filter((i) => !!i.slug)
-    .map((i) => ({
-      url: `${baseUrl}/insights/${i.slug}`,
-      lastModified,
-    }));
-
-  // About page (CMS-driven)
-  const aboutPage = await getPublishedPageBySlug("about");
-  const aboutRoute = aboutPage
-    ? [{ url: `${baseUrl}/about`, lastModified }]
-    : [];
-
-  // Static routes
+  // Static routes (always safe)
   const staticRoutes = STATIC_ROUTES.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified,
   }));
+
+  // Guard CMS calls — if Sanity env is missing, return static routes only
+  const hasSanityEnv =
+    !!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID &&
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "placeholder";
+
+  if (!hasSanityEnv) {
+    console.warn("[sitemap] Sanity env vars missing — returning static routes only");
+    return staticRoutes;
+  }
+
+  let serviceRoutes: MetadataRoute.Sitemap = [];
+  let insightRoutes: MetadataRoute.Sitemap = [];
+  let aboutRoute: MetadataRoute.Sitemap = [];
+
+  try {
+    const services = await getAllServices();
+    serviceRoutes = services
+      .filter((s) => !!s.slug)
+      .map((s) => ({
+        url: `${baseUrl}/services/${s.slug}`,
+        lastModified,
+      }));
+  } catch (e) {
+    console.warn("[sitemap] Failed to fetch services:", e);
+  }
+
+  try {
+    const insights = await getAllInsights();
+    insightRoutes = insights
+      .filter((i) => !!i.slug)
+      .map((i) => ({
+        url: `${baseUrl}/insights/${i.slug}`,
+        lastModified,
+      }));
+  } catch (e) {
+    console.warn("[sitemap] Failed to fetch insights:", e);
+  }
+
+  try {
+    const aboutPage = await getPublishedPageBySlug("about");
+    aboutRoute = aboutPage
+      ? [{ url: `${baseUrl}/about`, lastModified }]
+      : [];
+  } catch (e) {
+    console.warn("[sitemap] Failed to fetch about page:", e);
+  }
 
   return [
     ...staticRoutes,

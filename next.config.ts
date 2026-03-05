@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
 
   // Keep output lean; avoids shipping source maps to browsers by default.
   productionBrowserSourceMaps: false,
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

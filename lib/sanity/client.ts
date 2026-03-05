@@ -9,17 +9,18 @@ type SanityConfig = {
 	apiVersion: string;
 };
 
-function requiredEnv(name: string): string {
+function safeEnv(name: string, fallback: string): string {
 	const value = process.env[name];
 	if (!value || value.trim() === "") {
-		throw new Error(`Missing required environment variable: ${name}`);
+		console.warn(`[sanity] Missing environment variable: ${name} — using fallback "${fallback}"`);
+		return fallback;
 	}
 	return value.trim();
 }
 
-const projectId = requiredEnv("NEXT_PUBLIC_SANITY_PROJECT_ID");
-const datasetEnv = requiredEnv("NEXT_PUBLIC_SANITY_DATASET");
-const apiVersion = requiredEnv("NEXT_PUBLIC_SANITY_API_VERSION");
+const projectId = safeEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "placeholder");
+const datasetEnv = safeEnv("NEXT_PUBLIC_SANITY_DATASET", "production");
+const apiVersion = safeEnv("NEXT_PUBLIC_SANITY_API_VERSION", "2024-01-01");
 const dataset = datasetEnv === "production" ? datasetEnv : "production";
 const useCdn = false;
 

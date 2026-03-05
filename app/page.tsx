@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import groq from "groq";
 import HeroSection from "@/components-v2/sections/HeroSection";
+import FeaturedServicesSection from "@/components-v2/sections/FeaturedServicesSection";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
-import ServiceCard from "@/components-v2/ui/ServiceCard";
 import IndustryCard from "@/components-v2/ui/IndustryCard";
 import InsightsGridSection from "@/components-v2/sections/InsightsGridSection";
 import ServicesDeliveryModelSection from "@/components-v2/sections/ServicesDeliveryModelSection";
@@ -224,25 +224,7 @@ export default async function Home() {
         primaryCta={{ label: "See How We Deliver", href: "/services" }}
       />
 
-      <SectionWrapper background="neutral50">
-        <SectionHeader
-          overline="Advisory Architecture"
-          title="Ten disciplines. One integrated practice."
-          description="Each capability operates within a shared delivery framework — ensuring strategy, digital, financial, and governance workstreams are coordinated from diagnostic through handover."
-        />
-        <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
-          {services.map((svc, index) => (
-            <ServiceCard
-              key={svc.slug ?? index}
-              slug={svc.slug ?? ""}
-              title={svc.title ?? "Advisory Service"}
-              focusAreas={svc.focusAreas ?? svc.summary ?? ""}
-              approach={svc.approach ?? svc.description ?? "Learn how we deliver outcomes."}
-              index={index}
-            />
-          ))}
-        </div>
-      </SectionWrapper>
+      <FeaturedServicesSection />
 
       <SectionWrapper background="neutral50" padV={{ mobile: 48, tablet: 56, desktop: 64 }}>
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
