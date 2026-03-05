@@ -4,6 +4,7 @@ import groq from "groq";
 import HeroSection from "@/components-v2/sections/HeroSection";
 import FeaturedServicesSection from "@/components-v2/sections/FeaturedServicesSection";
 import CapabilityPanelsSection from "@/components-v2/sections/CapabilityPanelsSection";
+import DecisionGateway from "@/components-v2/sections/DecisionGateway";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
 import IndustryCard from "@/components-v2/ui/IndustryCard";
@@ -229,19 +230,7 @@ export default async function Home() {
 
       <CapabilityPanelsSection />
 
-      <SectionWrapper background="neutral50" padV={{ mobile: 48, tablet: 56, desktop: 64 }}>
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <h2 className="text-2xl font-semibold text-text-primary">Not sure where to start?</h2>
-          <div className="flex flex-wrap gap-3">
-            <Link href="/services" className="rounded-card border border-neutral-300 px-4 py-2 text-sm font-semibold text-accent-primary hover:border-neutral-400">
-              Explore by Service
-            </Link>
-            <Link href="/industries" className="rounded-card border border-neutral-300 px-4 py-2 text-sm font-semibold text-accent-primary hover:border-neutral-400">
-              Explore by Industry
-            </Link>
-          </div>
-        </div>
-      </SectionWrapper>
+      <DecisionGateway />
 
       <SectionWrapper background="white">
         <SectionHeader
