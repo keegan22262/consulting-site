@@ -6,6 +6,7 @@ import FeaturedServicesSection from "@/components-v2/sections/FeaturedServicesSe
 import CapabilityPanelsSection from "@/components-v2/sections/CapabilityPanelsSection";
 import DecisionGateway from "@/components-v2/sections/DecisionGateway";
 import FeaturedIndustriesSection from "@/components-v2/sections/FeaturedIndustriesSection";
+import InsightsCarouselSection from "@/components-v2/sections/InsightsCarouselSection";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
 import IndustryCard from "@/components-v2/ui/IndustryCard";
@@ -234,6 +235,8 @@ export default async function Home() {
       <DecisionGateway />
 
       <FeaturedIndustriesSection />
+
+      <InsightsCarouselSection />
 
       <SectionWrapper background="white">
         <SectionHeader

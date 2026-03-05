@@ -72,8 +72,10 @@ const TOTAL = INDUSTRIES.length;
 // Main section
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function FeaturedIndustriesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const wheelCooldown = useRef(false);
 
   const prevIndex = (activeIndex - 1 + TOTAL) % TOTAL;
   const nextIndex = (activeIndex + 1) % TOTAL;
@@ -86,6 +88,44 @@ export default function FeaturedIndustriesSection() {
     }, AUTO_INTERVAL);
     return () => clearInterval(id);
   }, [isPaused]);
+
+  // ─── Scoped wheel handler ─────────────────────────────────────────────────
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const handler = (e: WheelEvent) => {
+      // Only intercept when cursor is inside this section
+      if (!el.contains(e.target as Node)) return;
+
+      // Allow normal vertical scrolling — only capture horizontal-dominant gestures
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) return;
+
+      // Ignore tiny movements
+      if (Math.abs(e.deltaX) < 10) return;
+
+      // Smooth exit: at boundaries, let page scroll naturally
+      if (e.deltaX > 0 && activeIndex >= TOTAL - 1) return;
+      if (e.deltaX < 0 && activeIndex <= 0) return;
+
+      // Debounce to prevent rapid multi-fire
+      if (wheelCooldown.current) return;
+      wheelCooldown.current = true;
+      setTimeout(() => { wheelCooldown.current = false; }, 600);
+
+      e.preventDefault();
+
+      if (e.deltaX > 0) {
+        setActiveIndex((prev) => Math.min(prev + 1, TOTAL - 1));
+      } else {
+        setActiveIndex((prev) => Math.max(prev - 1, 0));
+      }
+      setIsPaused(true);
+    };
+
+    el.addEventListener("wheel", handler, { passive: false });
+    return () => el.removeEventListener("wheel", handler);
+  }, [activeIndex]);
 
   const advance = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % TOTAL);
@@ -119,6 +159,7 @@ export default function FeaturedIndustriesSection() {
 
   return (
     <section
+      ref={sectionRef}
       className="relative overflow-hidden bg-[#0A0A0A] py-16 md:py-20 lg:py-24"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
