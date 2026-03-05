@@ -3,6 +3,7 @@ import Link from "next/link";
 import groq from "groq";
 import HeroSection from "@/components-v2/sections/HeroSection";
 import FeaturedServicesSection from "@/components-v2/sections/FeaturedServicesSection";
+import CapabilityPanelsSection from "@/components-v2/sections/CapabilityPanelsSection";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
 import IndustryCard from "@/components-v2/ui/IndustryCard";
@@ -225,6 +226,8 @@ export default async function Home() {
       />
 
       <FeaturedServicesSection />
+
+      <CapabilityPanelsSection />
 
       <SectionWrapper background="neutral50" padV={{ mobile: 48, tablet: 56, desktop: 64 }}>
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
