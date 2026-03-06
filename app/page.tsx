@@ -7,11 +7,12 @@ import CapabilityPanelsSection from "@/components-v2/sections/CapabilityPanelsSe
 import DecisionGateway from "@/components-v2/sections/DecisionGateway";
 import FeaturedIndustriesSection from "@/components-v2/sections/FeaturedIndustriesSection";
 import InsightsCarouselSection from "@/components-v2/sections/InsightsCarouselSection";
+import PridePhilosophySection from "@/components-v2/sections/PridePhilosophySection";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
 import IndustryCard from "@/components-v2/ui/IndustryCard";
 import InsightsGridSection from "@/components-v2/sections/InsightsGridSection";
-import ServicesDeliveryModelSection from "@/components-v2/sections/ServicesDeliveryModelSection";
+import EngagementFrameworkSection from "@/components-v2/sections/EngagementFrameworkSection";
 import TrustSignalsSection from "@/components-v2/sections/TrustSignalsSection";
 import CTABlock from "@/components-v2/sections/CTABlock";
 import { sanityClient } from "@/lib/sanity/client";
@@ -264,20 +265,9 @@ export default async function Home() {
         title="Institutional analysis. Applied insight."
       />
 
-      <ServicesDeliveryModelSection phases={deliveryPhases} />
+      <EngagementFrameworkSection phases={deliveryPhases} />
 
-      <SectionWrapper background="neutral50">
-        <SectionHeader overline="Our Philosophy" title="Built for Execution." />
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6">
-          {pridePrinciples.map((item) => (
-            <div key={item.letter} className="border-t-2 border-[var(--a700)] pt-6">
-              <div className="text-xs font-semibold uppercase tracking-[0.14em] text-text-muted mb-2">{item.letter}</div>
-              <h3 className="text-lg font-semibold text-text-primary mb-2">{item.title}</h3>
-              <p className="text-base leading-[1.6] text-text-secondary">{item.body}</p>
-            </div>
-          ))}
-        </div>
-      </SectionWrapper>
+      <PridePhilosophySection principles={pridePrinciples} />
 
       <TrustSignalsSection indicators={trustIndicators} title="Institutional advisory. Measurable outcomes." intro={undefined} />
 
