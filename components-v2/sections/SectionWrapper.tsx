@@ -1,5 +1,7 @@
 "use client";
 import type { CSSProperties, ReactNode } from "react";
+import AtmosphericLayer from "./AtmosphericLayer";
+import SectionDivider from "./SectionDivider";
 
 interface SectionWrapperProps {
   children: ReactNode;
@@ -11,6 +13,10 @@ interface SectionWrapperProps {
     desktop?: number;
   };
   style?: CSSProperties;
+  /** Render subtle institutional gradient + texture behind content */
+  withAtmosphere?: boolean;
+  /** Render a subtle glow divider after this section */
+  withDivider?: boolean;
 }
 
 export default function SectionWrapper({
@@ -19,6 +25,8 @@ export default function SectionWrapper({
   className,
   padV,
   style,
+  withAtmosphere = false,
+  withDivider = false,
 }: SectionWrapperProps) {
   const sectionPadMobile = `${padV?.mobile ?? 48}px`;
   const sectionPadTablet = `${padV?.tablet ?? 64}px`;
@@ -41,18 +49,26 @@ export default function SectionWrapper({
       : "";
 
   return (
-    <section
-      className={["section-wrapper", bgClass, className].filter(Boolean).join(" ")}
-      style={{
-        ["--section-pad-mobile" as string]: sectionPadMobile,
-        ["--section-pad-tablet" as string]: sectionPadTablet,
-        ["--section-pad-desktop" as string]: sectionPadDesktop,
-        ...style,
-      }}
-    >
-      <div className="layout-container">
-        {children}
-      </div>
-    </section>
+    <>
+      <section
+        className={[
+          "section-wrapper relative",
+          bgClass,
+          className,
+        ].filter(Boolean).join(" ")}
+        style={{
+          ["--section-pad-mobile" as string]: sectionPadMobile,
+          ["--section-pad-tablet" as string]: sectionPadTablet,
+          ["--section-pad-desktop" as string]: sectionPadDesktop,
+          ...style,
+        }}
+      >
+        {withAtmosphere && <AtmosphericLayer />}
+        <div className="layout-container relative z-1">
+          {children}
+        </div>
+      </section>
+      {withDivider && <SectionDivider />}
+    </>
   );
 }

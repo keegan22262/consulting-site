@@ -164,6 +164,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-anchor: none;
   font-family: var(--font-primary);
 }
 

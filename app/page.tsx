@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import groq from "groq";
 import HeroSection from "@/components-v2/sections/HeroSection";
 import FeaturedServicesSection from "@/components-v2/sections/FeaturedServicesSection";
@@ -7,14 +6,11 @@ import CapabilityPanelsSection from "@/components-v2/sections/CapabilityPanelsSe
 import DecisionGateway from "@/components-v2/sections/DecisionGateway";
 import FeaturedIndustriesSection from "@/components-v2/sections/FeaturedIndustriesSection";
 import InsightsCarouselSection from "@/components-v2/sections/InsightsCarouselSection";
-import PridePhilosophySection from "@/components-v2/sections/PridePhilosophySection";
-import SectionWrapper from "@/components-v2/sections/SectionWrapper";
-import SectionHeader from "@/components-v2/sections/SectionHeader";
-import IndustryCard from "@/components-v2/ui/IndustryCard";
-import InsightsGridSection from "@/components-v2/sections/InsightsGridSection";
 import EngagementFrameworkSection from "@/components-v2/sections/EngagementFrameworkSection";
-import TrustSignalsSection from "@/components-v2/sections/TrustSignalsSection";
-import CTABlock from "@/components-v2/sections/CTABlock";
+import PridePhilosophySection from "@/components-v2/sections/PridePhilosophySection";
+import InstitutionalMetricsSection from "@/components-v2/sections/InstitutionalMetricsSection";
+import AtmosphericLayer from "@/components-v2/sections/AtmosphericLayer";
+import SectionDivider from "@/components-v2/sections/SectionDivider";
 import { sanityClient } from "@/lib/sanity/client";
 
 export const dynamic = "force-dynamic";
@@ -72,11 +68,7 @@ const PRIDE_PRINCIPLES_QUERY = groq`*[_type == "pride_principle"] | order(letter
   body
 }`;
 
-const TRUST_SIGNALS_QUERY = groq`*[_type == "trust_signal"] | order(coalesce(order, _createdAt) asc) {
-  _id,
-  title,
-  description
-}`;
+
 
 type ServiceQueryResult = {
   _id: string;
@@ -119,20 +111,15 @@ type PridePrincipleResult = {
   body?: string;
 };
 
-type TrustSignalResult = {
-  _id: string;
-  title?: string;
-  description?: string;
-};
+
 
 export default async function Home() {
-  const [servicesRaw, industriesRaw, insightsRaw, phasesRaw, principlesRaw, trustRaw] = await Promise.all([
+  const [servicesRaw, industriesRaw, insightsRaw, phasesRaw, principlesRaw] = await Promise.all([
     sanityClient.fetch<ServiceQueryResult[]>(HOMEPAGE_SERVICES_QUERY),
     sanityClient.fetch<IndustryQueryResult[]>(HOMEPAGE_INDUSTRIES_QUERY),
     sanityClient.fetch<InsightQueryResult[]>(HOMEPAGE_INSIGHTS_QUERY),
     sanityClient.fetch<DeliveryPhaseResult[]>(DELIVERY_PHASES_QUERY),
     sanityClient.fetch<PridePrincipleResult[]>(PRIDE_PRINCIPLES_QUERY),
-    sanityClient.fetch<TrustSignalResult[]>(TRUST_SIGNALS_QUERY),
   ]);
 
   const services = (servicesRaw ?? [])
@@ -189,15 +176,6 @@ export default async function Home() {
       body: item.body,
     }));
 
-  const trustIndicators = (trustRaw ?? [])
-    .filter((item): item is TrustSignalResult & { title: string; description: string } =>
-      Boolean(item?.title && item?.description)
-    )
-    .map((item) => ({
-      title: item.title,
-      description: item.description,
-    }));
-
   if (services.length === 0) {
     console.warn("[homepage] No featured services returned from CMS.");
   }
@@ -213,10 +191,6 @@ export default async function Home() {
   if (pridePrinciples.length === 0) {
     console.warn("[homepage] No PRIDE principles returned from CMS.");
   }
-  if (trustIndicators.length === 0) {
-    console.warn("[homepage] No trust signals returned from CMS.");
-  }
-
   return (
     <>
       <HeroSection
@@ -231,54 +205,48 @@ export default async function Home() {
 
       <FeaturedServicesSection />
 
-      <CapabilityPanelsSection />
+      <SectionDivider />
 
-      <DecisionGateway />
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <CapabilityPanelsSection />
+      </div>
 
-      <FeaturedIndustriesSection />
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <DecisionGateway />
+      </div>
 
-      <InsightsCarouselSection />
+      <SectionDivider />
 
-      <SectionWrapper background="white">
-        <SectionHeader
-          overline="Industry Coverage"
-          title="Deep sector knowledge. Continental reach."
-          description="Sector fluency calibrated to regulatory, capital, and digital realities."
-        />
-        <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
-          {industries.map((industry) => (
-            <IndustryCard
-              key={industry.slug}
-              title={industry.title}
-              description={industry.description}
-              href={`/industries/${industry.slug}`}
-            />
-          ))}
-        </div>
-      </SectionWrapper>
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <FeaturedIndustriesSection />
+      </div>
 
-      <InsightsGridSection
-        insights={insights}
-        background="neutral50"
-        showFilters={false}
-        overline="Perspectives"
-        title="Institutional analysis. Applied insight."
-      />
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <InsightsCarouselSection />
+      </div>
 
-      <EngagementFrameworkSection phases={deliveryPhases} />
+      <SectionDivider />
 
-      <PridePhilosophySection principles={pridePrinciples} />
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <EngagementFrameworkSection phases={deliveryPhases} />
+      </div>
 
-      <TrustSignalsSection indicators={trustIndicators} title="Institutional advisory. Measurable outcomes." intro={undefined} />
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <PridePhilosophySection principles={pridePrinciples} />
+      </div>
 
-      <CTABlock
-        title="Begin a conversation with our advisory team."
-        description="Every engagement begins with a structured conversation to clarify objectives, constraints, and delivery expectations."
-        primaryLabel="Schedule an Introduction"
-        primaryHref="/contact"
-        secondaryLabel="Explore Services"
-        secondaryHref="/services"
-      />
+      <SectionDivider />
+
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <InstitutionalMetricsSection />
+      </div>
     </>
   );
 }

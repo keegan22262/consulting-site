@@ -15,6 +15,7 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 const AUTO_INTERVAL = 5000;
@@ -73,6 +74,7 @@ const TOTAL = INDUSTRIES.length;
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function FeaturedIndustriesSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [revealRef, revealStyle] = useScrollReveal();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const wheelCooldown = useRef(false);
@@ -159,8 +161,12 @@ export default function FeaturedIndustriesSection() {
 
   return (
     <section
-      ref={sectionRef}
+      ref={(el) => {
+        (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
+        revealRef(el);
+      }}
       className="relative overflow-hidden bg-[#0A0A0A] py-16 md:py-20 lg:py-24"
+      style={revealStyle}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >

@@ -4,9 +4,9 @@ import { useRef, useState, useEffect, useMemo } from "react";
 import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPreference";
 
 // ─── Scroll-reveal motion constants ──────────────────────────────────────────
-const DURATION_MS = 700;
+const DURATION_MS = 800;
 const STAGGER_MS = 120;
-const TRANSLATE_Y = 24; // px
+const TRANSLATE_Y = 32; // px
 
 export interface ScrollRevealStyle {
   opacity: number;
