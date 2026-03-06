@@ -10,7 +10,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  AnimatePresence,
   motion,
   useMotionValue,
   useTransform,
@@ -19,7 +18,7 @@ import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 const AUTO_INTERVAL = 5000;
-const SPRING = { type: "spring" as const, stiffness: 120, damping: 20, mass: 0.6 };
+const TRANSITION = { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const };
 
 // ─── Industry data ───────────────────────────────────────────────────────────
 const INDUSTRIES = [
@@ -78,9 +77,20 @@ export default function FeaturedIndustriesSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const wheelCooldown = useRef(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [cardOffset, setCardOffset] = useState(460);
 
-  const prevIndex = (activeIndex - 1 + TOTAL) % TOTAL;
-  const nextIndex = (activeIndex + 1) % TOTAL;
+  // ─── Responsive card offset (matches original grid spacing) ────────────────
+  useEffect(() => {
+    function updateOffset() {
+      if (carouselRef.current) {
+        setCardOffset(carouselRef.current.offsetWidth * 0.36);
+      }
+    }
+    updateOffset();
+    window.addEventListener("resize", updateOffset);
+    return () => window.removeEventListener("resize", updateOffset);
+  }, []);
 
   // ─── Autoplay ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -165,11 +175,46 @@ export default function FeaturedIndustriesSection() {
         (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
         revealRef(el);
       }}
-      className="relative overflow-hidden bg-[#0A0A0A] py-16 md:py-20 lg:py-24"
-      style={revealStyle}
+      className="relative overflow-hidden py-16 md:py-20 lg:py-24"
+      style={{
+        ...revealStyle,
+        background: "linear-gradient(180deg, #0c1c2e 0%, #10263f 40%, #142e4a 100%)",
+      }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      {/* ── Atmospheric background layers ── */}
+      {/* Radial glow behind cards */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 35%, transparent 70%)",
+        }}
+      />
+      {/* Blurred architectural texture */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: "url(/images/advisory/institutional-01.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "70% center",
+          opacity: 0.05,
+          filter: "blur(60px)",
+          transform: "scale(1.1)",
+        }}
+      />
+      {/* Gloss highlight */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(120deg, rgba(255,255,255,0.08), transparent 40%)",
+        }}
+      />
       {/* Section header */}
       <div className="layout-container mb-10 md:mb-14">
         <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
@@ -183,25 +228,31 @@ export default function FeaturedIndustriesSection() {
         </p>
       </div>
 
-      {/* ── 3-lane carousel grid ── */}
+      {/* ── Carousel container ── */}
       <div
-        className="mx-auto grid max-w-7xl grid-cols-[1fr_1.4fr_1fr] items-center gap-4 px-4 md:gap-6 lg:gap-8"
+        ref={carouselRef}
+        className="relative mx-auto max-w-7xl overflow-hidden px-4 md:px-6 lg:px-8"
         style={{ perspective: "1200px" }}
       >
-        <AnimatePresence mode="popLayout">
-          {([
-            { idx: prevIndex, lane: "left" as Lane, onClick: retreat },
-            { idx: activeIndex, lane: "center" as Lane, onClick: undefined },
-            { idx: nextIndex, lane: "right" as Lane, onClick: advance },
-          ] as const).map(({ idx, lane, onClick }) => (
-            <LaneCard
-              key={idx}
-              industry={INDUSTRIES[idx]}
-              lane={lane}
-              onClick={onClick}
+        {/* Invisible spacer — drives container height to match center card */}
+        <div aria-hidden="true" className="pointer-events-none mx-auto max-w-105">
+          <div className="aspect-4/5" />
+        </div>
+
+        {INDUSTRIES.map((industry, i) => {
+          const slot = computeSlot(i, activeIndex);
+          return (
+            <CarouselCard
+              key={i}
+              industry={industry}
+              slot={slot}
+              cardOffset={cardOffset}
+              onClick={
+                slot === "left" ? retreat : slot === "right" ? advance : undefined
+              }
             />
-          ))}
-        </AnimatePresence>
+          );
+        })}
       </div>
 
       {/* ── Controls ── */}
@@ -277,29 +328,55 @@ export default function FeaturedIndustriesSection() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// LaneCard — sits inside its grid lane, animated with Framer Motion
+// Slot computation — determines each card's role via index rotation
 // ═══════════════════════════════════════════════════════════════════════════════
 
-type Lane = "left" | "center" | "right";
+type Slot = "left" | "center" | "right" | "hiddenLeft" | "hiddenRight";
 
-const laneVariants = {
-  left: { scale: 0.82, opacity: 0.5, rotateY: 8, zIndex: 1 },
-  center: { scale: 1, opacity: 1, rotateY: 0, zIndex: 3 },
-  right: { scale: 0.82, opacity: 0.5, rotateY: -8, zIndex: 1 },
-};
+function computeSlot(cardIndex: number, activeIndex: number): Slot {
+  const diff = ((cardIndex - activeIndex) % TOTAL + TOTAL) % TOTAL;
+  if (diff === 0) return "center";
+  if (diff === 1) return "right";
+  if (diff === TOTAL - 1) return "left";
+  if (diff <= Math.floor(TOTAL / 2)) return "hiddenRight";
+  return "hiddenLeft";
+}
 
-function LaneCard({
+function getSlotStyle(slot: Slot, offset: number) {
+  switch (slot) {
+    case "center":
+      return { x: 0, scale: 1, opacity: 1, rotateY: 0, zIndex: 3 };
+    case "left":
+      return { x: -offset, scale: 0.82, opacity: 0.5, rotateY: 8, zIndex: 1 };
+    case "right":
+      return { x: offset, scale: 0.82, opacity: 0.5, rotateY: -8, zIndex: 1 };
+    case "hiddenLeft":
+      return { x: -offset * 2, scale: 0.7, opacity: 0, rotateY: 8, zIndex: 0 };
+    case "hiddenRight":
+      return { x: offset * 2, scale: 0.7, opacity: 0, rotateY: -8, zIndex: 0 };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CarouselCard — absolutely positioned, strictly horizontal translate3d motion
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function CarouselCard({
   industry,
-  lane,
+  slot,
+  cardOffset,
   onClick,
 }: {
   industry: (typeof INDUSTRIES)[number];
-  lane: Lane;
+  slot: Slot;
+  cardOffset: number;
   onClick?: () => void;
 }) {
-  const isCenter = lane === "center";
+  const isCenter = slot === "center";
+  const isVisible = slot === "left" || slot === "center" || slot === "right";
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const target = getSlotStyle(slot, cardOffset);
 
   // ─── Cursor-reactive lighting (center card only) ───────────────────────────
   const mouseX = useMotionValue(0.5);
@@ -326,19 +403,27 @@ function LaneCard({
   return (
     <motion.div
       ref={cardRef}
-      layout
-      initial={{ opacity: 0.8, scale: 0.92 }}
-      animate={laneVariants[lane]}
-      exit={{ opacity: 0.8, scale: 0.92 }}
-      transition={SPRING}
+      initial={false}
+      animate={{
+        x: target.x,
+        scale: target.scale,
+        opacity: target.opacity,
+        rotateY: target.rotateY,
+      }}
+      transition={TRANSITION}
       onMouseEnter={() => isCenter && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onMouseMove={handleMouseMove}
       onClick={onClick}
-      className="relative mx-auto w-full max-w-105 cursor-pointer overflow-hidden rounded-lg shadow-xl"
-      style={{ transformStyle: "preserve-3d" }}
+      className="absolute inset-x-0 top-0 mx-auto w-full max-w-105 cursor-pointer overflow-hidden rounded-lg shadow-xl"
+      style={{
+        zIndex: target.zIndex,
+        transformStyle: "preserve-3d",
+        willChange: "transform",
+        pointerEvents: isVisible ? "auto" : "none",
+      }}
     >
-      {/* Card image — tall 4:5 aspect like BCG cards */}
+      {/* Card image — tall 4:5 aspect */}
       <div className="relative aspect-4/5 w-full">
         <Image
           src={industry.image}
