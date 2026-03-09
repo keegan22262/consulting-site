@@ -213,7 +213,9 @@ export default function InsightsCarouselSection() {
           Insights
         </span>
         <h2 className="mb-4 max-w-190 text-[1.75rem] font-semibold leading-tight text-white md:text-4xl">
-          Ideas shaping tomorrow&apos;s institutions.
+          <Link href="/insights" className="cursor-pointer transition-colors hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm">
+            Ideas shaping tomorrow&apos;s institutions.
+          </Link>
         </h2>
         <p className="max-w-170 text-[1.0625rem] leading-relaxed text-white/90">
           Explore perspectives drawn from advisory engagements, sector research,

@@ -98,7 +98,9 @@ export default function PridePhilosophySection({
               Our Philosophy
             </span>
             <h2 className="mt-1.5 text-3xl font-bold text-white lg:text-4xl">
-              Built for Execution.
+              <Link href="/about" className="cursor-pointer transition-colors hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm">
+                Built for Execution.
+              </Link>
             </h2>
             <p className="mt-5 max-w-[60ch] text-sm leading-relaxed text-[#CBD5F5] lg:text-base">
               PRIDE is not a slogan. It is an operating principle — the

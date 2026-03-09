@@ -17,8 +17,9 @@ export const dynamic = "force-dynamic";
 export const revalidate = 120;
 
 export const metadata: Metadata = {
-  title: "Home",
-  description: "Home",
+  title: "Institutional Advisory Built for Growth, Transformation, and Execution",
+  description:
+    "Rill Singh Limited advises growth-stage companies, public institutions, and sovereign entities across Africa on strategy, capital, digital transformation, and governance.",
   alternates: {
     canonical: "/",
   },
@@ -194,12 +195,9 @@ export default async function Home() {
   return (
     <>
       <HeroSection
-        title={insights[0]?.title ?? "Precision-led consulting for growth, transformation, and execution."}
-        subtitle={services[0]?.title ?? "Ten disciplines. One integrated practice."}
-        description={
-          insights[0]?.summary ??
-          "We help startups, SMEs, and enterprises execute complex change with disciplined delivery, measurable outcomes, and accountable teams."
-        }
+        overline="Pan-African Institutional Advisory"
+        title="Institutional Advisory Built for Growth, Transformation, and Execution."
+        description="We advise growth-stage companies, institutional operators, and public-sector leaders navigating structural complexity across strategy, technology, finance, and governance \u2014 delivering measurable outcomes with discipline."
         primaryCta={{ label: "See How We Deliver", href: "/services" }}
       />
 

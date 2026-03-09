@@ -55,7 +55,9 @@ export default function FeaturedServicesSection({
 
             {/* Heading */}
             <h2 className="max-w-160 text-3xl font-semibold leading-tight tracking-tight text-white md:text-4xl lg:text-5xl lg:leading-none">
-              Ten disciplines. One integrated practice.
+              <Link href="/services" className="cursor-pointer transition-colors hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm">
+                Ten disciplines. One integrated practice.
+              </Link>
             </h2>
 
             {/* Description */}

@@ -62,7 +62,9 @@ export default function SiteHeader(): JSX.Element {
         }`}
       >
         <div className="max-w-[1280px] w-full mx-auto px-6 lg:px-8 h-[64px] md:h-[72px] lg:h-[88px] flex items-center justify-between">
-          <div className="font-semibold text-h3 tracking-tight text-neutral-900">Rill Singh Limited</div>
+          <Link href="/" className="font-semibold text-h3 tracking-tight text-neutral-900 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 rounded-sm">
+            Rill Singh Limited
+          </Link>
 
           <div className="hidden lg:flex items-center gap-10">
             <nav className="flex items-center gap-10">

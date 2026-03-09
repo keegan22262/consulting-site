@@ -47,10 +47,16 @@ export default function RootLayout({
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Rill Singh Consulting",
+    name: "Rill Singh Limited",
     url: process.env.NEXT_PUBLIC_SITE_URL,
     logo: process.env.NEXT_PUBLIC_SITE_URL + "/logo.png",
-    sameAs: [],
+    sameAs: [
+      "https://linkedin.com",
+      "https://youtube.com",
+      "https://instagram.com",
+      "https://x.com",
+      "https://facebook.com",
+    ],
   };
   return (
     <html lang="en">

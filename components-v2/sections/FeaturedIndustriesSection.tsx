@@ -26,43 +26,43 @@ const INDUSTRIES = [
     title: "Financial Services",
     image: "/images/industries/industry-1.jpg",
     description:
-      "Transforming financial institutions through digital modernization and regulatory strategy.",
+      "Banking & Capital Markets, Insurance, Private Equity & Venture Capital, Microfinance & DFIs",
     href: "/industries/financial-services",
   },
   {
-    title: "Energy & Infrastructure",
+    title: "Technology & Digital",
     image: "/images/industries/industry-2.jpg",
     description:
-      "Advising energy leaders navigating the global transition toward sustainable systems.",
-    href: "/industries/energy-resources",
-  },
-  {
-    title: "Healthcare",
-    image: "/images/industries/industry-3.jpg",
-    description:
-      "Driving healthcare innovation through operational transformation and policy insight.",
-    href: "/industries/healthcare",
-  },
-  {
-    title: "Technology",
-    image: "/images/industries/industry-4.jpg",
-    description:
-      "Accelerating digital transformation and AI-enabled enterprise platforms.",
+      "Enterprise Software, Fintech & Payments, Telecommunications, Digital Infrastructure",
     href: "/industries/technology-digital",
   },
   {
-    title: "Public Sector",
-    image: "/images/industries/industry-5.jpg",
+    title: "Energy & Resources",
+    image: "/images/industries/industry-3.jpg",
     description:
-      "Partnering with governments to modernize institutions and strengthen public services.",
-    href: "/industries/public-sector",
+      "Oil & Gas, Power & Utilities, Mining & Minerals, Renewable Energy",
+    href: "/industries/energy-resources",
   },
   {
-    title: "Consumer Markets",
+    title: "Healthcare & Life Sciences",
+    image: "/images/industries/industry-4.jpg",
+    description:
+      "Healthcare Providers & Payers, Pharma & Biotech, Life Sciences, MedTech",
+    href: "/industries/healthcare",
+  },
+  {
+    title: "Infrastructure & Real Estate",
+    image: "/images/industries/industry-5.jpg",
+    description:
+      "Real Estate, Infrastructure, Construction, Capital Projects",
+    href: "/industries/real-assets",
+  },
+  {
+    title: "Public Sector & Government",
     image: "/images/industries/industry-6.jpg",
     description:
-      "Supporting global brands navigating evolving consumer behavior and supply chains.",
-    href: "/industries/consumer-markets",
+      "Government Advisory, Defense & Security, Public Service Delivery, Institutional Reform",
+    href: "/industries/public-sector",
   },
 ] as const;
 
@@ -218,13 +218,16 @@ export default function FeaturedIndustriesSection() {
       {/* Section header */}
       <div className="layout-container mb-10 md:mb-14">
         <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
-          Industries
+          Industry Coverage
         </span>
-        <h2 className="mt-1.5 text-2xl font-bold text-white">Industries</h2>
+        <h2 className="mt-1.5 text-2xl font-bold text-white">
+          <Link href="/industries" className="cursor-pointer transition-colors hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm">
+            Deep sector knowledge. Continental reach.
+          </Link>
+        </h2>
         <div className="my-5 h-0.5 w-12 bg-accent-primary" />
-        <p className="max-w-prose text-sm leading-relaxed text-neutral-400">
-          Advisory expertise across the sectors shaping global economic
-          transformation.
+        <p className="max-w-[60ch] text-sm leading-relaxed text-neutral-400">
+          Our advisory teams operate across the industries shaping Africa&apos;s next decade of economic transformation. From energy infrastructure and financial systems to digital ecosystems and public institutions, we combine sector expertise with execution discipline to guide complex transformation.
         </p>
       </div>
 
