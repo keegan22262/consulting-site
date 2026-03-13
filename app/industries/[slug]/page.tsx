@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import IndustryDetailHeroSection from "@/components-v2/sections/IndustryDetailHeroSection";
-import IndustrySummarySection from "@/components-v2/sections/IndustrySummarySection";
-import IndustryContextSection from "@/components-v2/sections/IndustryContextSection";
-import IndustryRelatedServicesSection from "@/components-v2/sections/IndustryRelatedServicesSection";
-import IndustryRelatedInsightsSection from "@/components-v2/sections/IndustryRelatedInsightsSection";
-import CTABlock from "@/components-v2/sections/CTABlock";
 import { sanityClient } from "@/lib/sanity/client";
 import { getIndustryBySlugQuery } from "@/lib/sanity/queries";
+import IndustryDetailSections from "@/src/sections/industry-detail/IndustryDetailSections";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -96,38 +91,16 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     .slice(0, 3);
 
   return (
-    <>
-      <IndustryDetailHeroSection
-        title={industry.title}
-        description={industry.description ?? industry.summary ?? ""}
-      />
-
-      <IndustrySummarySection summary={industry.summary ?? industry.description ?? ""} />
-
-      <IndustryContextSection
-        pressures={industry.challenge ?? ""}
-        transformationFocus={industry.regulatoryContext ?? ""}
-        institutionalShift={industry.description ?? industry.summary ?? ""}
-      />
-
-      {relatedServices.length > 0 ? (
-        <IndustryRelatedServicesSection services={relatedServices} />
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
-
-      {relatedInsights.length > 0 ? (
-        <IndustryRelatedInsightsSection insights={relatedInsights} />
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
-
-      <CTABlock
-        title={industry.title ?? "Talk to a partner"}
-        description={industry.summary ?? industry.description ?? "Discuss how we can support your industry transformation."}
-        primaryLabel="Contact"
-        primaryHref="/contact"
-      />
-    </>
+    <IndustryDetailSections
+      slug={slug}
+      title={industry.title ?? ""}
+      summary={industry.summary ?? ""}
+      description={industry.description ?? ""}
+      challenge={industry.challenge ?? ""}
+      regulatoryContext={industry.regulatoryContext ?? ""}
+      relatedServices={relatedServices}
+      relatedInsights={relatedInsights}
+      heroImage={industry.heroImage?.url}
+    />
   );
 }

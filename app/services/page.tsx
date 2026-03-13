@@ -1,56 +1,15 @@
 
-import ServicesHeroSection from "@/components-v2/sections/ServicesHeroSection";
-import ServicesIntroSection from "@/components-v2/sections/ServicesIntroSection";
-import ServicesGridSection from "@/components-v2/sections/ServicesGridSection";
-import ServicesRelatedIndustriesSection from "@/components-v2/sections/ServicesRelatedIndustriesSection";
-import CTABlock from "@/components-v2/sections/CTABlock";
+import type { Metadata } from "next";
+import ServicesPageClient from "@/src/sections/services/ServicesPageClient";
 
-import { sanityClient } from "@/lib/sanity/client";
-import { getAllServicesQuery } from "@/lib/sanity/queries";
-
-type ServiceResult = {
-  _id: string;
-  title?: string;
-  slug?: string;
-  summary?: string;
-  description?: string;
+export const metadata: Metadata = {
+  title: "Services | Rill Singh Limited",
+  description:
+    "Ten advisory disciplines. One integrated practice. Each capability operates within a shared delivery framework — strategy, digital, finance, people, ESG, and more.",
 };
 
-export default async function Page() {
-  const services = await sanityClient.fetch<ServiceResult[]>(getAllServicesQuery);
-  const serviceCards = (services ?? [])
-    .filter((service): service is ServiceResult & { slug: string; title: string; summary: string } =>
-      Boolean(service.slug && service.title && service.summary)
-    )
-    .map((service) => ({
-      slug: service.slug,
-      title: service.title,
-      focusAreas: service.summary,
-      approach: service.description ?? service.summary,
-    }));
-
-  const relatedIndustries: { slug: string; title: string; description: string }[] = [];
-
+export default function ServicesPage() {
   return (
-    <>
-      <ServicesHeroSection />
-      <ServicesIntroSection />
-      {serviceCards.length > 0 ? (
-        <ServicesGridSection services={serviceCards} />
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
-      {relatedIndustries.length > 0 ? (
-        <ServicesRelatedIndustriesSection industries={relatedIndustries} />
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
-      <CTABlock
-        title={serviceCards[0]?.title ?? "Talk to a partner"}
-        description={serviceCards[0]?.focusAreas}
-        primaryLabel="Contact"
-        primaryHref="/contact"
-      />
-    </>
+    <ServicesPageClient />
   );
 }

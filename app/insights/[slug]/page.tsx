@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PortableText } from "@portabletext/react";
-import Link from "next/link";
 import InsightsDetailHeroSection from "@/components-v2/sections/InsightsDetailHeroSection";
-import InsightsContentSection from "@/components-v2/sections/InsightsContentSection";
 import InsightsRelatedSection from "@/components-v2/sections/InsightsRelatedSection";
-import SectionWrapper from "@/components-v2/sections/SectionWrapper";
-import SectionHeader from "@/components-v2/sections/SectionHeader";
-import ServiceCard from "@/components-v2/ui/ServiceCard";
 import CTABlock from "@/components-v2/sections/CTABlock";
 import { sanityClient } from "@/lib/sanity/client";
 import { getInsightBySlugQuery } from "@/lib/sanity/queries";
+import InsightBodySection from "@/src/sections/insight-detail/InsightBodySection";
+import InsightDataHighlightsSection, {
+  type InsightDataHighlight,
+} from "@/src/sections/insight-detail/InsightDataHighlightsSection";
+import InsightMetaStrip from "@/src/sections/insight-detail/InsightMetaStrip";
+import InsightPullQuoteSection from "@/src/sections/insight-detail/InsightPullQuoteSection";
+import InsightRelatedServicesSection from "@/src/sections/insight-detail/InsightRelatedServicesSection";
+import InsightSummarySection from "@/src/sections/insight-detail/InsightSummarySection";
+import Link from "next/link";
+import { CASE_STUDIES } from "@/src/sections/case-study/data";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -125,7 +129,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     ? insight.summaryPoints.filter((point): point is string => Boolean(point))
     : [];
 
-  const dataHighlights = Array.isArray(insight.dataHighlights)
+  const dataHighlights: InsightDataHighlight[] = Array.isArray(insight.dataHighlights)
     ? insight.dataHighlights
         .filter((item): item is DataHighlight & { title: string; value: string } => Boolean(item?.title && item?.value))
         .map((item) => ({
@@ -182,124 +186,31 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
       />
 
-      {metaItems.length > 0 ? (
-        <SectionWrapper background="white" padV={{ mobile: 24, tablet: 28, desktop: 32 }}>
-          <div className="mx-auto flex max-w-[720px] flex-wrap items-center gap-3 text-sm text-text-secondary">
-            {metaItems.map((item, index) => (
-              <span key={item + index} className="flex items-center gap-3">
-                {index > 0 ? <span className="text-text-muted">•</span> : null}
-                <span>{item}</span>
-              </span>
-            ))}
-          </div>
-        </SectionWrapper>
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
+      <InsightMetaStrip metaItems={metaItems} />
 
-      {summaryPoints.length > 0 ? (
-        <SectionWrapper background="white" padV={{ mobile: 32, tablet: 40, desktop: 48 }}>
-          <div className="mx-auto max-w-[720px]">
-            <h2 className="text-2xl font-semibold leading-[1.2] text-text-primary">Summary</h2>
-            <div className="mt-4 h-0.5 w-8 bg-[var(--a700)]" />
-            <ul className="mt-6 space-y-4 text-base leading-[1.65] text-text-secondary list-disc pl-5">
-              {summaryPoints.map((point, idx) => (
-                <li key={idx}>{point}</li>
-              ))}
-            </ul>
-          </div>
-        </SectionWrapper>
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
+      <InsightSummarySection summaryPoints={summaryPoints} />
 
-      <InsightsContentSection>
-        {contentBlocks.length > 0 ? (
-          <PortableText
-            value={contentBlocks as any}
-            components={{
-              block: {
-                normal: ({ children }) => <p className="mb-6 last:mb-0">{children}</p>,
-                h2: ({ children }) => (
-                  <h2 className="mt-14 mb-6 text-2xl font-semibold leading-[1.2] text-text-primary">
-                    {children}
-                  </h2>
-                ),
-                h3: ({ children }) => (
-                  <h3 className="mt-10 mb-4 text-xl font-semibold leading-[1.25] text-text-primary">
-                    {children}
-                  </h3>
-                ),
-              },
-              list: {
-                bullet: ({ children }) => (
-                  <ul className="mb-6 list-disc space-y-3 pl-5 last:mb-0">{children}</ul>
-                ),
-              },
-            }}
-          />
-        ) : null}
-      </InsightsContentSection>
+      <InsightBodySection contentBlocks={contentBlocks} />
 
-      {pullQuote ? (
-        <SectionWrapper background="neutral50" padV={{ mobile: 32, tablet: 40, desktop: 48 }}>
-          <div className="mx-auto max-w-[720px] rounded-card border-l-4 border-[var(--a700)] bg-[var(--n50)] p-8 text-text-primary">
-            <p className="text-2xl font-semibold italic leading-[1.3]">{pullQuote}</p>
-          </div>
-        </SectionWrapper>
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
+      <InsightPullQuoteSection pullQuote={pullQuote} />
 
-      {dataHighlights.length > 0 ? (
-        <SectionWrapper background="white">
-          <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
-            {dataHighlights.map((item, index) => (
-              <div
-                key={item.title + index}
-                className="rounded-card border border-neutral-200 bg-white p-6 shadow-sm"
-              >
-                <div className="text-sm font-semibold text-text-muted">{item.title}</div>
-                <div className="mt-3 text-2xl font-semibold text-text-primary">{item.value}</div>
-                {item.detail ? (
-                  <p className="mt-3 text-sm leading-[1.6] text-text-secondary">{item.detail}</p>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </SectionWrapper>
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
+      <InsightDataHighlightsSection dataHighlights={dataHighlights} />
 
-      {relatedServices.length > 0 ? (
-        <SectionWrapper background="neutral50">
-          <div className="flex items-center justify-between">
-            <SectionHeader overline="Related Services" title="Advisory Support." />
-            <Link href="/services" className="text-sm font-medium text-accent-primary hover:underline">
-              Explore all services →
-            </Link>
-          </div>
-          <div className="rhythm-heading-grid grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
-            {relatedServices.map((service, index) => (
-              <ServiceCard
-                key={service.slug}
-                slug={service.slug}
-                title={service.title}
-                focusAreas={service.description}
-                approach={service.description}
-                index={index}
-              />
-            ))}
-          </div>
-        </SectionWrapper>
-      ) : null}
+      <InsightRelatedServicesSection relatedServices={relatedServices} />
+
+      <TranslateInsightSection />
 
       {relatedInsights.length > 0 ? (
         <InsightsRelatedSection insights={relatedInsights} />
       ) : (
         <div style={{ padding: "40px 0" }} />
       )}
+
+      <RelatedIndustriesSection />
+
+      <RelatedCaseStudiesSection />
+
+      <InsightKnowledgeNavigation hasServices={relatedServices.length > 0} />
 
       <CTABlock
         title={insight.title ?? "Talk to a partner"}
@@ -308,5 +219,133 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         primaryHref="/contact"
       />
     </>
+  );
+}
+
+function TranslateInsightSection() {
+  return (
+    <section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-6 md:px-8">
+        <div className="rounded-xl border border-[#E2E8F0] bg-white p-8 md:p-10">
+          <span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">
+            Translate Insight into Action
+          </span>
+          <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[1.875rem]">
+            Move from analysis to institutional execution.
+          </h3>
+          <p className="mt-4 max-w-[62ch] text-base leading-[1.7] text-[#475569]">
+            We help leadership teams turn research findings into scoped initiatives, governance decisions, and delivery
+            plans aligned to operational realities.
+          </p>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <Link
+              href="/contact"
+              className="rounded-lg bg-[#1B3A5C] px-7 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#0C1C2E]"
+            >
+              Discuss This Insight
+            </Link>
+            <Link
+              href="/services"
+              className="rounded-lg border border-[#CBD5E1] px-7 py-3 text-center text-sm font-semibold text-[#1B3A5C] transition hover:border-[#94A3B8]"
+            >
+              Explore Advisory Services
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function InsightKnowledgeNavigation({ hasServices }: { hasServices: boolean }) {
+  return (
+    <section className="bg-white py-14 md:py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-6 md:px-8">
+        <span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Explore Related Knowledge</span>
+        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
+          Continue from insight to execution context.
+        </h3>
+        <p className="mt-4 max-w-[62ch] text-base leading-[1.7] text-[#475569]">
+          Move between research, service architecture, and applied case context to shape institution-specific decisions.
+        </p>
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <Link
+            href="/insights"
+            className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 text-sm font-medium text-[#334155] transition hover:border-[#94A3B8]"
+          >
+            More Insights
+          </Link>
+          <Link
+            href={hasServices ? "/services" : "/contact"}
+            className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 text-sm font-medium text-[#334155] transition hover:border-[#94A3B8]"
+          >
+            {hasServices ? "Related Services" : "Discuss This Topic"}
+          </Link>
+          <Link
+            href="/case-studies"
+            className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 text-sm font-medium text-[#334155] transition hover:border-[#94A3B8]"
+          >
+            Case Studies
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RelatedIndustriesSection() {
+  const industries = [
+    ["financial-services", "Financial Services"],
+    ["technology-digital", "Technology, Media & Telecommunications"],
+    ["public-sector-government", "Public Sector & Government"],
+  ] as const;
+
+  return (
+    <section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-6 md:px-8">
+        <span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Related Industries</span>
+        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
+          Sector contexts connected to this insight.
+        </h3>
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {industries.map(([slug, label]) => (
+            <Link
+              key={slug}
+              href={`/industries/${slug}`}
+              className="rounded-xl border border-[#E2E8F0] bg-white p-6 text-sm font-medium text-[#334155] transition hover:border-[#94A3B8]"
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RelatedCaseStudiesSection() {
+  const studies = CASE_STUDIES.slice(0, 2);
+
+  return (
+    <section className="bg-white py-14 md:py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-6 md:px-8">
+        <span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Related Case Studies</span>
+        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
+          Applied execution examples.
+        </h3>
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+          {studies.map((study) => (
+            <Link
+              key={study.slug}
+              href={`/case-studies/${study.slug}`}
+              className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 transition hover:border-[#94A3B8]"
+            >
+              <h4 className="text-base font-semibold text-[#0F1720]">{study.title}</h4>
+              <p className="mt-2 text-sm leading-[1.6] text-[#475569]">{study.summary}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

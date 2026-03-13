@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ServicesDetailHeroSection from "@/components-v2/sections/ServicesDetailHeroSection";
-import ServicesChallengeSection from "@/components-v2/sections/ServicesChallengeSection";
-import ServicesDeliverablesSection from "@/components-v2/sections/ServicesDeliverablesSection";
-import ServicesRelatedInsightsSection from "@/components-v2/sections/ServicesRelatedInsightsSection";
-import ServicesRelatedIndustriesSection from "@/components-v2/sections/ServicesRelatedIndustriesSection";
-import CTABlock from "@/components-v2/sections/CTABlock";
 import { sanityClient } from "@/lib/sanity/client";
 import { getServiceBySlugQuery } from "@/lib/sanity/queries";
+import ServiceDetailSections from "@/src/sections/service-detail/ServiceDetailSections";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -42,6 +37,7 @@ type ServiceResult = {
   relatedIndustries?: RelatedIndustry[];
   relatedInsights?: RelatedInsight[];
   heroImage?: { url?: string };
+  finalCtaImage?: { url?: string };
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -114,43 +110,19 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     }));
 
   return (
-    <>
-      <ServicesDetailHeroSection
-        number={String(service.order ?? 0).padStart(2, "0")}
-        title={service.title}
-        approach={service.approach ?? service.summary ?? ""}
-      />
-
-      <ServicesChallengeSection
-        focusAreas={focusAreas || service.summary || ""}
-        targetClients={service.targetClients ?? ""}
-        approach={service.approach ?? service.summary ?? ""}
-      />
-
-      {deliverables.length > 0 ? (
-        <ServicesDeliverablesSection deliverables={deliverables} />
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
-
-      {relatedIndustries.length > 0 ? (
-        <ServicesRelatedIndustriesSection industries={relatedIndustries} />
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
-
-      {relatedInsights.length > 0 ? (
-        <ServicesRelatedInsightsSection insights={relatedInsights} />
-      ) : (
-        <div style={{ padding: "40px 0" }} />
-      )}
-
-      <CTABlock
-        title={service.title ?? "Talk to a partner"}
-        description={service.summary ?? service.approach ?? "Let’s align on your priorities and delivery approach."}
-        primaryLabel="Contact"
-        primaryHref="/contact"
-      />
-    </>
+    <ServiceDetailSections
+      slug={slug}
+      number={String(service.order ?? 0).padStart(2, "0")}
+      title={service.title ?? ""}
+      summary={service.summary ?? ""}
+      approach={service.approach ?? ""}
+      targetClients={service.targetClients ?? ""}
+      focusAreas={focusAreas}
+      deliverables={deliverables}
+      relatedIndustries={relatedIndustries}
+      relatedInsights={relatedInsights}
+      heroImage={service.heroImage?.url}
+      finalCtaImage={service.finalCtaImage?.url}
+    />
   );
 }
