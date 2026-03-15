@@ -1,5 +1,11 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
+import SectionHeader from "@/components-v2/sections/SectionHeader";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
+import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
 import type { ServiceItem } from "./data";
 
 interface Props {
@@ -20,66 +26,93 @@ interface Props {
  * Typography: overline caption, H2 title, H3 card title, 14px body, 13px CTA
  */
 export default function ServicesCardGrid({ services }: Props) {
+  const gridCols = useResponsiveValue({
+    desktop: "repeat(3, 1fr)",
+    tablet: "repeat(2, 1fr)",
+    mobile: "1fr",
+  });
+  const gridGap = useResponsiveValue({ desktop: "24px", tablet: "20px", mobile: "16px" });
+  const gridMarginTop = useResponsiveValue({ desktop: "48px", tablet: "40px", mobile: "32px" });
+
   return (
     <SectionWrapper
       className="bg-(--a900)"
       padV={{ mobile: 48, tablet: 64, desktop: 80 }}
     >
-      {/* Section header — custom colours for dark background */}
-      <div className="mb-10 md:mb-12">
-        <span className="text-[11px] font-semibold uppercase tracking-widest text-white/60">
-          Professional Services
-        </span>
-        <h2
-          className="mt-2 font-semibold text-white"
-          style={{
-            fontSize: "var(--text-h2)",
-            lineHeight: "var(--line-height-h2)",
-          }}
-        >
-          Advisory Disciplines
-        </h2>
-      </div>
+      <SectionHeader
+        overline="Professional Services"
+        title="Advisory Disciplines"
+        showAccentRule={false}
+        overlineColor="rgba(255, 255, 255, 0.6)"
+        titleColor="#FFFFFF"
+      />
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
-        {services.map((svc) => (
-          <ServiceDarkCard key={svc.slug} service={svc} />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: gridCols,
+          gap: gridGap,
+          marginTop: gridMarginTop,
+        }}
+      >
+        {services.map((svc, index) => (
+          <ServiceDarkCard key={svc.slug} service={svc} index={index} />
         ))}
       </div>
     </SectionWrapper>
   );
 }
 
-function ServiceDarkCard({ service }: { service: ServiceItem }) {
+function ServiceDarkCard({ service, index }: { service: ServiceItem; index: number }) {
+  const [revealRef, revealStyle] = useScrollReveal(index % 3);
+  const [hovered, setHovered] = useState(false);
+  const padding = useResponsiveValue({ desktop: "28px", tablet: "24px", mobile: "20px" });
+  const minHeight = useResponsiveValue({ desktop: "280px", tablet: "260px", mobile: "auto" });
+  const titleSize = useResponsiveValue({ desktop: "1.25rem", tablet: "1.125rem", mobile: "1.0625rem" });
+  const bodySize = useResponsiveValue({ desktop: "0.875rem", tablet: "0.8125rem", mobile: "0.8125rem" });
+  const cardBg = hovered ? "rgba(27, 58, 92, 0.55)" : "rgba(27, 58, 92, 0.35)";
+  const titleColor = hovered ? "var(--o500)" : "#FFFFFF";
+  const ctaColor = hovered ? "#FFFFFF" : "rgba(255, 255, 255, 0.6)";
+
   return (
-    <div id={`service-${service.slug}`}>
+    <div
+      id={`service-${service.slug}`}
+      ref={revealRef}
+      style={revealStyle}
+    >
       <Link
         href={`/services/${service.slug}`}
-        className="group flex min-h-70 flex-col rounded-(--radius-card) border-t-[3px] border-t-(--o500) bg-[rgba(27,58,92,0.35)] p-7 no-underline transition-colors duration-150 hover:bg-[rgba(27,58,92,0.55)]"
+        className="flex flex-col rounded-(--radius-card) border-t-[3px] border-t-(--o500) no-underline transition-colors duration-[120ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+        style={{
+          backgroundColor: cardBg,
+          padding,
+          minHeight,
+        }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
         {/* Card title */}
         <h3
-          className="font-semibold text-white transition-colors duration-150 group-hover:text-(--o500)"
-          style={{
-            fontSize: "var(--text-h3)",
-            lineHeight: "1.3",
-          }}
+          className="font-semibold transition-colors duration-[120ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+          style={{ fontSize: titleSize, lineHeight: "1.3", color: titleColor }}
         >
           {service.title}
         </h3>
 
         {/* Card body — approach copy */}
         <p
-          className="mt-3 grow leading-[1.6] text-white/70"
-          style={{ fontSize: "0.875rem" }}
+          className="mt-3 grow leading-[1.6]"
+          style={{ fontSize: bodySize, color: "rgba(255, 255, 255, 0.72)" }}
         >
           {service.approach}
         </p>
 
         {/* Explore CTA */}
-        <span className="mt-5 inline-block text-[13px] font-semibold text-white/60 transition-colors duration-150 group-hover:text-white">
-          Explore →
+        <span
+          className="mt-5 inline-block text-[0.8125rem] font-semibold transition-colors duration-[120ms] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+          style={{ color: ctaColor }}
+        >
+          Explore
         </span>
       </Link>
     </div>

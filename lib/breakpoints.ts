@@ -35,7 +35,7 @@ export function useBp(): Breakpoint {
   return useContext(BpCtx);
 }
 
-export function r<TDesktop, TTablet, TMobile>(
+export function useResponsiveValue<TDesktop, TTablet, TMobile>(
   desktop: TDesktop,
   tablet: TTablet,
   mobile: TMobile,

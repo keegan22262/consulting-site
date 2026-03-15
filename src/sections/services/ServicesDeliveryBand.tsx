@@ -1,6 +1,8 @@
-﻿import Image from "next/image";
+﻿"use client";
 
-// Image sourced from Figma reference (figma-reference/rslservices.tsx â†’ CreativeDeliverySection).
+import Image from "next/image";
+import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
+
 const DELIVERY_IMAGE = "/images/services/creative-delivery.jpg";
 
 /**
@@ -9,15 +11,23 @@ const DELIVERY_IMAGE = "/images/services/creative-delivery.jpg";
  * Full-width cinematic image band with dark gradient overlay and bottom-left text.
  * Positioned between CapabilityFrameworkMap and the CTA block.
  *
- * Layout: Figma reference â€” figma-reference/rslservices.tsx â†’ CreativeDeliverySection
+ * Layout: Figma reference - figma-reference/rslservices.tsx -> CreativeDeliverySection
  * Spacing: my-24 (96px) vertical margin; px-6/px-12 container; pb-10/pb-16 text inset
- * Typography: 11px overline, H2 headline (clamp 2â€“3rem), 16â€“18px body
+ * Typography: 11px overline, H2 headline (clamp 2-3rem), 16-18px body
  */
 export default function ServicesDeliveryBand() {
+  const sectionHeight = useResponsiveValue({ desktop: "600px", tablet: "520px", mobile: "440px" });
+  const marginY = useResponsiveValue({ desktop: "96px", tablet: "80px", mobile: "64px" });
+  const px = useResponsiveValue({ desktop: "48px", tablet: "48px", mobile: "24px" });
+  const pb = useResponsiveValue({ desktop: "64px", tablet: "52px", mobile: "40px" });
+  const h2Size = useResponsiveValue({ desktop: "3rem", tablet: "2.5rem", mobile: "2rem" });
+  const h2LineHeight = useResponsiveValue({ desktop: "1.1", tablet: "1.1", mobile: "1.15" });
+  const bodySize = useResponsiveValue({ desktop: "1.125rem", tablet: "1.125rem", mobile: "1rem" });
+
   return (
     <section
       className="relative w-full overflow-hidden"
-      style={{ height: "clamp(440px, 45vw, 600px)" }}
+      style={{ height: sectionHeight, marginTop: marginY, marginBottom: marginY }}
     >
       {/* Background image */}
       <Image
@@ -39,9 +49,9 @@ export default function ServicesDeliveryBand() {
         }}
       />
 
-      {/* Text overlay â€” bottom-left */}
+      {/* Text overlay - bottom-left */}
       <div className="absolute inset-x-0 bottom-0">
-        <div className="mx-auto max-w-7xl px-6 pb-10 md:px-12 md:pb-14 lg:pb-16">
+        <div className="mx-auto max-w-[1280px]" style={{ paddingLeft: px, paddingRight: px, paddingBottom: pb }}>
 
           {/* Overline */}
           <span className="mb-4 block text-[11px] font-semibold uppercase tracking-widest text-white/60">
@@ -52,8 +62,8 @@ export default function ServicesDeliveryBand() {
           <h2
             className="font-semibold text-white"
             style={{
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              lineHeight: "1.1",
+              fontSize: h2Size,
+              lineHeight: h2LineHeight,
               letterSpacing: "-0.02em",
               maxWidth: "640px",
             }}
@@ -65,12 +75,12 @@ export default function ServicesDeliveryBand() {
           <p
             className="mt-4 leading-[1.6] text-white/85"
             style={{
-              fontSize: "clamp(1rem, 1.3vw, 1.125rem)",
+              fontSize: bodySize,
               maxWidth: "560px",
             }}
           >
             Delivering transformation at scale. Our ten disciplines operate within a shared delivery
-            framework â€” ensuring strategic, digital, financial, people, and regulatory workstreams
+            framework — ensuring strategic, digital, financial, people, and regulatory workstreams
             are coordinated from diagnostic through institutional handover.
           </p>
         </div>

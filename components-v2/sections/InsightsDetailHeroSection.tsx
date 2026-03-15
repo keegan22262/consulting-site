@@ -1,4 +1,5 @@
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
+import Breadcrumb from "@/components-v2/ui/Breadcrumb";
 
 interface InsightsDetailHeroSectionProps {
   category: string;
@@ -10,13 +11,15 @@ export default function InsightsDetailHeroSection({ category, title, excerpt }: 
   return (
     <SectionWrapper background="white" padV={{ mobile: 56, tablet: 72, desktop: 96 }} className="min-h-[360px]">
       <div className="max-w-[720px] text-left">
-        <nav className="mb-8 text-sm text-text-muted">
-          <span>RSL</span>
-          <span className="mx-2">/</span>
-          <span>Insights</span>
-          <span className="mx-2">/</span>
-          <span className="font-medium text-text-primary">{title}</span>
-        </nav>
+        <div className="mb-8">
+          <Breadcrumb
+            items={[
+              { label: "RSL", href: "/" },
+              { label: "Insights", href: "/insights" },
+              { label: title },
+            ]}
+          />
+        </div>
         <span className="block text-xs uppercase tracking-[0.14em] text-text-muted mb-4">
           {category}
         </span>

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useBp } from "@/lib/breakpoints";
 import { C, F, FILTER_CATEGORIES, INDUSTRY_IMAGES, MAX_WIDTH, type IndustryData } from "./data";
+import EditorialIndustryCard from "@/components-v2/ui/EditorialIndustryCard";
 
 export default function SectorCoverageSection({ industries }: { industries: IndustryData[] }) {
   const bp = useBp();
@@ -173,96 +173,3 @@ function FilterPill({
   );
 }
 
-function EditorialIndustryCard({
-  title,
-  description,
-  slug,
-  image,
-  height,
-}: {
-  title: string;
-  description: string;
-  slug: string;
-  image?: string;
-  height: string;
-}) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <Link
-      href={`/industries/${slug}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position: "relative",
-        height,
-        borderRadius: "12px",
-        overflow: "hidden",
-        display: "block",
-        textDecoration: "none",
-        transform: hovered ? "translateY(-2px)" : "translateY(0)",
-        transition: "transform 240ms cubic-bezier(0.22, 1, 0.36, 1)",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `url(${image ?? "/images/industries/sectors/financial-services.jpg"})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          filter: "grayscale(32%) contrast(1.06)",
-          transform: hovered ? "scale(1.03)" : "scale(1)",
-          transition: "transform 700ms cubic-bezier(0.22, 1, 0.36, 1)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "linear-gradient(180deg, rgba(12,28,46,0.28) 0%, rgba(12,28,46,0.86) 100%)",
-        }}
-      />
-      <div
-        style={{
-          position: "relative",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          padding: "22px",
-        }}
-      >
-        <h3
-          style={{
-            fontFamily: F,
-            fontSize: "1.125rem",
-            fontWeight: 600,
-            lineHeight: "1.35",
-            color: C.white,
-            marginBottom: "8px",
-          }}
-        >
-          {title}
-        </h3>
-        <p
-          style={{
-            fontFamily: F,
-            fontSize: "0.875rem",
-            lineHeight: "1.6",
-            color: C.a200,
-            maxWidth: "44ch",
-          }}
-        >
-          {description}
-        </p>
-      </div>
-    </Link>
-  );
-}

@@ -29,7 +29,9 @@ export const getIndustryBySlugQuery = groq`
     "relatedInsights": coalesce(relatedInsights[]-> {
       "slug": coalesce(slug.current, slug),
       title,
-      "category": coalesce(theme->title, category)
+      "category": coalesce(theme->title, category),
+      "summary": coalesce(summary, description),
+      readingTime
     }, [])
   }
 `;
@@ -73,7 +75,8 @@ export const getServiceBySlugQuery = groq`
       | order(coalesce(publishedAt, _createdAt) desc)[0...3] {
         "slug": coalesce(slug.current, slug),
         title,
-        "category": coalesce(theme->title, category)
+        "category": coalesce(theme->title, category),
+        "summary": coalesce(summary, description)
       },
     offerings,
     outcomes,

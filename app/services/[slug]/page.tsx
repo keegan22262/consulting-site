@@ -23,6 +23,7 @@ type RelatedInsight = {
   slug?: string;
   title?: string;
   category?: string;
+  summary?: string;
 };
 
 type ServiceResult = {
@@ -107,6 +108,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       slug: item.slug,
       title: item.title,
       category: item.category ?? "Insight",
+      summary: item.summary ?? "",
     }));
 
   return (

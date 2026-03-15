@@ -4,7 +4,7 @@ export default function CoverageHero() {
   return (
     <section className="relative isolate overflow-hidden bg-(--a900)">
       <Image
-        src="/images/industries/coverage-hero.jpg"
+        src="/images/industries/hero/hero-city-skyline.jpg"
         alt="Industry coverage overview"
         fill
         className="object-cover"

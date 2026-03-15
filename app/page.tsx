@@ -219,24 +219,12 @@ export default async function Home() {
 
       <div className="relative overflow-hidden">
         <AtmosphericLayer />
-        <FeaturedIndustriesSection />
+        <FeaturedIndustriesSection industries={industries} />
       </div>
 
       <div className="relative overflow-hidden">
         <AtmosphericLayer />
-        <InsightsCarouselSection />
-      </div>
-
-      <SectionDivider />
-
-      <div className="relative overflow-hidden">
-        <AtmosphericLayer />
-        <EngagementFrameworkSection phases={deliveryPhases} />
-      </div>
-
-      <div className="relative overflow-hidden">
-        <AtmosphericLayer />
-        <PridePhilosophySection principles={pridePrinciples} />
+        <InsightsCarouselSection insights={insights} />
       </div>
 
       <SectionDivider />
@@ -244,6 +232,21 @@ export default async function Home() {
       <div className="relative overflow-hidden">
         <AtmosphericLayer />
         <InstitutionalMetricsSection />
+      </div>
+
+      <SectionDivider />
+
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <PridePhilosophySection
+          principles={pridePrinciples}
+          latestInsight={insights[0] ?? null}
+        />
+      </div>
+
+      <div className="relative overflow-hidden">
+        <AtmosphericLayer />
+        <EngagementFrameworkSection phases={deliveryPhases} />
       </div>
     </>
   );

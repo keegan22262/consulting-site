@@ -11,18 +11,22 @@ import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function CountUp({ value, duration = 1200 }: { value: number; duration?: number }) {
-  // Check reduced motion once at mount — skip animation entirely
-  const prefersReduced =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const [display, setDisplay] = useState(prefersReduced ? value : 0);
-  const hasAnimatedRef = useRef(prefersReduced);
+  const hasAnimatedRef = useRef(false);
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el || hasAnimatedRef.current) return;
+    const span = el;
+
+    span.textContent = "0";
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) {
+      hasAnimatedRef.current = true;
+      span.textContent = String(value);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -38,7 +42,7 @@ function CountUp({ value, duration = 1200 }: { value: number; duration?: number 
           const progress = Math.min(elapsed / duration, 1);
           // ease-out cubic
           const eased = 1 - Math.pow(1 - progress, 3);
-          setDisplay(Math.round(eased * value));
+          span.textContent = String(Math.round(eased * value));
 
           if (progress < 1) {
             rafId = requestAnimationFrame(tick);
@@ -50,11 +54,11 @@ function CountUp({ value, duration = 1200 }: { value: number; duration?: number 
       { threshold: 0.3 }
     );
 
-    observer.observe(el);
+    observer.observe(span);
     return () => observer.disconnect();
   }, [value, duration]);
 
-  return <span ref={ref}>{display}</span>;
+  return <span ref={ref}>0</span>;
 }
 
 /** Parses a metric value string and applies CountUp to the numeric portion.
@@ -103,25 +107,12 @@ const DEFAULT_METRICS = [
   },
 ];
 
-// ─── Institutional cinematic image sequence ─────────────────────────────────
-// Local paths preferred; Unsplash URLs used as fallback when local assets
-// are not yet present. Same pattern used across hero, framework, etc.
-const INSTITUTIONAL_SEQUENCE = [
-  "/images/advisory/institutional-01.jpg",
-  "/images/advisory/institutional-02.jpg",
-  "/images/advisory/institutional-03.jpg",
+// ─── CTA cinematic sequence (matches Figma lower section) ──────────────────
+const IA_CTA_IMAGES = [
+  "https://images.unsplash.com/photo-1758518727707-b023e285b709?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+  "https://images.unsplash.com/photo-1676276375450-3707e4e624c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+  "https://images.unsplash.com/photo-1599908712364-e30b14696fa1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
 ];
-
-const INSTITUTIONAL_FALLBACK = [
-  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-  "https://images.unsplash.com/photo-1556761175-4b46a572b786?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-];
-
-// ─── CTA conversation image ────────────────────────────────────────────────
-const CTA_LOCAL_IMAGE = "/images/advisory/conversation.jpg";
-const CTA_FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1758518727707-b023e285b709?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080";
 
 // ─── Props ──────────────────────────────────────────────────────────────────
 interface MetricItem {
@@ -145,7 +136,7 @@ export default function InstitutionalMetricsSection({
   const displayMetrics = metrics && metrics.length > 0 ? metrics : DEFAULT_METRICS;
 
   return (
-    <section className="relative overflow-hidden bg-linear-to-br from-[#071a2f] via-[#0c2744] to-[#0e2f52] py-32">
+    <section className="relative overflow-hidden bg-linear-to-br from-[#071a2f] via-[#0c2744] to-[#0e2f52]">
       {/* ── Diagonal navy geometric ribbon — 10–15% opacity ── */}
       <div
         aria-hidden="true"
@@ -171,56 +162,60 @@ export default function InstitutionalMetricsSection({
         }}
       />
 
-      <div className="layout-container relative z-10">
+      <div className="relative z-10">
         {/* ════════════ BLOCK 1: METRICS ════════════ */}
-        <div ref={headerRef} style={headerStyle} className="mb-16 max-w-4xl">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-indigo-300/70">
-            INSTITUTIONAL ADVISORY. MEASURABLE OUTCOMES.
-          </p>
-          <h2 className="text-3xl font-semibold leading-tight text-white lg:text-4xl">
-            Institutional Advisory. Measurable Outcomes.
-          </h2>
-        </div>
+        <div className="layout-container pb-8 pt-12 md:pb-12 md:pt-16 lg:pb-16 lg:pt-24">
+          <div ref={headerRef} style={headerStyle} className="mb-8 max-w-4xl md:mb-10 lg:mb-14">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-indigo-300/70">
+              INSTITUTIONAL ADVISORY. MEASURABLE OUTCOMES.
+            </p>
+            <h2 className="text-3xl font-semibold leading-tight text-white lg:text-4xl">
+              Institutional Advisory. Measurable Outcomes.
+            </h2>
+          </div>
 
-        {/* Metrics card grid */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {displayMetrics.map((m, i) => (
-            <MetricCard key={m.label} {...m} staggerIndex={i + 1} />
-          ))}
+          {/* Metrics card grid */}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {displayMetrics.map((m, i) => (
+              <MetricCard key={m.label} {...m} staggerIndex={i + 1} />
+            ))}
+          </div>
         </div>
 
         {/* ════════════ BLOCK 2: CTA PANEL ════════════ */}
-        <div className="mt-24 grid grid-cols-1 items-center gap-16 lg:grid-cols-12">
-          {/* Left column — copy + buttons */}
-          <div className="lg:col-span-6">
-            <h2 className="text-3xl font-semibold leading-tight text-white lg:text-4xl">
-              {ctaTitle ?? "Begin a Conversation With Our Advisory Team."}
-            </h2>
-            <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-white/70 lg:text-lg">
-              {ctaDescription ??
-                "Every engagement begins with a structured conversation. No obligations — simply an exchange of context to determine whether there is a basis for collaboration."}
-            </p>
+        <div className="layout-container pb-12 pt-8 md:pb-16 md:pt-10 lg:pb-24 lg:pt-12">
+          <div className="grid grid-cols-1 items-center gap-8 md:gap-12 lg:grid-cols-2">
+            {/* Left column — copy + buttons */}
+            <div>
+              <h2 className="text-3xl font-semibold leading-tight text-white lg:text-4xl">
+                {ctaTitle ?? "Begin a Conversation With Our Advisory Team."}
+              </h2>
+              <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-white/70 lg:text-lg">
+                {ctaDescription ??
+                  "Every engagement begins with a structured conversation. No obligations — simply an exchange of context to determine whether there is a basis for collaboration."}
+              </p>
 
-            <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-              <Link
-                href="/contact"
-                className="inline-block rounded-card bg-white px-8 py-3.5 text-center text-sm font-semibold text-[#071a2f] transition-colors duration-200 hover:bg-slate-200"
-              >
-                Schedule an Introduction
-              </Link>
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-1.5 py-3.5 text-sm font-medium text-white/70 transition-colors duration-200 hover:text-white"
-              >
-                Download Firm Overview
-                <span aria-hidden="true" className="text-base">→</span>
-              </Link>
+              <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
+                <Link
+                  href="/contact"
+                  className="inline-block rounded-card bg-white px-8 py-3.5 text-center text-sm font-semibold text-[#071a2f] transition-colors duration-200 hover:bg-slate-200"
+                >
+                  Schedule an Introduction
+                </Link>
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-1.5 py-3.5 text-sm font-medium text-white/70 transition-colors duration-200 hover:text-white"
+                >
+                  Download Firm Overview
+                  <span aria-hidden="true" className="text-base">→</span>
+                </Link>
+              </div>
             </div>
-          </div>
 
-          {/* Right column — cinematic image crossfade */}
-          <div className="lg:col-span-6">
-            <CinematicVisualPanel />
+            {/* Right column — cinematic image crossfade */}
+            <div>
+              <CinematicVisualPanel />
+            </div>
           </div>
         </div>
       </div>
@@ -250,11 +245,11 @@ function MetricCard({
         style={{
           minHeight: "200px",
           cursor: "pointer",
-          borderColor: hovered ? "rgba(255,255,255,0.18)" : "rgba(255,255,255,0.10)",
+          borderColor: "rgba(255,255,255,0.08)",
           backgroundColor: hovered ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.05)",
-          transform: hovered ? "translateY(-6px)" : "translateY(0)",
+          transform: hovered ? "translateY(-8px)" : "translateY(0)",
           boxShadow: hovered
-            ? "0 16px 40px rgba(0,0,0,0.25)"
+            ? "0 20px 48px rgba(0,0,0,0.35)"
             : "0 4px 16px rgba(0,0,0,0.15)",
           transition: "transform 260ms cubic-bezier(0.22,1,0.36,1), box-shadow 260ms cubic-bezier(0.22,1,0.36,1), border-color 260ms cubic-bezier(0.22,1,0.36,1), background-color 260ms cubic-bezier(0.22,1,0.36,1)",
         }}
@@ -304,39 +299,9 @@ function MetricCard({
 // Uses local paths when available, falls back to Unsplash URLs.
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/** Probe whether a local image path exists by attempting a HEAD fetch.
- *  Returns resolved URL array (local or fallback). */
-function useImageSequence(
-  localPaths: string[],
-  fallbackPaths: string[]
-): string[] {
-  const [resolved, setResolved] = useState<string[]>(fallbackPaths);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function probe() {
-      try {
-        // Check one local path to decide if the whole set is present
-        const res = await fetch(localPaths[0], { method: "HEAD" });
-        if (!cancelled && res.ok) {
-          setResolved(localPaths);
-        }
-      } catch {
-        // Local images not present — keep fallback
-      }
-    }
-
-    probe();
-    return () => { cancelled = true; };
-  }, [localPaths, fallbackPaths]);
-
-  return resolved;
-}
-
 function CinematicVisualPanel() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const images = useImageSequence(INSTITUTIONAL_SEQUENCE, INSTITUTIONAL_FALLBACK);
+  const images = IA_CTA_IMAGES;
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -349,7 +314,7 @@ function CinematicVisualPanel() {
   }, [images.length]);
 
   return (
-    <div className="relative aspect-4/3 overflow-hidden rounded-card">
+    <div className="relative min-h-75 overflow-hidden rounded-card md:min-h-95 lg:min-h-100">
       {images.map((src, i) => (
         <Image
           key={src}

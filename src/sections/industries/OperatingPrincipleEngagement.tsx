@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { r } from "@/lib/breakpoints";
+import { useResponsiveValue } from "@/lib/breakpoints";
 import { BORDER_RADIUS, C, F, M_CURVE, M_DUR, MAX_WIDTH, PHILOSOPHY_IMAGES } from "./data";
 
 export default function OperatingPrincipleEngagement() {
-  const isMobile = r(false, false, true);
+  const isMobile = useResponsiveValue(false, false, true);
   const [imgHover, setImgHover] = useState(false);
   const [primaryHover, setPrimaryHover] = useState(false);
   const [secondaryHover, setSecondaryHover] = useState(false);
 
-  const px = r("32px", "32px", "24px");
-  const padV = r("96px", "64px", "48px");
+  const px = useResponsiveValue("32px", "32px", "24px");
+  const padV = useResponsiveValue("96px", "64px", "48px");
 
   return (
     <section style={{ backgroundColor: C.n900 }}>
@@ -26,7 +26,7 @@ export default function OperatingPrincipleEngagement() {
           paddingRight: px,
           display: "grid",
           gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-          gap: r("64px", "40px", "40px"),
+          gap: useResponsiveValue("64px", "40px", "40px"),
         }}
       >
         <div>
@@ -47,8 +47,8 @@ export default function OperatingPrincipleEngagement() {
           <p
             style={{
               fontFamily: F,
-              fontSize: r("var(--text-h3)", "var(--text-body-lg)", "var(--text-body-lg)"),
-              lineHeight: r("var(--line-height-h3)", "1.4", "1.4"),
+              fontSize: useResponsiveValue("var(--text-h3)", "var(--text-body-lg)", "var(--text-body-lg)"),
+              lineHeight: useResponsiveValue("var(--line-height-h3)", "1.4", "1.4"),
               fontWeight: 600,
               color: C.white,
               maxWidth: "48ch",
@@ -134,9 +134,9 @@ export default function OperatingPrincipleEngagement() {
           <h3
             style={{
               fontFamily: F,
-              fontSize: r("var(--text-h2)", "var(--text-h3)", "var(--text-body-lg)"),
+              fontSize: useResponsiveValue("var(--text-h2)", "var(--text-h3)", "var(--text-body-lg)"),
               fontWeight: 600,
-              lineHeight: r("var(--line-height-h2)", "var(--line-height-h3)", "1.3"),
+              lineHeight: useResponsiveValue("var(--line-height-h2)", "var(--line-height-h3)", "1.3"),
               color: C.white,
             }}
           >

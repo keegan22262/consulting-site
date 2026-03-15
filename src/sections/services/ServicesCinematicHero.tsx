@@ -1,27 +1,38 @@
-﻿import Image from "next/image";
-import Link from "next/link";
+﻿"use client";
 
-// Hero image sourced from Figma reference (figma-reference/rslservices.tsx).
+import Image from "next/image";
+import Breadcrumb from "@/components-v2/ui/Breadcrumb";
+import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
+
 const HERO_IMAGE = "/images/services/hero-services.jpg";
 
 /**
  * ServicesCinematicHero
  *
  * Full-width cinematic image with dark gradient overlay and bottom-left text.
- * Layout: Figma reference â€” figma-reference/rslservices.tsx â†’ CinematicHero
- * Spacing: hero padding 128px (space-128) â†’ clamp via height; px-8 container
+ * Layout: Figma reference - figma-reference/rslservices.tsx -> CinematicHero
+ * Spacing: hero padding 128px (space-128) -> responsive fixed heights and container padding
  * Typography: H1 display, body-lg description, caption breadcrumb
  */
 export default function ServicesCinematicHero() {
+  const heroHeight = useResponsiveValue({ desktop: "520px", tablet: "420px", mobile: "340px" });
+  const px = useResponsiveValue({ desktop: "48px", tablet: "32px", mobile: "24px" });
+  const pb = useResponsiveValue({ desktop: "56px", tablet: "44px", mobile: "36px" });
+  const h1Size = useResponsiveValue({ desktop: "3.5rem", tablet: "2.75rem", mobile: "2rem" });
+  const h1LineHeight = useResponsiveValue({ desktop: "1.06", tablet: "1.1", mobile: "1.18" });
+  const h1LetterSpacing = useResponsiveValue({ desktop: "-0.03em", tablet: "-0.02em", mobile: "-0.01em" });
+  const descSize = useResponsiveValue({ desktop: "1.0625rem", tablet: "1rem", mobile: "0.9375rem" });
+  const descMaxW = useResponsiveValue({ desktop: "540px", tablet: "440px", mobile: "100%" });
+
   return (
     <section
       className="relative w-full overflow-hidden bg-(--a900)"
-      style={{ height: "clamp(340px, 42vw, 520px)" }}
+      style={{ height: heroHeight }}
     >
       {/* Background image */}
       <Image
         src={HERO_IMAGE}
-        alt="Global infrastructure and economic activity â€” institutional services overview"
+        alt="Global infrastructure and economic activity - institutional services overview"
         fill
         priority
         className="object-cover object-center"
@@ -38,29 +49,31 @@ export default function ServicesCinematicHero() {
         }}
       />
 
-      {/* Text content â€” bottom-left */}
+      {/* Text content - bottom-left */}
       <div className="absolute inset-x-0 bottom-0">
-        <div className="mx-auto w-full max-w-7xl px-6 pb-10 md:px-8 md:pb-12 lg:pb-14">
+        <div
+          className="mx-auto w-full max-w-[1280px]"
+          style={{ paddingLeft: px, paddingRight: px, paddingBottom: pb }}
+        >
 
           {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2">
-            <Link
-              href="/"
-              className="text-[13px] text-white/60 transition-colors hover:text-white/90"
-            >
-              RSL
-            </Link>
-            <span className="text-[13px] text-white/40">/</span>
-            <span className="text-[13px] text-white/90 font-medium">Services</span>
-          </nav>
+          <div className="mb-6">
+            <Breadcrumb
+              items={[
+                { label: "RSL", href: "/" },
+                { label: "Services" },
+              ]}
+              light
+            />
+          </div>
 
           {/* H1 */}
           <h1
             className="font-semibold text-white"
             style={{
-              fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
-              lineHeight: "1.08",
-              letterSpacing: "-0.02em",
+              fontSize: h1Size,
+              lineHeight: h1LineHeight,
+              letterSpacing: h1LetterSpacing,
             }}
           >
             Services
@@ -76,8 +89,8 @@ export default function ServicesCinematicHero() {
             <p
               className="leading-[1.6] text-white/88"
               style={{
-                fontSize: "clamp(0.9375rem, 1.2vw, 1.0625rem)",
-                maxWidth: "540px",
+                fontSize: descSize,
+                maxWidth: descMaxW,
               }}
             >
               Our full spectrum of advisory capabilities across sectors and globally connected teams

@@ -7,19 +7,20 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
+import InsightCarouselCard, {
+  INSIGHT_CARD_H,
+  INSIGHT_CAROUSEL_EASING,
+} from "@/components-v2/ui/InsightCarouselCard";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 const AUTO_INTERVAL = 7000;
-const EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
-const CARD_HEIGHT_DESKTOP = 520;
-const CARD_HEIGHT_MOBILE = 400;
+const EASING = INSIGHT_CAROUSEL_EASING;
 
 // ─── Placeholder data — 5 cards per Figma spec ──────────────────────────────
-const INSIGHTS = [
+const FALLBACK_INSIGHTS = [
   {
     category: "Technology",
     title: "AI Readiness Assessment for African Enterprises",
@@ -67,35 +68,147 @@ const INSIGHTS = [
   },
 ] as const;
 
-const TOTAL = INSIGHTS.length;
+type InsightCardData = {
+  category: string;
+  title: string;
+  excerpt: string;
+  source: string;
+  image: string;
+  slug: string;
+};
+
+interface InsightsCarouselSectionProps {
+  insights?: Array<{
+    slug: string;
+    category?: string;
+    title: string;
+    excerpt?: string;
+    summary?: string;
+  }>;
+  overline?: string;
+  title?: string;
+  description?: string;
+  titleHref?: string | null;
+  exploreHref?: string;
+  exploreLabel?: string;
+  hideFilters?: boolean;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Main section
 // ═══════════════════════════════════════════════════════════════════════════════
-export default function InsightsCarouselSection() {
+export default function InsightsCarouselSection({
+  insights,
+  overline = "Insights",
+  title = "Ideas shaping tomorrow's institutions.",
+  description =
+    "Explore perspectives drawn from advisory engagements, sector research, and institutional transformation across Africa's evolving economic landscape.",
+  titleHref = "/insights",
+  exploreHref = "/insights",
+  exploreLabel = "Explore all insights",
+  hideFilters = false,
+}: InsightsCarouselSectionProps) {
   const [revealRef, revealStyle] = useScrollReveal();
   const [activeIndex, setActiveIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<string>("All Insights");
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  const [trackOpacity, setTrackOpacity] = useState(1);
+  const [trackScale, setTrackScale] = useState(1);
   const sectionRef = useRef<HTMLElement>(null);
   const wheelCooldown = useRef(false);
+  const filterTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const mobileMq = window.matchMedia("(max-width: 767px)");
+    const tabletMq = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
+    const update = () => {
+      setIsMobile(mobileMq.matches);
+      setIsTablet(tabletMq.matches);
+    };
+    update();
+    mobileMq.addEventListener("change", update);
+    tabletMq.addEventListener("change", update);
+    return () => {
+      mobileMq.removeEventListener("change", update);
+      tabletMq.removeEventListener("change", update);
+    };
+  }, []);
+
+  const runtimeInsights: InsightCardData[] =
+    insights && insights.length > 0
+      ? insights.map((item, idx) => ({
+          category: item.category ?? "Insight",
+          title: item.title,
+          excerpt: item.excerpt ?? item.summary ?? "",
+          source:
+            FALLBACK_INSIGHTS[idx % FALLBACK_INSIGHTS.length]?.source ??
+            "RSL Perspectives",
+          image:
+            FALLBACK_INSIGHTS[idx % FALLBACK_INSIGHTS.length]?.image ??
+            FALLBACK_INSIGHTS[0].image,
+          slug: item.slug,
+        }))
+      : FALLBACK_INSIGHTS.map((item) => ({ ...item }));
+
+  const categories = [
+    "All Insights",
+    ...Array.from(new Set(runtimeInsights.map((item) => item.category))),
+  ];
+
+  const filteredInsights = hideFilters
+    ? runtimeInsights
+    : activeFilter === "All Insights"
+      ? runtimeInsights
+      : runtimeInsights.filter((item) => item.category === activeFilter);
+  const currentTotal = filteredInsights.length;
+  const cardWidthPercent = isMobile ? 92 : isTablet ? 90 : 80;
+  const shouldShowFilters = !hideFilters && categories.length > 1;
+
+  const handleFilterChange = useCallback(
+    (nextFilter: string) => {
+      if (!shouldShowFilters) return;
+      if (nextFilter === activeFilter) return;
+      if (filterTimeoutRef.current) clearTimeout(filterTimeoutRef.current);
+      setTrackOpacity(0);
+      setTrackScale(0.98);
+      filterTimeoutRef.current = setTimeout(() => {
+        setActiveFilter(nextFilter);
+        setActiveIndex(0);
+        setHoveredIndex(null);
+        requestAnimationFrame(() => {
+          setTrackOpacity(1);
+          setTrackScale(1);
+        });
+      }, 250);
+    },
+    [activeFilter, shouldShowFilters],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (filterTimeoutRef.current) clearTimeout(filterTimeoutRef.current);
+    };
+  }, []);
 
   // ─── Autoplay — 7s, pauses on hover ───────────────────────────────────────
   useEffect(() => {
-    if (isHovered || TOTAL <= 1) return;
+    if (isHovered || currentTotal <= 1) return;
     const id = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % TOTAL);
+      setActiveIndex((prev) => (prev + 1) % currentTotal);
     }, AUTO_INTERVAL);
     return () => clearInterval(id);
-  }, [isHovered]);
+  }, [isHovered, currentTotal]);
 
   const advance = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % TOTAL);
-  }, []);
+    setActiveIndex((prev) => (prev + 1) % currentTotal);
+  }, [currentTotal]);
 
   const retreat = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + TOTAL) % TOTAL);
-  }, []);
+    setActiveIndex((prev) => (prev - 1 + currentTotal) % currentTotal);
+  }, [currentTotal]);
 
   // ─── Scoped wheel handler ─────────────────────────────────────────────────
   useEffect(() => {
@@ -111,10 +224,6 @@ export default function InsightsCarouselSection() {
       // Ignore tiny movements
       if (Math.abs(e.deltaX) < 10) return;
 
-      // Smooth exit at boundaries — let page scroll naturally
-      if (e.deltaX > 0 && activeIndex >= TOTAL - 1) return;
-      if (e.deltaX < 0 && activeIndex <= 0) return;
-
       // Debounce rapid fire
       if (wheelCooldown.current) return;
       wheelCooldown.current = true;
@@ -123,15 +232,15 @@ export default function InsightsCarouselSection() {
       e.preventDefault();
 
       if (e.deltaX > 0) {
-        setActiveIndex((prev) => Math.min(prev + 1, TOTAL - 1));
+        setActiveIndex((prev) => (prev + 1) % currentTotal);
       } else {
-        setActiveIndex((prev) => Math.max(prev - 1, 0));
+        setActiveIndex((prev) => (prev - 1 + currentTotal) % currentTotal);
       }
     };
 
     el.addEventListener("wheel", handler, { passive: false });
     return () => el.removeEventListener("wheel", handler);
-  }, [activeIndex]);
+  }, [currentTotal]);
 
   // ─── Keyboard nav ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -210,31 +319,62 @@ export default function InsightsCarouselSection() {
       {/* ─── Section Header ─── */}
       <div className="relative z-1 mx-auto mb-16 max-w-7xl px-8">
         <span className="mb-3 block text-xs font-semibold uppercase tracking-[0.12em] text-white/55">
-          Insights
+          {overline}
         </span>
         <h2 className="mb-4 max-w-190 text-[1.75rem] font-semibold leading-tight text-white md:text-4xl">
-          <Link href="/insights" className="cursor-pointer transition-colors hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm">
-            Ideas shaping tomorrow&apos;s institutions.
-          </Link>
+          {titleHref ? (
+            <Link
+              href={titleHref}
+              className="cursor-pointer transition-colors hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm"
+            >
+              {title}
+            </Link>
+          ) : (
+            title
+          )}
         </h2>
         <p className="max-w-170 text-[1.0625rem] leading-relaxed text-white/90">
-          Explore perspectives drawn from advisory engagements, sector research,
-          and institutional transformation across Africa&apos;s evolving economic
-          landscape.
+          {description}
         </p>
+
+        {shouldShowFilters && (
+          <div className="mt-9 flex flex-wrap gap-7">
+            {categories.map((cat) => {
+              const isActive = activeFilter === cat;
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => handleFilterChange(cat)}
+                  className="border-none bg-transparent p-0 text-sm tracking-[0.04em] transition-colors"
+                  style={{
+                    fontWeight: 500,
+                    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.65)",
+                    borderBottom: isActive ? "2px solid #FFFFFF" : "2px solid transparent",
+                    paddingBottom: "6px",
+                    paddingTop: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* ─── Horizontal Slider Track ─── */}
-      <div className="relative z-1 w-full overflow-hidden px-[calc((100vw-900px)/2)] max-lg:px-6">
+      <div className="relative z-1 w-full overflow-visible" style={{ opacity: trackOpacity, transform: `scale(${trackScale})`, transition: "opacity 250ms ease, transform 250ms ease" }}>
         <motion.div
-          className="flex gap-8"
+          className="flex gap-16"
           animate={{
-            x: `calc(-${activeIndex} * (min(85vw, 900px) + 2rem))`,
+            x: `calc(${(100 - cardWidthPercent) / 2}vw - ${activeIndex * cardWidthPercent}vw - ${activeIndex * 64}px)`,
           }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         >
-          {INSIGHTS.map((ins, idx) => (
-            <InsightCard
+          {filteredInsights.map((ins, idx) => (
+            <InsightCarouselCard
               key={ins.slug}
               insight={ins}
               isActive={idx === activeIndex}
@@ -242,6 +382,9 @@ export default function InsightsCarouselSection() {
               onHoverStart={() => setHoveredIndex(idx)}
               onHoverEnd={() => setHoveredIndex(null)}
               onClick={() => setActiveIndex(idx)}
+              cardWidthPercent={cardWidthPercent}
+              isMobile={isMobile}
+              cardHeight={isMobile ? 400 : INSIGHT_CARD_H}
             />
           ))}
         </motion.div>
@@ -250,11 +393,11 @@ export default function InsightsCarouselSection() {
       {/* ─── Navigation Controls ─── */}
       <div className="relative z-1 mt-10 flex items-center justify-center gap-5">
         <NavButton label="Previous insight" onClick={retreat}>
-          ←
+          {"<-"}
         </NavButton>
 
         <div className="flex items-center gap-3">
-          {INSIGHTS.map((ins, idx) => (
+          {filteredInsights.map((ins, idx) => (
             <button
               key={ins.slug}
               type="button"
@@ -275,136 +418,23 @@ export default function InsightsCarouselSection() {
         </div>
 
         <NavButton label="Next insight" onClick={advance}>
-          →
+          {"->"}
         </NavButton>
       </div>
 
       {/* ─── "Explore all insights →" ─── */}
       <div className="relative z-1 mx-auto mt-8 flex max-w-7xl justify-end px-8">
         <Link
-          href="/insights"
+          href={exploreHref}
           className="group inline-flex items-center gap-1.5 text-[0.9375rem] font-medium text-white/85 transition-colors hover:text-white"
         >
-          Explore all insights
+          {exploreLabel}
           <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
-            →
+            {"->"}
           </span>
         </Link>
       </div>
     </section>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// InsightCard — dark glass editorial card, text-left / image-right
-// 80vw wide, 520px tall (desktop). Inactive: 70% opacity, scale(0.92).
-// ═══════════════════════════════════════════════════════════════════════════════
-
-function InsightCard({
-  insight,
-  isActive,
-  isHovered,
-  onHoverStart,
-  onHoverEnd,
-  onClick,
-}: {
-  insight: (typeof INSIGHTS)[number];
-  isActive: boolean;
-  isHovered: boolean;
-  onHoverStart: () => void;
-  onHoverEnd: () => void;
-  onClick: () => void;
-}) {
-  return (
-    <div
-      onMouseEnter={onHoverStart}
-      onMouseLeave={onHoverEnd}
-      onClick={onClick}
-      className="relative shrink-0 cursor-pointer overflow-hidden rounded-2xl"
-      style={{
-        width: "min(85vw, 900px)",
-        height: `${CARD_HEIGHT_DESKTOP}px`,
-        backgroundColor: "rgba(12,28,46,0.65)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
-        boxShadow: isHovered
-          ? "0px 40px 80px rgba(0,0,0,0.45)"
-          : "0px 30px 60px rgba(0,0,0,0.35)",
-        opacity: isActive ? 1 : 0.7,
-        transform: isActive ? "scale(1)" : "scale(0.92)",
-        transition: `opacity 900ms ${EASING}, transform 900ms ${EASING}, box-shadow 300ms ${EASING}`,
-      }}
-    >
-      {/* Full-bleed background image */}
-      <Image
-        src={insight.image}
-        alt={insight.title}
-        fill
-        sizes="(max-width: 1024px) 85vw, 900px"
-        className="object-cover"
-        style={{
-          transform: isHovered ? "scale(1.04)" : "scale(1)",
-          transition: `transform 900ms ${EASING}`,
-        }}
-      />
-
-      {/* Gradient overlay — left-heavy for text legibility */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-1"
-        style={{
-          background:
-            "linear-gradient(to right, rgba(12,28,46,0.85), rgba(12,28,46,0.55), rgba(12,28,46,0.1))",
-        }}
-      />
-
-      {/* Text content — left side */}
-      <div className="relative z-2 flex h-full max-w-130 flex-col justify-end px-6 pb-8 pt-12 md:px-14 md:pb-12">
-        {/* Category overline */}
-        <span className="mb-3 text-xs font-semibold uppercase tracking-[0.08em] text-white/65">
-          {insight.category}
-        </span>
-
-        {/* Title */}
-        <h3 className="mb-4 text-[1.375rem] font-semibold leading-tight text-white md:text-[1.75rem]">
-          {insight.title}
-        </h3>
-
-        {/* Excerpt */}
-        <p
-          className="mb-5 text-[0.9375rem] leading-relaxed text-white/78"
-          style={{
-            display: "-webkit-box",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical" as const,
-            overflow: "hidden",
-          }}
-        >
-          {insight.excerpt}
-        </p>
-
-        {/* Source line */}
-        <span className="mb-5 text-xs text-white/50">{insight.source}</span>
-
-        {/* CTA link */}
-        <Link
-          href={`/insights/${insight.slug}`}
-          onClick={(e) => e.stopPropagation()}
-          className="inline-flex w-fit items-center gap-1.5 border-b border-white/40 pb-0.5 text-sm font-semibold text-white transition-colors hover:border-white"
-        >
-          Read Full Insight
-          <span
-            className="inline-block text-[0.9em]"
-            style={{
-              transition: `transform 300ms ${EASING}`,
-              transform: isHovered ? "translateX(4px)" : "translateX(0px)",
-            }}
-          >
-            →
-          </span>
-        </Link>
-      </div>
-    </div>
   );
 }
 

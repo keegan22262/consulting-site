@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Breadcrumb from "@/components-v2/ui/Breadcrumb";
 import { useHeroEntrance } from "@/components-v2/foundation/useHeroEntrance";
-import { r } from "@/lib/breakpoints";
+import { useResponsiveValue } from "@/lib/breakpoints";
 import { BORDER_RADIUS, C, F, HERO_BACKGROUNDS, M_CURVE, M_DUR, MAX_WIDTH } from "./data";
 
 export default function IndustriesHero() {
@@ -11,9 +12,9 @@ export default function IndustriesHero() {
   const heroEntrance = useHeroEntrance();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const px = r("32px", "32px", "24px");
-  const padTop = r("136px", "104px", "80px");
-  const padBot = r("104px", "80px", "64px");
+  const px = useResponsiveValue("32px", "32px", "24px");
+  const padTop = useResponsiveValue("136px", "104px", "80px");
+  const padBot = useResponsiveValue("104px", "80px", "64px");
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
@@ -79,32 +80,16 @@ export default function IndustriesHero() {
           }}
         >
           <div style={{ marginBottom: "32px", ...heroEntrance.overline }}>
-            <nav aria-label="Breadcrumb" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Link
-                href="/"
-                style={{
-                  fontFamily: F,
-                  fontSize: "var(--text-caption)",
-                  color: "rgba(255,255,255,0.65)",
-                  textDecoration: "none",
-                }}
-              >
-                RSL
-              </Link>
-              <span style={{ color: "rgba(255,255,255,0.45)" }}>/</span>
-              <span
-                style={{
-                  fontFamily: F,
-                  fontSize: "var(--text-caption)",
-                  color: "rgba(255,255,255,0.85)",
-                }}
-              >
-                Industries
-              </span>
-            </nav>
+            <Breadcrumb
+              items={[
+                { label: "RSL", href: "/" },
+                { label: "Industries" },
+              ]}
+              light
+            />
           </div>
 
-          <div style={{ maxWidth: r("720px", "100%", "100%") as string }}>
+          <div style={{ maxWidth: useResponsiveValue("720px", "100%", "100%") as string }}>
             <span
               style={{
                 fontFamily: F,
@@ -124,10 +109,10 @@ export default function IndustriesHero() {
             <h1
               style={{
                 fontFamily: F,
-                fontSize: r("3.5rem", "2.75rem", "2.25rem"),
+                fontSize: useResponsiveValue("3.5rem", "2.75rem", "2.25rem"),
                 fontWeight: 600,
-                lineHeight: r("1.06", "1.1", "1.15"),
-                letterSpacing: r("-0.025em", "-0.015em", "-0.005em"),
+                lineHeight: useResponsiveValue("1.06", "1.1", "1.15"),
+                letterSpacing: useResponsiveValue("-0.025em", "-0.015em", "-0.005em"),
                 color: C.white,
                 ...heroEntrance.heading,
               }}
@@ -151,7 +136,9 @@ export default function IndustriesHero() {
               market dynamics, and digital maturity across every industry we serve.
             </p>
 
-            <div style={{ marginTop: r("48px", "40px", "32px"), ...heroEntrance.cta }}>
+            <div
+              style={{ marginTop: useResponsiveValue("48px", "40px", "32px"), ...heroEntrance.cta }}
+            >
               <a
                 href="#sector-coverage"
                 onMouseEnter={(e) => {

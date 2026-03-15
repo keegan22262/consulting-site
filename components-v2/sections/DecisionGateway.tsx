@@ -81,7 +81,7 @@ export default function DecisionGateway() {
 
           {/* Executive image — first on mobile, second on desktop */}
           <div className="order-1 lg:order-2">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-card">
+            <div className="relative aspect-4/3 overflow-hidden rounded-card">
               <Image
                 src="/images/gateway/executive.jpg"
                 alt="Executive professional — strategic advisory context"
@@ -94,21 +94,29 @@ export default function DecisionGateway() {
         </div>
       </div>
 
-      {/* ── Floating guidance panel ── */}
-      {/* Desktop: overlaps bottom by ~40px. Mobile: stacked cards */}
+      {/* ── Mobile guidance panel (stacked cards) ── */}
       <div
         ref={panelRef}
         style={panelStyle}
-        className="relative z-2 mx-auto w-full max-w-3xl px-6 pb-12 lg:-mt-10 lg:mb-0 lg:pb-0"
-        // On desktop the negative margin + the section's pb-0 creates the overlap effect
+        className="layout-container relative z-2 pb-12 lg:hidden"
       >
-        {/* Desktop: side-by-side with divider */}
-        <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-lg lg:grid lg:grid-cols-[1fr_1px_1fr]">
+        <div className="flex flex-col gap-4">
+          {GUIDANCE_ITEMS.map((item) => (
+            <div
+              key={item.href}
+              className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm"
+            >
+              <GuidanceCard {...item} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Desktop floating guidance panel ── */}
+      <div className="relative z-2 mx-auto hidden w-full max-w-3xl px-6 lg:-mt-10 lg:block">
+        <div className="grid overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-lg lg:grid-cols-[1fr_1px_1fr]">
           <GuidanceCard {...GUIDANCE_ITEMS[0]} />
-          {/* Vertical divider — visible only on desktop */}
-          <div className="hidden bg-neutral-200 lg:block" />
-          {/* Horizontal divider — visible only on mobile */}
-          <div className="h-px bg-neutral-200 lg:hidden" />
+          <div className="bg-neutral-200" />
           <GuidanceCard {...GUIDANCE_ITEMS[1]} />
         </div>
       </div>

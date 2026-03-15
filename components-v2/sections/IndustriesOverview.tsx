@@ -24,6 +24,7 @@ const IndustriesOverview = ({ industries, background = "white" }: IndustriesOver
             key={industry.slug}
             title={industry.title}
             description={industry.description}
+            variant="detailed"
             href={`/industries/${industry.slug}`}
           />
         ))}

@@ -15,6 +15,7 @@ import InsightRelatedServicesSection from "@/src/sections/insight-detail/Insight
 import InsightSummarySection from "@/src/sections/insight-detail/InsightSummarySection";
 import Link from "next/link";
 import { CASE_STUDIES } from "@/src/sections/case-study/data";
+import { ExploreRelatedKnowledge, type KnowledgeLink } from "@/components-v2/ui/RelatedKnowledge";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -173,6 +174,25 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     url: canonicalUrl,
   };
 
+  const relatedIndustries: KnowledgeLink[] = [
+    { href: "/industries/financial-services", label: "Financial Services" },
+    { href: "/industries/technology-digital", label: "Technology, Media & Telecommunications" },
+    { href: "/industries/public-sector-government", label: "Public Sector & Government" },
+  ];
+  const knowledgeServices: KnowledgeLink[] = relatedServices.map((svc) => ({
+    label: svc.title,
+    href: `/services/${svc.slug}`,
+  }));
+  const knowledgeInsights: KnowledgeLink[] = relatedInsights.map((ins) => ({
+    label: ins.title,
+    href: `/insights/${ins.slug}`,
+    category: ins.category,
+  }));
+  const knowledgeCaseStudies: KnowledgeLink[] = CASE_STUDIES.slice(0, 2).map((study) => ({
+    label: study.title,
+    href: `/case-studies/${study.slug}`,
+  }));
+
   return (
     <>
       <InsightsDetailHeroSection
@@ -190,7 +210,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
       <InsightSummarySection summaryPoints={summaryPoints} />
 
-      <InsightBodySection contentBlocks={contentBlocks} />
+      <InsightBodySection
+        contentBlocks={contentBlocks}
+        relatedServices={relatedServices.map((svc) => ({ slug: svc.slug, label: svc.title }))}
+        relatedIndustries={relatedIndustries.map((ind) => ({ id: ind.href.split("/").pop() || ind.href, label: ind.label }))}
+        shareUrl={canonicalUrl}
+        shareTitle={insight.title ?? ""}
+        discussionCTA={{ label: "Discuss this insight", to: "/contact" }}
+      />
 
       <InsightPullQuoteSection pullQuote={pullQuote} />
 
@@ -206,11 +233,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div style={{ padding: "40px 0" }} />
       )}
 
-      <RelatedIndustriesSection />
-
-      <RelatedCaseStudiesSection />
-
-      <InsightKnowledgeNavigation hasServices={relatedServices.length > 0} />
+      <ExploreRelatedKnowledge
+        industries={relatedIndustries}
+        services={knowledgeServices}
+        insights={knowledgeInsights}
+        caseStudies={knowledgeCaseStudies}
+      />
 
       <CTABlock
         title={insight.title ?? "Talk to a partner"}
@@ -251,99 +279,6 @@ function TranslateInsightSection() {
               Explore Advisory Services
             </Link>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function InsightKnowledgeNavigation({ hasServices }: { hasServices: boolean }) {
-  return (
-    <section className="bg-white py-14 md:py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Explore Related Knowledge</span>
-        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
-          Continue from insight to execution context.
-        </h3>
-        <p className="mt-4 max-w-[62ch] text-base leading-[1.7] text-[#475569]">
-          Move between research, service architecture, and applied case context to shape institution-specific decisions.
-        </p>
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Link
-            href="/insights"
-            className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 text-sm font-medium text-[#334155] transition hover:border-[#94A3B8]"
-          >
-            More Insights
-          </Link>
-          <Link
-            href={hasServices ? "/services" : "/contact"}
-            className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 text-sm font-medium text-[#334155] transition hover:border-[#94A3B8]"
-          >
-            {hasServices ? "Related Services" : "Discuss This Topic"}
-          </Link>
-          <Link
-            href="/case-studies"
-            className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 text-sm font-medium text-[#334155] transition hover:border-[#94A3B8]"
-          >
-            Case Studies
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function RelatedIndustriesSection() {
-  const industries = [
-    ["financial-services", "Financial Services"],
-    ["technology-digital", "Technology, Media & Telecommunications"],
-    ["public-sector-government", "Public Sector & Government"],
-  ] as const;
-
-  return (
-    <section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Related Industries</span>
-        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
-          Sector contexts connected to this insight.
-        </h3>
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {industries.map(([slug, label]) => (
-            <Link
-              key={slug}
-              href={`/industries/${slug}`}
-              className="rounded-xl border border-[#E2E8F0] bg-white p-6 text-sm font-medium text-[#334155] transition hover:border-[#94A3B8]"
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function RelatedCaseStudiesSection() {
-  const studies = CASE_STUDIES.slice(0, 2);
-
-  return (
-    <section className="bg-white py-14 md:py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Related Case Studies</span>
-        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
-          Applied execution examples.
-        </h3>
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-          {studies.map((study) => (
-            <Link
-              key={study.slug}
-              href={`/case-studies/${study.slug}`}
-              className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 transition hover:border-[#94A3B8]"
-            >
-              <h4 className="text-base font-semibold text-[#0F1720]">{study.title}</h4>
-              <p className="mt-2 text-sm leading-[1.6] text-[#475569]">{study.summary}</p>
-            </Link>
-          ))}
         </div>
       </div>
     </section>

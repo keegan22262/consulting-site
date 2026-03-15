@@ -10,7 +10,7 @@ const extract = (obj: Record<string, any>) =>
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}"
+    "./components-v2/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     extend: {

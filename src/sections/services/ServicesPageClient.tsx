@@ -1,6 +1,6 @@
 "use client";
 
-import CTABlock from "@/components-v2/sections/CTABlock";
+import InstitutionalCTA from "@/components-v2/sections/InstitutionalCTA";
 import { useServices } from "@/lib/hooks/useServices";
 import CapabilityFrameworkMap from "@/src/sections/services/CapabilityFrameworkMap";
 import CinematicHero from "@/src/sections/services/CinematicHero";
@@ -20,14 +20,13 @@ export default function ServicesPageClient() {
       <ServiceGridSection services={services} />
       <CapabilityFrameworkMap />
       <CreativeDeliverySection />
-      <CTABlock
-        title="Ready to discuss a specific challenge?"
-        description="Every engagement begins with a structured conversation to determine whether there is a basis for collaboration."
-        primaryLabel="Schedule an Introduction"
-        primaryHref="/contact"
+      <InstitutionalCTA
+        overline="Next Step"
+        headline="Ready to discuss a specific challenge?"
+        body="Every engagement begins with a structured conversation to determine whether there is a basis for collaboration."
+        buttonLabel="Schedule an Introduction"
         secondaryLabel="View Industry Coverage"
-        secondaryHref="/industries"
-        secondaryVariant="ghost"
+        secondaryHref="/coverage"
       />
     </>
   );

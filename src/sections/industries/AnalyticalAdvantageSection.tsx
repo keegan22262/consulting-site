@@ -1,6 +1,6 @@
 "use client";
 
-import { r } from "@/lib/breakpoints";
+import { useResponsiveValue } from "@/lib/breakpoints";
 import { ANALYTICAL_BLOCKS, BORDER_RADIUS, C, F, MAX_WIDTH } from "./data";
 
 export default function AnalyticalAdvantageSection() {
@@ -10,10 +10,10 @@ export default function AnalyticalAdvantageSection() {
         style={{
           maxWidth: MAX_WIDTH,
           margin: "0 auto",
-          paddingTop: r("96px", "72px", "56px"),
-          paddingBottom: r("96px", "72px", "56px"),
-          paddingLeft: r("32px", "32px", "24px"),
-          paddingRight: r("32px", "32px", "24px"),
+          paddingTop: useResponsiveValue("96px", "72px", "56px"),
+          paddingBottom: useResponsiveValue("96px", "72px", "56px"),
+          paddingLeft: useResponsiveValue("32px", "32px", "24px"),
+          paddingRight: useResponsiveValue("32px", "32px", "24px"),
         }}
       >
         <span
@@ -56,7 +56,7 @@ export default function AnalyticalAdvantageSection() {
           others.
         </p>
 
-        <div style={{ marginTop: r("64px", "48px", "40px") }}>
+        <div style={{ marginTop: useResponsiveValue("64px", "48px", "40px") }}>
           {ANALYTICAL_BLOCKS.map((block, i) => (
             <AnalyticalEditorialBlock key={block.headline} {...block} index={i} />
           ))}
@@ -77,7 +77,9 @@ function AnalyticalEditorialBlock({
   image: string;
   index: number;
 }) {
-  const isMobile = r(false, false, true);
+  const isMobile = useResponsiveValue(false, false, true);
+  const blockGap = useResponsiveValue("64px", "40px", "24px");
+  const blockMarginBottom = useResponsiveValue("80px", "56px", "40px");
   const imageOnRight = index % 2 === 0;
 
   const imageBlock = (
@@ -132,9 +134,9 @@ function AnalyticalEditorialBlock({
       <h3
         style={{
           fontFamily: F,
-          fontSize: r("var(--text-h3)", "var(--text-body-lg)", "var(--text-body-lg)"),
+          fontSize: useResponsiveValue("var(--text-h3)", "var(--text-body-lg)", "var(--text-body-lg)"),
           fontWeight: 600,
-          lineHeight: r("var(--line-height-h3)", "1.3", "1.3"),
+          lineHeight: useResponsiveValue("var(--line-height-h3)", "1.3", "1.3"),
           color: C.n900,
         }}
       >
@@ -160,8 +162,8 @@ function AnalyticalEditorialBlock({
       style={{
         display: "grid",
         gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-        gap: r("64px", "40px", "24px"),
-        marginBottom: index < ANALYTICAL_BLOCKS.length - 1 ? r("80px", "56px", "40px") : "0",
+        gap: blockGap,
+        marginBottom: index < ANALYTICAL_BLOCKS.length - 1 ? blockMarginBottom : "0",
       }}
     >
       {isMobile || !imageOnRight ? (

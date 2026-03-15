@@ -181,6 +181,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 										   key={insight.slug}
 										   title={insight.title}
 										   description={insight.summary}
+								   		   variant="compact"
 										   href={`/insights/${insight.slug}`}
 									   />
 									   // Note: v2 IndustryCard expects title, description, href. Only summary is available for description from searchInsights.

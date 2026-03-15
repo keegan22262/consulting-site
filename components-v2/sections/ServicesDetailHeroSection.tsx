@@ -1,4 +1,5 @@
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
+import Breadcrumb from "@/components-v2/ui/Breadcrumb";
 
 interface ServicesDetailHeroSectionProps {
   number: string;
@@ -10,13 +11,15 @@ export default function ServicesDetailHeroSection({ number, title, approach }: S
   return (
     <SectionWrapper background="white" padV={{ mobile: 56, tablet: 72, desktop: 96 }} className="min-h-[360px]">
       <div className="max-w-[720px] text-left">
-        <nav className="mb-8 text-sm text-text-muted">
-          <span>RSL</span>
-          <span className="mx-2">/</span>
-          <span>Services</span>
-          <span className="mx-2">/</span>
-          <span className="font-medium text-text-primary">{title}</span>
-        </nav>
+        <div className="mb-8">
+          <Breadcrumb
+            items={[
+              { label: "RSL", href: "/" },
+              { label: "Services", href: "/services" },
+              { label: title },
+            ]}
+          />
+        </div>
         <span className="block text-xs uppercase tracking-widest text-text-muted mb-4">
           Service {number} of 10
         </span>

@@ -16,10 +16,10 @@ import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPre
 
 // ─── Hero image sequence ─────────────────────────────────────────────────────
 const HERO_IMAGES = [
-  "/images/hero/hero-0.jpg",
-  "/images/hero/hero-1.jpg",
-  "/images/hero/hero-2.jpg",
-  "/images/hero/hero-3.jpg",
+  "https://images.unsplash.com/photo-1717256770124-e053bebb13b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjaXR5JTIwc2t5bGluZSUyMG5pZ2h0JTIwZmluYW5jaWFsJTIwdG93ZXJzJTIwZHVza3xlbnwxfHx8fDE3NzI1NzY1NzN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+  "https://images.unsplash.com/photo-1709803857154-d20ee16ff763?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxleGVjdXRpdmUlMjBib2FyZHJvb20lMjBBZnJpY2FuJTIwbGVhZGVyc2hpcCUyMHNlcmlvdXMlMjBtZWV0aW5nfGVufDF8fHx8MTc3MjU3NjU2OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+  "https://images.unsplash.com/photo-1599923142561-ee85cfb5550d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXRhJTIwY2VudGVyJTIwZ2l0YWwlMjMinZnJhc3RydWN0dXJlJTIwbmV0d29yayUyMGZ1dHVyaXN0aWN8ZW58MXx8fHwxNzcyNTc2NTY5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+  "https://images.unsplash.com/photo-1761926002909-781a45b71030?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhZXJpYWwlMjBzaGlwcGluZyUyMHBvcnQlMjBpbmR1c3RyaWFsJTIwaW5mcmFzdHJ1Y3R1cmUlMjBjb3JyaWRvcnxlbnwxfHx8fDE3NzI1NzY1NzN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
 ];
 
 // ─── Timing constants ────────────────────────────────────────────────────────
@@ -64,7 +64,7 @@ export default function HeroSection({
   overline = "Pan-African Institutional Advisory",
   title = "Institutional Advisory Built for Growth, Transformation, and Execution.",
   subtitle,
-  description = "We advise growth-stage companies, institutional operators, and public-sector leaders navigating structural complexity across strategy, technology, finance, and governance — delivering measurable outcomes with discipline.",
+  description = "We advise growth-stage companies, institutional operators, and public-sector leaders navigating structural complexity across strategy, technology, finance, and governance - delivering measurable outcomes with discipline.",
   primaryCta = { label: "See How We Deliver", href: "/services" },
   secondaryCta = { label: "Explore Our Services", href: "/services" },
 }: HeroSectionProps) {
@@ -90,7 +90,43 @@ export default function HeroSection({
   const entrance = useHeroEntrance(prefersReducedMotion);
 
   // ─── Secondary CTA hover state ──────────────────────────────────────────
+  const [primaryHover, setPrimaryHover] = useState(false);
   const [secondaryHover, setSecondaryHover] = useState(false);
+
+  const trackHeroCtaClick = () => {
+    if (typeof window === "undefined") return;
+    const payload = {
+      event: "cta_click",
+      ctaLabel: primaryCta?.label ?? "See How We Deliver",
+      location: "homepage-hero",
+      href: primaryCta?.href ?? "/services",
+    };
+
+    const w = window as typeof window & {
+      dataLayer?: Array<Record<string, unknown>>;
+    };
+
+    if (Array.isArray(w.dataLayer)) {
+      w.dataLayer.push(payload);
+      return;
+    }
+
+    w.dataLayer = [payload];
+  };
+
+  // ─── Explicitly preload first hero image for parity with reference ──────
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = HERO_IMAGES[0];
+    link.setAttribute("fetchpriority", "high");
+    document.head.appendChild(link);
+
+    return () => {
+      if (link.parentNode) link.parentNode.removeChild(link);
+    };
+  }, []);
 
   // ─── Preload remaining hero images after first paint ────────────────────
   useEffect(() => {
@@ -228,7 +264,17 @@ export default function HeroSection({
               {primaryCta?.label && primaryCta?.href && (
                 <Link
                   href={primaryCta.href}
-                  className="inline-block rounded-md bg-white px-6 py-4 text-center text-base font-semibold text-(--a700) transition-[background-color,transform,box-shadow] duration-200 ease-in-out hover:bg-neutral-100 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 md:w-auto"
+                  className="inline-block rounded-md px-6 py-4 text-center text-base font-semibold text-(--a700) transition-[background-color,transform,box-shadow] duration-200 ease-in-out md:w-auto"
+                  onMouseEnter={() => setPrimaryHover(true)}
+                  onMouseLeave={() => setPrimaryHover(false)}
+                  onClick={trackHeroCtaClick}
+                  style={{
+                    backgroundColor: primaryHover ? "#F0F0F0" : "#FFFFFF",
+                    transform: primaryHover ? "translateY(-2px)" : "translateY(0)",
+                    boxShadow: primaryHover
+                      ? "0 14px 30px rgba(0, 0, 0, 0.20)"
+                      : "0 6px 16px rgba(0, 0, 0, 0.14)",
+                  }}
                 >
                   {primaryCta.label}
                 </Link>

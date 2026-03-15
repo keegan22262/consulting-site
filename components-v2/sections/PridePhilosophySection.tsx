@@ -53,10 +53,18 @@ const GRID_TEXTURE = `url("data:image/svg+xml,%3Csvg width='60' height='60' xmln
 // ═══════════════════════════════════════════════════════════════════════════════
 interface PridePhilosophySectionProps {
   principles?: { letter: string; title: string; body: string }[];
+  latestInsight?: {
+    slug: string;
+    category?: string;
+    title: string;
+    excerpt?: string;
+    image?: string;
+  } | null;
 }
 
 export default function PridePhilosophySection({
   principles,
+  latestInsight,
 }: PridePhilosophySectionProps) {
   const [sectionRef, sectionStyle] = useScrollReveal();
 
@@ -127,7 +135,10 @@ export default function PridePhilosophySection({
             <ExecutionCard card={executionCard} staggerIndex={5} />
 
             {/* Strategic Insights placeholder card */}
-            <InsightsPlaceholderCard staggerIndex={6} />
+            <InsightsPlaceholderCard
+              staggerIndex={6}
+              insight={latestInsight ?? null}
+            />
           </div>
         </div>
       </div>
@@ -275,9 +286,79 @@ function ExecutionCard({
 // Insights Placeholder Card — Dark tint, icon, no background image
 // ═══════════════════════════════════════════════════════════════════════════════
 
-function InsightsPlaceholderCard({ staggerIndex }: { staggerIndex: number }) {
+function InsightsPlaceholderCard({
+  staggerIndex,
+  insight,
+}: {
+  staggerIndex: number;
+  insight?: {
+    slug: string;
+    category?: string;
+    title: string;
+    excerpt?: string;
+    image?: string;
+  } | null;
+}) {
   const [hovered, setHovered] = useState(false);
   const [cardRef, cardStyle] = useScrollReveal(staggerIndex);
+
+  if (insight) {
+    return (
+      <div ref={cardRef} style={cardStyle}>
+        <Link href={`/insights/${insight.slug}`} className="block">
+          <div
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            className="group relative cursor-pointer overflow-hidden rounded-xl transition-shadow duration-350"
+            style={{
+              minHeight: "300px",
+              backgroundColor: "#1E293B",
+              boxShadow: hovered
+                ? "0 24px 60px rgba(0,0,0,0.4)"
+                : "0 4px 20px rgba(0,0,0,0.2)",
+              transform: hovered ? "translateY(-6px)" : "translateY(0)",
+              transition: "transform 350ms ease, box-shadow 350ms ease",
+            }}
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-350"
+              style={{
+                backgroundImage: `url(${insight.image ?? "/images/insights/insight-1.jpg"})`,
+                opacity: hovered ? 0.35 : 0.25,
+                transform: hovered ? "scale(1.05)" : "scale(1)",
+              }}
+            />
+
+            <div className="relative z-10 flex h-full min-h-75 flex-col justify-end p-7">
+              <span className="mb-3 block text-[11px] font-semibold uppercase tracking-widest text-[#A5B4FC]">
+                {insight.category ?? "Insight"}
+              </span>
+              <h3 className="text-lg font-semibold text-white">{insight.title}</h3>
+              <p className="mt-2 max-w-[40ch] text-sm leading-relaxed text-[#A5B4FC]">
+                {insight.excerpt ?? "Read our latest perspective from active advisory engagements."}
+              </p>
+              <span
+                className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[#A5B4FC]"
+                style={{ opacity: hovered ? 1 : 0.8, transition: "opacity 250ms ease" }}
+              >
+                Read insight
+                <span
+                  aria-hidden="true"
+                  style={{
+                    transform: hovered ? "translateX(3px)" : "translateX(0)",
+                    transition: "transform 250ms ease",
+                  }}
+                >
+                  →
+                </span>
+              </span>
+            </div>
+          </div>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div ref={cardRef} style={cardStyle}>
@@ -298,7 +379,7 @@ function InsightsPlaceholderCard({ staggerIndex }: { staggerIndex: number }) {
           aria-hidden="true"
           className="absolute inset-0 bg-cover bg-center transition-transform duration-350"
           style={{
-            backgroundImage: "url(/images/pride/pride-insights.jpg)",
+            backgroundImage: "url(/images/insights/insight-1.jpg)",
             opacity: 0.15,
             transform: hovered ? "scale(1.05)" : "scale(1)",
           }}

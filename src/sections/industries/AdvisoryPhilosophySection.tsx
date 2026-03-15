@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { r } from "@/lib/breakpoints";
+import { useResponsiveValue } from "@/lib/breakpoints";
 import { C, F, MAX_WIDTH, M_CURVE, M_DUR, PHILOSOPHY_CARDS } from "./data";
 
 export default function AdvisoryPhilosophySection() {
-  const isDesktop = r(true, false, false);
-  const isTablet = r(false, true, false);
-  const px = r("32px", "32px", "24px");
+  const isDesktop = useResponsiveValue(true, false, false);
+  const isTablet = useResponsiveValue(false, true, false);
+  const px = useResponsiveValue("32px", "32px", "24px");
 
   return (
     <section style={{ backgroundColor: C.white }}>
@@ -15,8 +15,8 @@ export default function AdvisoryPhilosophySection() {
         style={{
           maxWidth: MAX_WIDTH,
           margin: "0 auto",
-          paddingTop: r("96px", "72px", "56px"),
-          paddingBottom: r("96px", "72px", "56px"),
+          paddingTop: useResponsiveValue("96px", "72px", "56px"),
+          paddingBottom: useResponsiveValue("96px", "72px", "56px"),
           paddingLeft: px,
           paddingRight: px,
         }}

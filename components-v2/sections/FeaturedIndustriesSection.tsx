@@ -21,7 +21,7 @@ const AUTO_INTERVAL = 5000;
 const TRANSITION = { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const };
 
 // ─── Industry data ───────────────────────────────────────────────────────────
-const INDUSTRIES = [
+const FALLBACK_INDUSTRIES = [
   {
     title: "Financial Services",
     image: "/images/industries/industry-1.jpg",
@@ -66,12 +66,25 @@ const INDUSTRIES = [
   },
 ] as const;
 
-const TOTAL = INDUSTRIES.length;
+type IndustryCardData = {
+  title: string;
+  description: string;
+  href: string;
+  image: string;
+};
+
+interface FeaturedIndustriesSectionProps {
+  industries?: Array<{
+    slug: string;
+    title: string;
+    description?: string;
+  }>;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Main section
 // ═══════════════════════════════════════════════════════════════════════════════
-export default function FeaturedIndustriesSection() {
+export default function FeaturedIndustriesSection({ industries }: FeaturedIndustriesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [revealRef, revealStyle] = useScrollReveal();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -79,6 +92,20 @@ export default function FeaturedIndustriesSection() {
   const wheelCooldown = useRef(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [cardOffset, setCardOffset] = useState(460);
+
+  const runtimeIndustries: IndustryCardData[] =
+    industries && industries.length > 0
+      ? industries.map((item, idx) => ({
+          title: item.title,
+          description: item.description ?? "",
+          href: `/industries/${item.slug}`,
+          image:
+            FALLBACK_INDUSTRIES[idx % FALLBACK_INDUSTRIES.length]?.image ??
+            FALLBACK_INDUSTRIES[0].image,
+        }))
+      : FALLBACK_INDUSTRIES.map((item) => ({ ...item }));
+
+  const total = runtimeIndustries.length;
 
   // ─── Responsive card offset (matches original grid spacing) ────────────────
   useEffect(() => {
@@ -96,10 +123,10 @@ export default function FeaturedIndustriesSection() {
   useEffect(() => {
     if (isPaused) return;
     const id = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % TOTAL);
+      setActiveIndex((prev) => (prev + 1) % total);
     }, AUTO_INTERVAL);
     return () => clearInterval(id);
-  }, [isPaused]);
+  }, [isPaused, total]);
 
   // ─── Scoped wheel handler ─────────────────────────────────────────────────
   useEffect(() => {
@@ -116,10 +143,6 @@ export default function FeaturedIndustriesSection() {
       // Ignore tiny movements
       if (Math.abs(e.deltaX) < 10) return;
 
-      // Smooth exit: at boundaries, let page scroll naturally
-      if (e.deltaX > 0 && activeIndex >= TOTAL - 1) return;
-      if (e.deltaX < 0 && activeIndex <= 0) return;
-
       // Debounce to prevent rapid multi-fire
       if (wheelCooldown.current) return;
       wheelCooldown.current = true;
@@ -128,26 +151,26 @@ export default function FeaturedIndustriesSection() {
       e.preventDefault();
 
       if (e.deltaX > 0) {
-        setActiveIndex((prev) => Math.min(prev + 1, TOTAL - 1));
+        setActiveIndex((prev) => (prev + 1) % total);
       } else {
-        setActiveIndex((prev) => Math.max(prev - 1, 0));
+        setActiveIndex((prev) => (prev - 1 + total) % total);
       }
       setIsPaused(true);
     };
 
     el.addEventListener("wheel", handler, { passive: false });
     return () => el.removeEventListener("wheel", handler);
-  }, [activeIndex]);
+  }, [total]);
 
   const advance = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % TOTAL);
+    setActiveIndex((prev) => (prev + 1) % total);
     setIsPaused(true);
-  }, []);
+  }, [total]);
 
   const retreat = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + TOTAL) % TOTAL);
+    setActiveIndex((prev) => (prev - 1 + total) % total);
     setIsPaused(true);
-  }, []);
+  }, [total]);
 
   // ─── Touch / swipe ────────────────────────────────────────────────────────
   const touchStartX = useRef<number | null>(null);
@@ -178,7 +201,7 @@ export default function FeaturedIndustriesSection() {
       className="relative overflow-hidden py-16 md:py-20 lg:py-24"
       style={{
         ...revealStyle,
-        background: "linear-gradient(180deg, #0c1c2e 0%, #10263f 40%, #142e4a 100%)",
+        backgroundColor: "#FFFFFF",
       }}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -190,7 +213,7 @@ export default function FeaturedIndustriesSection() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 35%, transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(12,28,46,0.08) 0%, rgba(12,28,46,0.03) 35%, transparent 70%)",
         }}
       />
       {/* Blurred architectural texture */}
@@ -201,9 +224,9 @@ export default function FeaturedIndustriesSection() {
           backgroundImage: "url(/images/advisory/institutional-01.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "70% center",
-          opacity: 0.05,
-          filter: "blur(60px)",
-          transform: "scale(1.1)",
+          opacity: 0.03,
+          filter: "blur(6px)",
+          transform: "scale(1.06)",
         }}
       />
       {/* Gloss highlight */}
@@ -212,21 +235,21 @@ export default function FeaturedIndustriesSection() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(120deg, rgba(255,255,255,0.08), transparent 40%)",
+            "linear-gradient(120deg, rgba(12,28,46,0.05), transparent 40%)",
         }}
       />
       {/* Section header */}
       <div className="layout-container mb-10 md:mb-14">
-        <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+        <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
           Industry Coverage
         </span>
-        <h2 className="mt-1.5 text-2xl font-bold text-white">
-          <Link href="/industries" className="cursor-pointer transition-colors hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm">
+        <h2 className="mt-1.5 text-2xl font-bold text-text-primary">
+          <Link href="/industries" className="cursor-pointer transition-colors hover:text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
             Deep sector knowledge. Continental reach.
           </Link>
         </h2>
         <div className="my-5 h-0.5 w-12 bg-accent-primary" />
-        <p className="max-w-[60ch] text-sm leading-relaxed text-neutral-400">
+        <p className="max-w-[60ch] text-sm leading-relaxed text-neutral-600">
           Our advisory teams operate across the industries shaping Africa&apos;s next decade of economic transformation. From energy infrastructure and financial systems to digital ecosystems and public institutions, we combine sector expertise with execution discipline to guide complex transformation.
         </p>
       </div>
@@ -242,8 +265,8 @@ export default function FeaturedIndustriesSection() {
           <div className="aspect-4/5" />
         </div>
 
-        {INDUSTRIES.map((industry, i) => {
-          const slot = computeSlot(i, activeIndex);
+        {runtimeIndustries.map((industry, i) => {
+          const slot = computeSlot(i, activeIndex, total);
           return (
             <CarouselCard
               key={i}
@@ -303,7 +326,7 @@ export default function FeaturedIndustriesSection() {
 
       {/* ── Dot indicators ── */}
       <div className="mt-4 flex items-center justify-center gap-2">
-        {INDUSTRIES.map((ind, i) => (
+        {runtimeIndustries.map((ind, i) => (
           <button
             key={ind.title}
             type="button"
@@ -317,8 +340,8 @@ export default function FeaturedIndustriesSection() {
               width: activeIndex === i ? 24 : 8,
               height: 8,
               borderRadius: 4,
-              backgroundColor:
-                activeIndex === i ? "#FFFFFF" : "rgba(255,255,255,0.3)",
+                backgroundColor:
+                  activeIndex === i ? "var(--a700)" : "#D1D5DB",
               border: "none",
               padding: 0,
               cursor: "pointer",
@@ -336,12 +359,12 @@ export default function FeaturedIndustriesSection() {
 
 type Slot = "left" | "center" | "right" | "hiddenLeft" | "hiddenRight";
 
-function computeSlot(cardIndex: number, activeIndex: number): Slot {
-  const diff = ((cardIndex - activeIndex) % TOTAL + TOTAL) % TOTAL;
+function computeSlot(cardIndex: number, activeIndex: number, total: number): Slot {
+  const diff = ((cardIndex - activeIndex) % total + total) % total;
   if (diff === 0) return "center";
   if (diff === 1) return "right";
-  if (diff === TOTAL - 1) return "left";
-  if (diff <= Math.floor(TOTAL / 2)) return "hiddenRight";
+  if (diff === total - 1) return "left";
+  if (diff <= Math.floor(total / 2)) return "hiddenRight";
   return "hiddenLeft";
 }
 
@@ -370,7 +393,7 @@ function CarouselCard({
   cardOffset,
   onClick,
 }: {
-  industry: (typeof INDUSTRIES)[number];
+  industry: IndustryCardData;
   slot: Slot;
   cardOffset: number;
   onClick?: () => void;
@@ -514,7 +537,7 @@ function NavButton({
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="flex size-11 items-center justify-center rounded-full border border-neutral-700 bg-transparent text-neutral-300 transition-colors hover:bg-neutral-800"
+      className="flex size-11 items-center justify-center rounded-md border border-neutral-300 bg-white text-neutral-700 transition-colors hover:bg-neutral-100"
     >
       {children}
     </button>

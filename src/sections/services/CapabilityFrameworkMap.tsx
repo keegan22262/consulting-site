@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
+import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
 
 interface Capability {
   id: string;
@@ -61,61 +65,85 @@ const CAPABILITIES: Capability[] = [
  * Layers: core (1 wide card) → upper pair → lower pair → foundation (1 wide card)
  */
 export default function CapabilityFrameworkMap() {
+  const isMobile = useResponsiveValue({ desktop: false, tablet: false, mobile: true });
+  const mapMarginTop = useResponsiveValue({ desktop: "56px", tablet: "44px", mobile: "36px" });
+  const gap = useResponsiveValue({ desktop: "16px", tablet: "16px", mobile: "12px" });
+  const gridGap = useResponsiveValue({ desktop: "24px", tablet: "16px", mobile: "12px" });
+  const gridMaxWidth = useResponsiveValue({ desktop: "680px", tablet: "560px", mobile: "100%" });
+  const connectorWidth = useResponsiveValue({ desktop: "620px", tablet: "500px", mobile: "0px" });
+  const highlightWidth = useResponsiveValue({ desktop: "360px", tablet: "320px", mobile: "100%" });
+
   return (
     <SectionWrapper background="neutral50" padV={{ mobile: 56, tablet: 72, desktop: 96 }}>
       <SectionHeader
         overline="Integrated Framework"
         title="Our Capability Framework"
         description="Our advisory capabilities work together to transform institutions, unlock growth, and deliver long-term value."
+        showAccentRule={false}
+        maxWidth="56ch"
       />
 
-      <div className="relative mt-12 flex flex-col items-center gap-3">
+      <div
+        className="relative flex flex-col items-center"
+        style={{ marginTop: mapMarginTop, gap }}
+      >
         {/* Vertical connector line — desktop only */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-(--n300) md:block"
-        />
+        {!isMobile && (
+          <div
+            aria-hidden="true"
+            className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-(--n300)"
+          />
+        )}
 
         {/* Layer 1 — Core Strategy */}
         <div className="relative z-10 flex w-full justify-center">
-          <FrameworkCard
-            capability={CAPABILITIES[0]}
-            className="w-full md:w-90"
-          />
+          <FrameworkCard capability={CAPABILITIES[0]} width={highlightWidth} accent />
         </div>
 
-        {/* Horizontal connector */}
-        <div
-          aria-hidden="true"
-          className="relative z-10 hidden h-px bg-(--n300) md:block"
-          style={{ width: "clamp(400px, 50%, 620px)" }}
-        />
+        {!isMobile && (
+          <div
+            aria-hidden="true"
+            className="relative z-10 flex w-full justify-center"
+          >
+            <div className="h-px bg-(--n300)" style={{ width: connectorWidth }} />
+          </div>
+        )}
 
-        {/* Layer 2 — Connected upper */}
-        <div className="relative z-10 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 md:max-w-170">
+        <div
+          className="relative z-10 grid w-full"
+          style={{
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+            gap: gridGap,
+            maxWidth: gridMaxWidth,
+          }}
+        >
           <FrameworkCard capability={CAPABILITIES[1]} />
           <FrameworkCard capability={CAPABILITIES[2]} />
         </div>
 
-        {/* Layer 3 — Connected lower */}
-        <div className="relative z-10 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 md:max-w-170">
+        <div
+          className="relative z-10 grid w-full"
+          style={{
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+            gap: gridGap,
+            maxWidth: gridMaxWidth,
+          }}
+        >
           <FrameworkCard capability={CAPABILITIES[3]} />
           <FrameworkCard capability={CAPABILITIES[4]} />
         </div>
 
-        {/* Horizontal connector */}
-        <div
-          aria-hidden="true"
-          className="relative z-10 hidden h-px bg-(--n300) md:block"
-          style={{ width: "clamp(400px, 50%, 620px)" }}
-        />
+        {!isMobile && (
+          <div
+            aria-hidden="true"
+            className="relative z-10 flex w-full justify-center"
+          >
+            <div className="h-px bg-(--n300)" style={{ width: connectorWidth }} />
+          </div>
+        )}
 
-        {/* Layer 4 — Foundation */}
         <div className="relative z-10 flex w-full justify-center">
-          <FrameworkCard
-            capability={CAPABILITIES[5]}
-            className="w-full md:w-90"
-          />
+          <FrameworkCard capability={CAPABILITIES[5]} width={highlightWidth} />
         </div>
       </div>
     </SectionWrapper>
@@ -124,37 +152,65 @@ export default function CapabilityFrameworkMap() {
 
 function FrameworkCard({
   capability,
-  className = "",
+  width,
+  accent = false,
 }: {
   capability: Capability;
-  className?: string;
+  width?: string;
+  accent?: boolean;
 }) {
-  const isAccent = capability.accent;
+  const [hovered, setHovered] = useState(false);
+  const isAccent = accent || capability.accent;
+  const cardBg = isAccent ? (hovered ? "var(--a800)" : "var(--a700)") : "#FFFFFF";
+  const titleColor = isAccent ? "#FFFFFF" : hovered ? "var(--a700)" : "var(--n900)";
+  const descColor = isAccent
+    ? hovered
+      ? "rgba(255,255,255,0.9)"
+      : "rgba(255,255,255,0.72)"
+    : hovered
+      ? "var(--n600)"
+      : "var(--n500)";
+  const borderColor = isAccent ? "transparent" : hovered ? "var(--a300)" : "var(--n200)";
+  const boxShadow = hovered ? "0 4px 16px rgba(0,0,0,0.08)" : "0 1px 4px rgba(0,0,0,0.04)";
 
   return (
     <div
-      className={[
-        "rounded-(--radius-card) border p-6 transition-shadow duration-150",
-        isAccent
-          ? "border-transparent bg-(--a700)"
-          : "border-(--n200) bg-white hover:border-(--a300) hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)]",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        width: width || "100%",
+        backgroundColor: cardBg,
+        borderColor,
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderRadius: "4px",
+        paddingTop: "24px",
+        paddingBottom: "24px",
+        paddingLeft: "28px",
+        paddingRight: "28px",
+        boxShadow,
+        transition: "background-color 120ms cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 120ms cubic-bezier(0.25, 0.1, 0.25, 1), border-color 120ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+      }}
     >
       <h3
-        className={isAccent ? "font-semibold text-white" : "font-semibold text-(--n900)"}
-        style={{ fontSize: "1.0625rem", lineHeight: "1.3" }}
+        style={{
+          fontSize: "1.0625rem",
+          lineHeight: "1.3",
+          color: titleColor,
+          fontWeight: 600,
+        }}
       >
         {capability.name}
       </h3>
       <p
-        className={[
-          "mt-2 leading-[1.55]",
-          isAccent ? "text-white/70" : "text-(--n500)",
-        ].join(" ")}
-        style={{ fontSize: "var(--text-caption)" }}
+        style={{
+          marginTop: "8px",
+          fontSize: "0.8125rem",
+          lineHeight: "1.55",
+          color: descColor,
+          maxHeight: hovered ? "100px" : "40px",
+          overflow: "hidden",
+        }}
       >
         {capability.description}
       </p>

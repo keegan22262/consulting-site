@@ -1,11 +1,11 @@
 "use client";
 
-import { r } from "@/lib/breakpoints";
+import { useResponsiveValue } from "@/lib/breakpoints";
 import { C, F, MAX_WIDTH, TRANSFORMATION_FORCES } from "./data";
 
 export default function TransformationForcesSection() {
-  const gridCols = r("repeat(3, 1fr)", "repeat(2, 1fr)", "1fr");
-  const gridGap = r("32px", "24px", "20px");
+  const gridCols = useResponsiveValue("repeat(3, 1fr)", "repeat(2, 1fr)", "1fr");
+  const gridGap = useResponsiveValue("32px", "24px", "20px");
 
   return (
     <section style={{ backgroundColor: C.white }}>
@@ -13,10 +13,10 @@ export default function TransformationForcesSection() {
         style={{
           maxWidth: MAX_WIDTH,
           margin: "0 auto",
-          paddingTop: r("96px", "72px", "56px"),
-          paddingBottom: r("96px", "72px", "56px"),
-          paddingLeft: r("32px", "32px", "24px"),
-          paddingRight: r("32px", "32px", "24px"),
+          paddingTop: useResponsiveValue("96px", "72px", "56px"),
+          paddingBottom: useResponsiveValue("96px", "72px", "56px"),
+          paddingLeft: useResponsiveValue("32px", "32px", "24px"),
+          paddingRight: useResponsiveValue("32px", "32px", "24px"),
         }}
       >
         <span
@@ -50,7 +50,7 @@ export default function TransformationForcesSection() {
             display: "grid",
             gridTemplateColumns: gridCols,
             gap: gridGap,
-            marginTop: r("52px", "40px", "32px"),
+            marginTop: useResponsiveValue("52px", "40px", "32px"),
           }}
         >
           {TRANSFORMATION_FORCES.map((force, i) => (

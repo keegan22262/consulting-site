@@ -33,7 +33,7 @@ export default function FeaturedServicesSection({
   const [videoPlaying, setVideoPlaying] = useState(false);
 
   return (
-    <section className="bg-[#0C1C2E] min-h-0 lg:min-h-120">
+    <section className="bg-[#0C1C2E] min-h-0 md:min-h-120 lg:min-h-120">
       <div
         ref={revealRef}
         style={revealStyle}
@@ -61,9 +61,9 @@ export default function FeaturedServicesSection({
             </h2>
 
             {/* Description */}
-            <p className="mt-8 max-w-140 text-base leading-relaxed text-white/85 md:text-lg md:leading-relaxed">
+            <p className="mt-8 max-w-140 text-base leading-relaxed text-white/85 md:text-[17px] md:leading-relaxed">
               Ten advisory disciplines operate within a unified governance and
-              delivery architecture — eliminating fragmentation, aligning
+              delivery architecture - eliminating fragmentation, aligning
               strategic intent with execution mechanics, and ensuring
               institutional coherence across every engagement.
             </p>
