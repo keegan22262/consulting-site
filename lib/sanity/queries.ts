@@ -112,6 +112,13 @@ export const getInsightBySlugQuery = groq`
     summary,
     "category": coalesce(theme->title, category),
     "publishedAt": coalesce(publishedAt, _createdAt),
+    "heroImage": heroImage{ "url": asset->url },
+    readTime,
+    summaryPoints,
+    pullQuote,
+    "dataHighlights": coalesce(dataHighlights[] { label, value }, []),
+    "industryTags": coalesce(industryTags[]-> { "id": coalesce(slug.current, slug), "label": title }, []),
+    "serviceTags": coalesce(serviceTags[]-> { "slug": slug, "label": title }, []),
     content,
     body,
     "relatedInsights": coalesce(relatedSlugs[]-> {

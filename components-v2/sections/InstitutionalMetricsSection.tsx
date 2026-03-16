@@ -125,12 +125,14 @@ interface InstitutionalMetricsSectionProps {
   metrics?: MetricItem[];
   ctaTitle?: string;
   ctaDescription?: string;
+  showCta?: boolean;
 }
 
 export default function InstitutionalMetricsSection({
   metrics,
   ctaTitle,
   ctaDescription,
+  showCta = true,
 }: InstitutionalMetricsSectionProps) {
   const [headerRef, headerStyle] = useScrollReveal();
   const displayMetrics = metrics && metrics.length > 0 ? metrics : DEFAULT_METRICS;
@@ -183,41 +185,43 @@ export default function InstitutionalMetricsSection({
         </div>
 
         {/* ════════════ BLOCK 2: CTA PANEL ════════════ */}
-        <div className="layout-container pb-12 pt-8 md:pb-16 md:pt-10 lg:pb-24 lg:pt-12">
-          <div className="grid grid-cols-1 items-center gap-8 md:gap-12 lg:grid-cols-2">
-            {/* Left column — copy + buttons */}
-            <div>
-              <h2 className="text-3xl font-semibold leading-tight text-white lg:text-4xl">
-                {ctaTitle ?? "Begin a Conversation With Our Advisory Team."}
-              </h2>
-              <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-white/70 lg:text-lg">
-                {ctaDescription ??
-                  "Every engagement begins with a structured conversation. No obligations — simply an exchange of context to determine whether there is a basis for collaboration."}
-              </p>
+        {showCta ? (
+          <div className="layout-container pb-12 pt-8 md:pb-16 md:pt-10 lg:pb-24 lg:pt-12">
+            <div className="grid grid-cols-1 items-center gap-8 md:gap-12 lg:grid-cols-2">
+              {/* Left column — copy + buttons */}
+              <div>
+                <h2 className="text-3xl font-semibold leading-tight text-white lg:text-4xl">
+                  {ctaTitle ?? "Begin a Conversation With Our Advisory Team."}
+                </h2>
+                <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-white/70 lg:text-lg">
+                  {ctaDescription ??
+                    "Every engagement begins with a structured conversation. No obligations — simply an exchange of context to determine whether there is a basis for collaboration."}
+                </p>
 
-              <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-                <Link
-                  href="/contact"
-                  className="inline-block rounded-card bg-white px-8 py-3.5 text-center text-sm font-semibold text-[#071a2f] transition-colors duration-200 hover:bg-slate-200"
-                >
-                  Schedule an Introduction
-                </Link>
-                <Link
-                  href="/about"
-                  className="inline-flex items-center gap-1.5 py-3.5 text-sm font-medium text-white/70 transition-colors duration-200 hover:text-white"
-                >
-                  Download Firm Overview
-                  <span aria-hidden="true" className="text-base">→</span>
-                </Link>
+                <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
+                  <Link
+                    href="/contact"
+                    className="inline-block rounded-card bg-white px-8 py-3.5 text-center text-sm font-semibold text-[#071a2f] transition-colors duration-200 hover:bg-slate-200"
+                  >
+                    Schedule an Introduction
+                  </Link>
+                  <Link
+                    href="/about"
+                    className="inline-flex items-center gap-1.5 py-3.5 text-sm font-medium text-white/70 transition-colors duration-200 hover:text-white"
+                  >
+                    Download Firm Overview
+                    <span aria-hidden="true" className="text-base">→</span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right column — cinematic image crossfade */}
+              <div>
+                <CinematicVisualPanel />
               </div>
             </div>
-
-            {/* Right column — cinematic image crossfade */}
-            <div>
-              <CinematicVisualPanel />
-            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </section>
   );
@@ -299,7 +303,7 @@ function MetricCard({
 // Uses local paths when available, falls back to Unsplash URLs.
 // ═══════════════════════════════════════════════════════════════════════════════
 
-function CinematicVisualPanel() {
+export function CinematicVisualPanel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const images = IA_CTA_IMAGES;
 

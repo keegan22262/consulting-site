@@ -5,7 +5,7 @@ import Link from "next/link";
 import CaseStudyBody from "@/src/sections/case-study/CaseStudyBody";
 import CaseStudyHero from "@/src/sections/case-study/CaseStudyHero";
 import { CASE_STUDIES } from "@/src/sections/case-study/data";
-import { INSIGHTS } from "@/src/sections/insights/data";
+import { INSIGHTS_DATA } from "@/src/sections/insights/data";
 
 export const dynamic = "force-dynamic";
 
@@ -60,7 +60,7 @@ export default async function CaseStudyPage({
 }
 
 function RelatedInsightsSection() {
-  const items = INSIGHTS.slice(0, 3);
+  const items = INSIGHTS_DATA.slice(0, 3);
 
   return (
     <section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
@@ -77,7 +77,7 @@ function RelatedInsightsSection() {
               className="rounded-xl border border-[#E2E8F0] bg-white p-6 transition hover:border-[#94A3B8]"
             >
               <p className="text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">{item.category}</p>
-              <h3 className="mt-2 text-base font-semibold leading-[1.4] text-[#0F1720]">{item.title}</h3>
+              <h3 className="mt-2 text-base font-semibold leading-[1.4] text-[#0F1720]">{item.headline}</h3>
             </Link>
           ))}
         </div>

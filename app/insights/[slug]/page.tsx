@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import InsightInDevelopmentPlaceholder from "@/components-v2/sections/InsightInDevelopmentPlaceholder";
 import InsightsDetailHeroSection from "@/components-v2/sections/InsightsDetailHeroSection";
 import InsightsRelatedSection from "@/components-v2/sections/InsightsRelatedSection";
 import CTABlock from "@/components-v2/sections/CTABlock";
 import { sanityClient } from "@/lib/sanity/client";
 import { getInsightBySlugQuery } from "@/lib/sanity/queries";
 import InsightBodySection from "@/src/sections/insight-detail/InsightBodySection";
-import InsightDataHighlightsSection, {
-  type InsightDataHighlight,
-} from "@/src/sections/insight-detail/InsightDataHighlightsSection";
-import InsightMetaStrip from "@/src/sections/insight-detail/InsightMetaStrip";
-import InsightPullQuoteSection from "@/src/sections/insight-detail/InsightPullQuoteSection";
+import type { InsightDataHighlight } from "@/src/sections/insight-detail/InsightDataHighlightsSection";
 import InsightRelatedServicesSection from "@/src/sections/insight-detail/InsightRelatedServicesSection";
-import InsightSummarySection from "@/src/sections/insight-detail/InsightSummarySection";
-import Link from "next/link";
 import { CASE_STUDIES } from "@/src/sections/case-study/data";
 import { ExploreRelatedKnowledge, type KnowledgeLink } from "@/components-v2/ui/RelatedKnowledge";
+import { INSIGHTS_DATA } from "@/src/sections/insights/data";
+import InsightRelatedIndustriesSection, {
+  type InsightRelatedIndustry,
+} from "@/src/sections/insight-detail/InsightRelatedIndustriesSection";
+import InsightRelatedEngagementsSection from "@/src/sections/insight-detail/InsightRelatedEngagementsSection";
+import TranslateInsightSection from "@/src/sections/insight-detail/TranslateInsightSection";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -30,12 +31,19 @@ type RelatedService = {
   slug?: string;
   title?: string;
   description?: string;
+  summary?: string;
 };
 
 type DataHighlight = {
-  title?: string;
+  label?: string;
   value?: string;
   detail?: string;
+};
+
+type InsightTag = {
+  slug?: string;
+  id?: string;
+  label?: string;
 };
 
 type InsightResult = {
@@ -50,33 +58,38 @@ type InsightResult = {
   summaryPoints?: string[];
   pullQuote?: string;
   dataHighlights?: DataHighlight[];
+  industryTags?: InsightTag[];
+  serviceTags?: InsightTag[];
   relatedServices?: RelatedService[];
   relatedInsights?: RelatedInsight[];
   heroImage?: { url?: string };
+  sourceUrl?: string;
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const insight = await sanityClient.fetch<InsightResult | null>(getInsightBySlugQuery, { slug });
+  const fallback = INSIGHTS_DATA.find((item) => item.slug === slug);
 
-  if (!insight?.title) {
+  if (!insight?.title && !fallback?.headline) {
     return {
       title: "Rill Singh Limited",
     };
   }
 
-  const description = insight.summary ?? "Insight from Rill Singh Limited.";
-  const image = insight.heroImage?.url ?? "/og-default.jpg";
+  const description = insight?.summary ?? fallback?.whatItMeans ?? "Insight from Rill Singh Limited.";
+  const image = insight?.heroImage?.url ?? fallback?.image ?? "/og-default.jpg";
+  const title = insight?.title ?? fallback?.headline ?? "Insight";
 
   return {
-    title: `${insight.title} | Insights | Rill Singh Limited`,
+    title: `${title} | Insights | Rill Singh Limited`,
     description,
     openGraph: {
-      title: `${insight.title} | Insights | Rill Singh Limited`,
+      title: `${title} | Insights | Rill Singh Limited`,
       description,
       url: `https://rillsingh.com/insights/${slug}`,
       type: "article",
-      publishedTime: insight.publishedAt,
+      publishedTime: insight?.publishedAt ?? fallback?.date,
       images: [image],
     },
     alternates: {
@@ -90,23 +103,24 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const insight = await sanityClient.fetch<InsightResult | null>(getInsightBySlugQuery, {
     slug,
   });
+  const fallback = INSIGHTS_DATA.find((item) => item.slug === slug);
 
   if (process.env.NODE_ENV === "development") {
     console.log("Sanity fetch result:", insight);
   }
 
-  if (!insight?.title) {
-    console.warn("No data found for insight", slug);
-    notFound();
+  if (!insight?.title && !fallback?.headline) {
+    // Show in-development placeholder instead of 404
+    return <InsightInDevelopmentPlaceholder />;
   }
 
-  const contentBlocks = (Array.isArray(insight.content)
-    ? insight.content
-    : Array.isArray(insight.body)
-      ? insight.body
+  const contentBlocks = (Array.isArray(insight?.content)
+    ? insight?.content
+    : Array.isArray(insight?.body)
+      ? insight?.body
       : []) as Record<string, unknown>[];
 
-  const relatedInsights = (insight.relatedInsights ?? [])
+  const relatedInsights = (insight?.relatedInsights ?? [])
     .filter((item): item is RelatedInsight & { slug: string; title: string } =>
       Boolean(item?.slug && item?.title && item.slug !== slug)
     )
@@ -117,47 +131,51 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     }))
     .slice(0, 3);
 
-  const relatedServices = (insight.relatedServices ?? [])
+  const relatedServices = (insight?.relatedServices ?? [])
     .filter((item): item is RelatedService & { slug: string; title: string } => Boolean(item?.slug && item?.title))
     .map((item) => ({
       slug: item.slug,
       title: item.title,
-      description: item.description ?? "",
+      description: item.description ?? item.summary ?? "",
     }))
     .slice(0, 3);
 
-  const summaryPoints = Array.isArray(insight.summaryPoints)
+  const summaryPoints = Array.isArray(insight?.summaryPoints)
     ? insight.summaryPoints.filter((point): point is string => Boolean(point))
     : [];
+  if (summaryPoints.length === 0) {
+    if (insight?.summary) {
+      summaryPoints.push(insight.summary);
+    } else if (fallback?.whatItMeans) {
+      summaryPoints.push(fallback.whatItMeans);
+    }
+  }
 
-  const dataHighlights: InsightDataHighlight[] = Array.isArray(insight.dataHighlights)
+  const dataHighlights: InsightDataHighlight[] = Array.isArray(insight?.dataHighlights)
     ? insight.dataHighlights
-        .filter((item): item is DataHighlight & { title: string; value: string } => Boolean(item?.title && item?.value))
+        .filter((item): item is DataHighlight & { label: string; value: string } => Boolean(item?.label && item?.value))
         .map((item) => ({
-          title: item.title,
+          title: item.label,
           value: item.value,
           detail: item.detail ?? "",
         }))
     : [];
 
-  const pullQuote = insight.pullQuote?.trim() ?? "";
-
-  const metaItems = [insight.publishedAt, insight.readTime, insight.category ?? "Insight"]
-    .filter(Boolean)
-    .map((item) => String(item));
+  const pullQuote = insight?.pullQuote?.trim() ?? "";
 
   const canonicalUrl = `https://rillsingh.com/insights/${slug}`;
-  const description = insight.summary ?? "Insight from Rill Singh Limited.";
-  const heroImageUrl = insight.heroImage?.url ?? "https://rillsingh.com/og-default.jpg";
+  const description = insight?.summary ?? fallback?.whatItMeans ?? "Insight from Rill Singh Limited.";
+  const heroImageUrl = insight?.heroImage?.url ?? fallback?.image ?? "https://rillsingh.com/og-default.jpg";
+  const sourceUrl = insight?.sourceUrl ?? fallback?.source ?? "";
 
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: insight.title ?? "Insight | Rill Singh Limited",
+    headline: insight?.title ?? fallback?.headline ?? "Insight | Rill Singh Limited",
     description,
     mainEntityOfPage: canonicalUrl,
-    datePublished: insight.publishedAt ?? undefined,
-    dateModified: insight.publishedAt ?? undefined,
+    datePublished: insight?.publishedAt ?? fallback?.date ?? undefined,
+    dateModified: insight?.publishedAt ?? fallback?.date ?? undefined,
     author: {
       "@type": "Organization",
       name: "Rill Singh Limited",
@@ -174,11 +192,23 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     url: canonicalUrl,
   };
 
-  const relatedIndustries: KnowledgeLink[] = [
-    { href: "/industries/financial-services", label: "Financial Services" },
-    { href: "/industries/technology-digital", label: "Technology, Media & Telecommunications" },
-    { href: "/industries/public-sector-government", label: "Public Sector & Government" },
-  ];
+  const industryTags = Array.isArray(insight?.industryTags)
+    ? insight.industryTags
+        .filter((tag): tag is InsightTag & { id: string; label: string } => Boolean(tag?.id && tag?.label))
+        .map((tag) => ({ id: tag.id, label: tag.label }))
+    : [];
+  const relatedIndustries: InsightRelatedIndustry[] = industryTags.length > 0
+    ? industryTags
+    : [
+        { href: "/industries/financial-services", label: "Financial Services" },
+        { href: "/industries/technology-digital", label: "Technology, Media & Telecommunications" },
+        { href: "/industries/public-sector-government", label: "Public Sector & Government" },
+      ].map((item) => ({ id: item.href.split("/").pop() || item.href, label: item.label }));
+  const serviceTags = Array.isArray(insight?.serviceTags)
+    ? insight.serviceTags
+        .filter((tag): tag is InsightTag & { slug: string; label: string } => Boolean(tag?.slug && tag?.label))
+        .map((tag) => ({ slug: tag.slug, label: tag.label }))
+    : [];
   const knowledgeServices: KnowledgeLink[] = relatedServices.map((svc) => ({
     label: svc.title,
     href: `/services/${svc.slug}`,
@@ -188,17 +218,40 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     href: `/insights/${ins.slug}`,
     category: ins.category,
   }));
-  const knowledgeCaseStudies: KnowledgeLink[] = CASE_STUDIES.slice(0, 2).map((study) => ({
+  const relatedServiceIds = relatedServices.map((svc) => svc.slug);
+  const relatedIndustryIds = relatedIndustries.map((ind) => ind.id);
+  const relatedCaseStudies = CASE_STUDIES.filter(
+    (study) =>
+      study.serviceIds.some((id) => relatedServiceIds.includes(id)) ||
+      study.industryIds.some((id) => relatedIndustryIds.includes(id)),
+  ).slice(0, 2);
+  const knowledgeCaseStudies: KnowledgeLink[] = relatedCaseStudies.map((study) => ({
     label: study.title,
     href: `/case-studies/${study.slug}`,
   }));
+  const heroTags = [
+    ...(industryTags.length > 0
+      ? industryTags.map((ind) => ({ label: ind.label, href: `/industries/${ind.id}` }))
+      : relatedIndustries.map((ind) => ({ label: ind.label, href: `/industries/${ind.id}` }))),
+    ...(serviceTags.length > 0
+      ? serviceTags.map((svc) => ({ label: svc.label, href: `/services/${svc.slug}` }))
+      : relatedServices.map((svc) => ({ label: svc.title, href: `/services/${svc.slug}` }))),
+  ];
+  const sidebarServices = serviceTags.length > 0
+    ? serviceTags
+    : relatedServices.map((svc) => ({ slug: svc.slug, label: svc.title }));
+  const sidebarIndustries = industryTags.length > 0 ? industryTags : relatedIndustries;
 
   return (
     <>
       <InsightsDetailHeroSection
-        category={insight.category ?? "Insight"}
-        title={insight.title}
-        excerpt={insight.summary ?? ""}
+        category={insight?.category ?? fallback?.category ?? "Insight"}
+        title={insight?.title ?? fallback?.headline ?? ""}
+        excerpt={insight?.summary ?? fallback?.whatItMeans ?? ""}
+        image={insight?.heroImage?.url ?? fallback?.image ?? "/og-default.jpg"}
+        date={insight?.publishedAt ?? fallback?.date ?? ""}
+        readTime={insight?.readTime ?? fallback?.readTime ?? ""}
+        tags={heroTags}
       />
 
       <script
@@ -206,26 +259,20 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
       />
 
-      <InsightMetaStrip metaItems={metaItems} />
-
-      <InsightSummarySection summaryPoints={summaryPoints} />
-
       <InsightBodySection
         contentBlocks={contentBlocks}
-        relatedServices={relatedServices.map((svc) => ({ slug: svc.slug, label: svc.title }))}
-        relatedIndustries={relatedIndustries.map((ind) => ({ id: ind.href.split("/").pop() || ind.href, label: ind.label }))}
+        summaryPoints={summaryPoints}
+        dataHighlights={dataHighlights}
+        pullQuote={pullQuote}
+        sourceUrl={sourceUrl}
+        relatedServices={sidebarServices}
+        relatedIndustries={sidebarIndustries}
         shareUrl={canonicalUrl}
-        shareTitle={insight.title ?? ""}
+        shareTitle={insight?.title ?? fallback?.headline ?? ""}
         discussionCTA={{ label: "Discuss this insight", to: "/contact" }}
       />
 
-      <InsightPullQuoteSection pullQuote={pullQuote} />
-
-      <InsightDataHighlightsSection dataHighlights={dataHighlights} />
-
-      <InsightRelatedServicesSection relatedServices={relatedServices} />
-
-      <TranslateInsightSection />
+      <TranslateInsightSection category={insight?.category ?? fallback?.category} />
 
       {relatedInsights.length > 0 ? (
         <InsightsRelatedSection insights={relatedInsights} />
@@ -233,54 +280,25 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div style={{ padding: "40px 0" }} />
       )}
 
+      <InsightRelatedServicesSection relatedServices={relatedServices} />
+
+      <InsightRelatedIndustriesSection industries={relatedIndustries} />
+
+      <InsightRelatedEngagementsSection caseStudies={relatedCaseStudies} />
+
       <ExploreRelatedKnowledge
-        industries={relatedIndustries}
+        industries={relatedIndustries.map((ind) => ({ label: ind.label, href: `/industries/${ind.id}` }))}
         services={knowledgeServices}
         insights={knowledgeInsights}
         caseStudies={knowledgeCaseStudies}
       />
 
       <CTABlock
-        title={insight.title ?? "Talk to a partner"}
-        description={insight.summary ?? "Let’s translate your challenge into an actionable plan."}
+        title={insight?.title ?? fallback?.headline ?? "Talk to a partner"}
+        description={insight?.summary ?? fallback?.whatItMeans ?? "Let’s translate your challenge into an actionable plan."}
         primaryLabel="Contact"
         primaryHref="/contact"
       />
     </>
-  );
-}
-
-function TranslateInsightSection() {
-  return (
-    <section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <div className="rounded-xl border border-[#E2E8F0] bg-white p-8 md:p-10">
-          <span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">
-            Translate Insight into Action
-          </span>
-          <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[1.875rem]">
-            Move from analysis to institutional execution.
-          </h3>
-          <p className="mt-4 max-w-[62ch] text-base leading-[1.7] text-[#475569]">
-            We help leadership teams turn research findings into scoped initiatives, governance decisions, and delivery
-            plans aligned to operational realities.
-          </p>
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <Link
-              href="/contact"
-              className="rounded-lg bg-[#1B3A5C] px-7 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#0C1C2E]"
-            >
-              Discuss This Insight
-            </Link>
-            <Link
-              href="/services"
-              className="rounded-lg border border-[#CBD5E1] px-7 py-3 text-center text-sm font-semibold text-[#1B3A5C] transition hover:border-[#94A3B8]"
-            >
-              Explore Advisory Services
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }

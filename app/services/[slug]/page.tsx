@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { sanityClient } from "@/lib/sanity/client";
 import { getServiceBySlugQuery } from "@/lib/sanity/queries";
 import ServiceDetailSections from "@/src/sections/service-detail/ServiceDetailSections";
+import { CAPABILITIES } from "@/src/sections/service-detail/capabilities";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -44,22 +45,24 @@ type ServiceResult = {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const service = await sanityClient.fetch<ServiceResult | null>(getServiceBySlugQuery, { slug });
+  const fallback = CAPABILITIES[slug];
 
-  if (!service?.title) {
+  if (!service?.title && !fallback?.title) {
     return {
       title: "Rill Singh Limited",
     };
   }
 
   const description =
-    service.summary ?? "Strategic advisory service delivered by Rill Singh Limited.";
-  const image = service.heroImage?.url ?? "/og-default.jpg";
+    service?.summary ?? fallback?.approach ?? "Strategic advisory service delivered by Rill Singh Limited.";
+  const image = service?.heroImage?.url ?? "/og-default.jpg";
+  const title = service?.title ?? fallback?.title ?? "Rill Singh Limited";
 
   return {
-    title: `${service.title} | Rill Singh Limited`,
+    title: `${title} | Rill Singh Limited`,
     description,
     openGraph: {
-      title: `${service.title} | Rill Singh Limited`,
+      title: `${title} | Rill Singh Limited`,
       description,
       url: `https://rillsingh.com/services/${slug}`,
       type: "article",
@@ -76,17 +79,18 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const service = await sanityClient.fetch<ServiceResult | null>(getServiceBySlugQuery, {
     slug,
   });
+  const fallback = CAPABILITIES[slug];
 
-  if (!service?.title) {
+  if (!service?.title && !fallback?.title) {
     console.warn("No data found for service", slug);
     notFound();
   }
 
-  const focusAreas = Array.isArray(service.focusAreas)
+  const focusAreas = Array.isArray(service?.focusAreas)
     ? service.focusAreas.filter(Boolean).join(", ")
-    : "";
+    : fallback?.focusAreas ?? "";
 
-  const deliverables = (service.deliverables ?? [])
+  const deliverables = (service?.deliverables ?? [])
     .filter((item): item is Deliverable & { title: string; body: string } => Boolean(item?.title && item?.body))
     .map((item) => ({
       overline: item.overline ?? "Deliverable",
@@ -94,7 +98,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       body: item.body,
     }));
 
-  const relatedIndustries = (service.relatedIndustries ?? [])
+  const relatedIndustries = (service?.relatedIndustries ?? [])
     .filter((item): item is RelatedIndustry & { slug: string; title: string } => Boolean(item?.slug && item?.title))
     .map((item) => ({
       slug: item.slug,
@@ -102,7 +106,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       description: item.description ?? "",
     }));
 
-  const relatedInsights = (service.relatedInsights ?? [])
+  const relatedInsights = (service?.relatedInsights ?? [])
     .filter((item): item is RelatedInsight & { slug: string; title: string } => Boolean(item?.slug && item?.title))
     .map((item) => ({
       slug: item.slug,
@@ -114,17 +118,17 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return (
     <ServiceDetailSections
       slug={slug}
-      number={String(service.order ?? 0).padStart(2, "0")}
-      title={service.title ?? ""}
-      summary={service.summary ?? ""}
-      approach={service.approach ?? ""}
-      targetClients={service.targetClients ?? ""}
+      number={service?.order ? String(service.order).padStart(2, "0") : fallback?.number ?? ""}
+      title={service?.title ?? fallback?.title ?? ""}
+      summary={service?.summary ?? ""}
+      approach={service?.approach ?? fallback?.approach ?? ""}
+      targetClients={service?.targetClients ?? fallback?.targetClients ?? ""}
       focusAreas={focusAreas}
-      deliverables={deliverables}
-      relatedIndustries={relatedIndustries}
-      relatedInsights={relatedInsights}
-      heroImage={service.heroImage?.url}
-      finalCtaImage={service.finalCtaImage?.url}
+      deliverables={deliverables.length > 0 ? deliverables : []}
+      relatedIndustries={relatedIndustries.length > 0 ? relatedIndustries : []}
+      relatedInsights={relatedInsights.length > 0 ? relatedInsights : []}
+      heroImage={service?.heroImage?.url}
+      finalCtaImage={service?.finalCtaImage?.url}
     />
   );
 }

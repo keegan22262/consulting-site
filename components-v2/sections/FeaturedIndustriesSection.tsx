@@ -465,7 +465,7 @@ function CarouselCard({
           className="pointer-events-none absolute inset-0 z-1"
           style={{
             background:
-              "linear-gradient(to top, rgba(12,28,46,0.7) 0%, rgba(12,28,46,0.2) 45%, rgba(12,28,46,0.05) 100%)",
+              "linear-gradient(to top, rgba(8,18,30,0.55) 0%, rgba(8,18,30,0.22) 45%, rgba(8,18,30,0.06) 100%)",
           }}
         />
 
@@ -488,7 +488,7 @@ function CarouselCard({
             className="absolute inset-0 z-3 flex flex-col justify-end p-6"
             animate={{ opacity: isHovered ? 1 : 0 }}
             transition={{ duration: 0.3 }}
-            style={{ backgroundColor: "rgba(12,28,46,0.75)" }}
+            style={{ backgroundColor: "rgba(8,18,30,0.55)" }}
           >
             <p className="mb-5 text-sm leading-relaxed text-white/90 md:text-[0.9375rem]">
               {industry.description}

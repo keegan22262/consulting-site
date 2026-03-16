@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
 
 interface ServiceCardProps {
   index: number;
@@ -27,11 +28,16 @@ export default function ServiceCard({
   href,
   focusAreas,
   approach,
+  ctaLabel,
+  showCornerArrow = true,
 }: ServiceCardProps) {
   const [hovered, setHovered] = useState(false);
+  const pad = useResponsiveValue({ desktop: "32px", tablet: "24px", mobile: "24px" });
   const resolvedTitle = name ?? title ?? "";
-  const resolvedDescription = description ?? focusAreas ?? approach ?? "";
+  const resolvedFocus = focusAreas ?? "";
+  const resolvedApproach = approach ?? description ?? "";
   const resolvedHref = href ?? (slug ? `/services/${slug}` : "#");
+  const resolvedCta = ctaLabel ?? "Explore Service";
 
   return (
     <Link
@@ -42,7 +48,7 @@ export default function ServiceCard({
         backgroundColor: "#FFFFFF",
         border: `1px solid ${hovered ? "var(--n300)" : "var(--n200)"}`,
         borderRadius: "4px",
-        padding: "32px",
+        padding: pad,
         transition: `border-color 120ms cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 120ms cubic-bezier(0.25, 0.1, 0.25, 1)`,
         boxShadow: hovered ? "0 1px 4px rgba(0,0,0,0.06)" : "none",
         position: "relative",
@@ -56,13 +62,13 @@ export default function ServiceCard({
           fontSize: "0.6875rem",
           fontWeight: 600,
           color: "var(--n400)",
-          letterSpacing: "0.04em",
+          letterSpacing: "0.02em",
           display: "block",
           marginBottom: "16px",
           fontVariantNumeric: "tabular-nums",
         }}
       >
-        {String.fromCharCode(65 + index)}
+        {String(index + 1).padStart(2, "0")}
       </span>
 
       <h3
@@ -78,7 +84,7 @@ export default function ServiceCard({
         {resolvedTitle}
       </h3>
 
-      {resolvedDescription ? (
+      {resolvedFocus ? (
         <p
           style={{
             fontFamily: "var(--font-primary)",
@@ -86,29 +92,70 @@ export default function ServiceCard({
             lineHeight: "1.55",
             color: "var(--n600)",
             marginTop: "8px",
-            maxWidth: "48ch",
+            maxWidth: "52ch",
           }}
         >
-          {resolvedDescription}
+          <strong style={{ fontWeight: 600, color: "var(--n700)" }}>Focus:</strong>{" "}
+          {resolvedFocus}
+        </p>
+      ) : null}
+
+      {resolvedApproach ? (
+        <p
+          style={{
+            fontFamily: "var(--font-primary)",
+            fontSize: "var(--text-caption)",
+            lineHeight: "1.55",
+            color: "var(--n600)",
+            marginTop: "8px",
+            maxWidth: "52ch",
+          }}
+        >
+          {resolvedApproach}
         </p>
       ) : null}
 
       <span
-        aria-hidden="true"
         style={{
-          position: "absolute",
-          top: "32px",
-          right: "32px",
           fontFamily: "var(--font-primary)",
-          fontSize: "var(--text-body)",
+          fontSize: "var(--text-caption)",
           fontWeight: 600,
-          color: "var(--o500)",
-          opacity: hovered ? 1 : 0,
-          transition: `opacity 120ms cubic-bezier(0.25, 0.1, 0.25, 1)`,
+          color: "var(--a700)",
+          marginTop: "16px",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "4px",
         }}
       >
-        -&gt;
+        {resolvedCta}
+        <span
+          style={{
+            color: hovered ? "var(--o500)" : "var(--a700)",
+            transition: `color 120ms cubic-bezier(0.25, 0.1, 0.25, 1)`
+          }}
+        >
+          {"->"}
+        </span>
       </span>
+
+      {showCornerArrow ? (
+        <span
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: pad,
+            right: pad,
+            fontFamily: "var(--font-primary)",
+            fontSize: "var(--text-body)",
+            fontWeight: 600,
+            color: "var(--o500)",
+            opacity: hovered ? 1 : 0,
+            transition: `opacity 120ms cubic-bezier(0.25, 0.1, 0.25, 1)`
+          }}
+        >
+          {"->"}
+        </span>
+      ) : null}
     </Link>
   );
 }

@@ -29,13 +29,13 @@ const CROSSFADE_MS = 1_400; // 1.4 s crossfade
 // ─── Per-image overlay brightness tuning ─────────────────────────────────────
 // Image 1 (boardroom) is brighter — boost midpoint to 0.88
 const OVERLAY_DESKTOP: Record<number, string> = {
-  0: "linear-gradient(to bottom, rgba(12,28,46,0.72) 0%, rgba(12,28,46,0.82) 50%, rgba(12,28,46,0.92) 100%)",
-  1: "linear-gradient(to bottom, rgba(12,28,46,0.72) 0%, rgba(12,28,46,0.88) 50%, rgba(12,28,46,0.92) 100%)",
-  2: "linear-gradient(to bottom, rgba(12,28,46,0.72) 0%, rgba(12,28,46,0.82) 50%, rgba(12,28,46,0.92) 100%)",
-  3: "linear-gradient(to bottom, rgba(12,28,46,0.72) 0%, rgba(12,28,46,0.82) 50%, rgba(12,28,46,0.92) 100%)",
+  0: "linear-gradient(to bottom, rgba(8,18,30,0.35) 0%, rgba(8,18,30,0.48) 55%, rgba(8,18,30,0.62) 100%)",
+  1: "linear-gradient(to bottom, rgba(8,18,30,0.35) 0%, rgba(8,18,30,0.52) 55%, rgba(8,18,30,0.62) 100%)",
+  2: "linear-gradient(to bottom, rgba(8,18,30,0.35) 0%, rgba(8,18,30,0.48) 55%, rgba(8,18,30,0.62) 100%)",
+  3: "linear-gradient(to bottom, rgba(8,18,30,0.35) 0%, rgba(8,18,30,0.48) 55%, rgba(8,18,30,0.62) 100%)",
 };
 const OVERLAY_MOBILE =
-  "linear-gradient(to bottom, rgba(12,28,46,0.88) 0%, rgba(12,28,46,0.91) 50%, rgba(12,28,46,0.94) 100%)";
+  "linear-gradient(to bottom, rgba(8,18,30,0.55) 0%, rgba(8,18,30,0.68) 55%, rgba(8,18,30,0.8) 100%)";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // Props

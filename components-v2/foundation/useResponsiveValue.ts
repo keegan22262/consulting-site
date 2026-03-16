@@ -25,7 +25,7 @@ export function useResponsiveValue<T>(values: {
     return values.mobile;
   };
 
-  const [current, setCurrent] = useState<Breakpoint>(() => getBreakpoint());
+  const [current, setCurrent] = useState<Breakpoint>("mobile");
 
   useEffect(() => {
     const handleResize = () => {

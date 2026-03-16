@@ -1,10 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumb from "@/components-v2/ui/Breadcrumb";
-import { ExploreRelatedKnowledge, type KnowledgeLink } from "@/components-v2/ui/RelatedKnowledge";
+import { CaseStudyCard, ExploreRelatedKnowledge, type KnowledgeLink } from "@/components-v2/ui/RelatedKnowledge";
 import ServiceCard from "@/components-v2/ui/ServiceCard";
+import SectionHeader from "@/components-v2/sections/SectionHeader";
+import SectionWrapper from "@/components-v2/sections/SectionWrapper";
+import CTABlock from "@/components-v2/sections/CTABlock";
+import { useHeroEntrance } from "@/components-v2/foundation/useHeroEntrance";
+import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
 import { SERVICES, type ServiceItem } from "@/src/sections/services/data";
-import { INDUSTRY_IMAGES } from "@/src/sections/industries/data";
 import { CASE_STUDIES } from "@/src/sections/case-study/data";
 
 export type IndustryRelatedService = {
@@ -41,18 +48,66 @@ const INSIGHT_IMAGES = [
   "/images/insights/insight-5.jpg",
 ];
 
-const FUTURE_APPROACH_IMAGES = [
-  "/images/industries/hero/hero-boardroom.jpg",
-  "/images/industries/hero/hero-bridge-infrastructure.jpg",
-  "/images/industries/hero/hero-digital-command-center.jpg",
-  "/images/industries/hero/hero-city-skyline.jpg",
-];
-
-const ADVISORY_CTA_IMAGES = [
-  "/images/advisory/institutional-01.jpg",
-  "/images/advisory/institutional-02.jpg",
-  "/images/advisory/institutional-03.jpg",
-];
+const INDUSTRY_IMAGE_SETS: Record<
+  string,
+  { hero: string; foresight: string; advisory: string }
+> = {
+  "financial-services": {
+    hero: "/images/industries/financial-services/hero.jpg",
+    foresight: "/images/industries/financial-services/foresight.jpg",
+    advisory: "/images/industries/financial-services/advisory.jpg",
+  },
+  "healthcare-life-sciences": {
+    hero: "/images/industries/healthcare-life-sciences/hero.jpg",
+    foresight: "/images/industries/healthcare-life-sciences/foresight.jpg",
+    advisory: "/images/industries/healthcare-life-sciences/advisory.jpg",
+  },
+  "energy-resources": {
+    hero: "/images/industries/energy-resources/hero.jpg",
+    foresight: "/images/industries/energy-resources/foresight.jpg",
+    advisory: "/images/industries/energy-resources/advisory.jpg",
+  },
+  "industrials-manufacturing": {
+    hero: "/images/industries/industrials-manufacturing/hero.jpg",
+    foresight: "/images/industries/industrials-manufacturing/foresight.jpg",
+    advisory: "/images/industries/industrials-manufacturing/advisory.jpg",
+  },
+  "consumer-retail": {
+    hero: "/images/industries/consumer-retail/hero.jpg",
+    foresight: "/images/industries/consumer-retail/foresight.jpg",
+    advisory: "/images/industries/consumer-retail/advisory.jpg",
+  },
+  "technology-digital": {
+    hero: "/images/industries/technology-digital/hero.jpg",
+    foresight: "/images/industries/technology-digital/foresight.jpg",
+    advisory: "/images/industries/technology-digital/advisory.jpg",
+  },
+  "transport-logistics": {
+    hero: "/images/industries/transport-logistics/hero.jpg",
+    foresight: "/images/industries/transport-logistics/foresight.jpg",
+    advisory: "/images/industries/transport-logistics/advisory.jpg",
+  },
+  "public-sector-government": {
+    hero: "/images/industries/public-sector-government/hero.jpg",
+    foresight: "/images/industries/public-sector-government/foresight.jpg",
+    advisory: "/images/industries/public-sector-government/advisory.jpg",
+  },
+  "real-estate-infrastructure": {
+    hero: "/images/industries/real-estate-infrastructure/hero.jpg",
+    foresight: "/images/industries/real-estate-infrastructure/foresight.jpg",
+    advisory: "/images/industries/real-estate-infrastructure/advisory.jpg",
+  },
+  "private-capital": {
+    hero: "/images/industries/private-capital/hero.jpg",
+    foresight: "/images/industries/private-capital/foresight.jpg",
+    advisory: "/images/industries/private-capital/advisory.jpg",
+  },
+  education: {
+    hero: "/images/industries/education/hero.jpg",
+    foresight: "/images/industries/education/foresight.jpg",
+    advisory: "/images/industries/education/advisory.jpg",
+  },
+};
 
 export default function IndustryDetailSections(props: Props) {
   const {
@@ -70,11 +125,10 @@ export default function IndustryDetailSections(props: Props) {
   const body = description || summary;
   const includes = regulatoryContext;
 
-  const effectiveHeroImage =
-    heroImage || INDUSTRY_IMAGES[slug] || "/images/industries/hero/hero-boardroom.jpg";
-
-  const futureImage = getRotatedImage(slug, FUTURE_APPROACH_IMAGES);
-  const advisoryImage = getRotatedImage(slug, ADVISORY_CTA_IMAGES);
+  const imageSet = INDUSTRY_IMAGE_SETS[slug];
+  const effectiveHeroImage = imageSet?.hero ?? heroImage ?? "/images/industries/financial-services/hero.jpg";
+  const futureImage = imageSet?.foresight ?? "/images/industries/financial-services/foresight.jpg";
+  const advisoryImage = imageSet?.advisory ?? "/images/industries/financial-services/advisory.jpg";
   const serviceItems = buildServiceItems(relatedServices);
   const caseStudies = CASE_STUDIES.filter((cs) => cs.industryIds.includes(slug)).slice(0, 2);
 
@@ -132,10 +186,22 @@ function IndustryEditorialHero({
   title: string;
   positioning: string;
 }) {
+  const heroEntrance = useHeroEntrance(true);
+  const px = useResponsiveValue({ desktop: "32px", tablet: "32px", mobile: "24px" });
+  const padTop = useResponsiveValue({ desktop: "120px", tablet: "96px", mobile: "72px" });
+  const padBottom = useResponsiveValue({ desktop: "72px", tablet: "56px", mobile: "40px" });
+  const titleSize = useResponsiveValue({ desktop: "3.5rem", tablet: "2.75rem", mobile: "2rem" });
+  const titleLineHeight = useResponsiveValue({ desktop: "1.06", tablet: "1.1", mobile: "1.18" });
+  const titleLetterSpacing = useResponsiveValue({ desktop: "-0.03em", tablet: "-0.02em", mobile: "-0.01em" });
+  const descSize = useResponsiveValue({ desktop: "1.1875rem", tablet: "1.0625rem", mobile: "1rem" });
+
   return (
     <section className="bg-white">
-      <div className="layout-container pb-10 pt-20 md:pb-12 md:pt-24 lg:pb-16 lg:pt-32">
-        <div className="mb-8">
+      <div
+        className="mx-auto max-w-[1280px]"
+        style={{ paddingTop: padTop, paddingBottom: padBottom, paddingLeft: px, paddingRight: px }}
+      >
+        <div className="mb-10" style={heroEntrance.overline}>
           <Breadcrumb
             items={[
               { label: "RSL", href: "/" },
@@ -144,13 +210,22 @@ function IndustryEditorialHero({
             ]}
           />
         </div>
-        <span className="block text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[#64748B]">
+        <span
+          className="block text-[0.6875rem] font-semibold uppercase tracking-[0.08em]"
+          style={{ color: "rgba(27, 58, 92, 0.88)", ...heroEntrance.overline }}
+        >
           Industry
         </span>
-        <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.02em] text-[#0F1720] md:text-4xl lg:text-5xl">
+        <h1
+          className="mt-4 max-w-[780px] font-semibold text-[#0F1720]"
+          style={{ fontSize: titleSize, lineHeight: titleLineHeight, letterSpacing: titleLetterSpacing, ...heroEntrance.heading }}
+        >
           {title}.
         </h1>
-        <p className="mt-6 max-w-2xl text-base leading-[1.65] text-[#475569] md:text-lg">
+        <p
+          className="mt-6 max-w-[62ch] leading-[1.65] text-[#475569]"
+          style={{ fontSize: descSize, ...heroEntrance.paragraph }}
+        >
           {positioning}
         </p>
       </div>
@@ -159,10 +234,13 @@ function IndustryEditorialHero({
 }
 
 function IndustryCinematicImage({ image, title }: { image: string; title: string }) {
+  const px = useResponsiveValue({ desktop: "32px", tablet: "32px", mobile: "24px" });
+  const padBottom = useResponsiveValue({ desktop: "80px", tablet: "64px", mobile: "48px" });
+
   return (
-    <section className="bg-white pb-12 md:pb-16 lg:pb-20">
-      <div className="layout-container">
-        <div className="relative w-full overflow-hidden rounded-xl pt-[45%] shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+    <section className="bg-white" style={{ paddingBottom: padBottom }}>
+      <div className="mx-auto max-w-[1280px]" style={{ paddingLeft: px, paddingRight: px }}>
+        <div className="relative w-full overflow-hidden" style={{ paddingBottom: "45%", borderRadius: "12px", boxShadow: "0 8px 32px rgba(0,0,0,0.08)" }}>
           <Image
             src={image}
             alt={title}
@@ -171,7 +249,7 @@ function IndustryCinematicImage({ image, title }: { image: string; title: string
             style={{ filter: "contrast(1.05)" }}
             sizes="(max-width: 1024px) 100vw, 1120px"
           />
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-black/20 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0" style={{ height: "120px", background: "linear-gradient(to top, rgba(0,0,0,0.15), transparent)" }} />
         </div>
       </div>
     </section>
@@ -179,115 +257,158 @@ function IndustryCinematicImage({ image, title }: { image: string; title: string
 }
 
 function IndustryNarrativeSection({ body, includes }: { body: string; includes: string }) {
-  return (
-    <section className="bg-white py-14 md:py-16 lg:py-20">
-      <div className="layout-container">
-        <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
-          Sector Overview
-        </span>
-        <h2 className="mt-2 text-2xl font-semibold text-[#0F1720] md:text-3xl lg:text-4xl">
-          Sector Landscape.
-        </h2>
-        <div className="mt-8 h-0.5 w-12 bg-[#1B3A5C]" />
+  const isDesktop = useResponsiveValue({ desktop: true, tablet: false, mobile: false });
+  const gap = useResponsiveValue({ desktop: "64px", tablet: "32px", mobile: "24px" });
 
-        <div className="mt-8 grid gap-8 md:grid-cols-[7fr_5fr] md:gap-16">
-          <div>
-            <p className="text-base leading-[1.65] text-[#475569] md:text-lg">
-              {body}
+  return (
+    <SectionWrapper background="white">
+      <SectionHeader
+        overline="Sector Overview"
+        title="Sector Landscape."
+        showAccentRule={false}
+      />
+
+      <div style={{ width: "48px", height: "2px", backgroundColor: "var(--a700)", marginTop: "32px", marginBottom: "32px" }} />
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: isDesktop ? "7fr 5fr" : "1fr",
+          gap,
+        }}
+      >
+        <div>
+          <p style={{ fontSize: "var(--text-body-lg)", lineHeight: "1.65", color: "var(--n700)", maxWidth: "65ch" }}>
+            {body}
+          </p>
+        </div>
+        <div>
+          <div style={{ borderLeft: "3px solid var(--a700)", paddingLeft: "24px" }}>
+            <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: "var(--a700)", letterSpacing: "0.04em", textTransform: "uppercase", display: "block", marginBottom: "8px" }}>
+              Includes
+            </span>
+            <p style={{ fontSize: "var(--text-caption)", lineHeight: "1.55", color: "var(--n600)", maxWidth: "40ch" }}>
+              {includes}
             </p>
-          </div>
-          <div>
-            <div className="border-l-2 border-[#1B3A5C] pl-6">
-              <span className="block text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[#1B3A5C]">
-                Includes
-              </span>
-              <p className="mt-3 text-sm leading-[1.55] text-[#64748B]">
-                {includes}
-              </p>
-            </div>
           </div>
         </div>
       </div>
-    </section>
+    </SectionWrapper>
   );
 }
 
 function ServicesSupportingSection({ services }: { services: ServiceItem[] }) {
+  const gridCols = useResponsiveValue({ desktop: "repeat(2, 1fr)", tablet: "1fr", mobile: "1fr" });
+  const gridGap = useResponsiveValue({ desktop: "32px", tablet: "24px", mobile: "20px" });
+  const gridMarginTop = useResponsiveValue({ desktop: "48px", tablet: "40px", mobile: "32px" });
+
   return (
-    <section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
-      <div className="layout-container">
-        <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
-          Advisory Architecture
-        </span>
-        <h2 className="mt-2 text-2xl font-semibold text-[#0F1720] md:text-3xl lg:text-4xl">
-          Services Supporting This Industry.
-        </h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-2 md:gap-8">
-          {services.map((svc, index) => (
-            <ServiceCard
-              key={svc.slug}
-              slug={svc.slug}
-              title={svc.title}
-              focusAreas={svc.focusAreas}
-              approach={svc.approach}
-              index={index}
-              variant="industry"
-              ctaLabel="Explore Service"
-              showCornerArrow
-            />
-          ))}
-        </div>
+    <SectionWrapper background="neutral50">
+      <SectionHeader
+        overline="Advisory Architecture"
+        title="Services Supporting This Industry."
+        showAccentRule={false}
+      />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: gridCols,
+          gap: gridGap,
+          marginTop: gridMarginTop,
+        }}
+      >
+        {services.map((svc, index) => (
+          <ServiceCard
+            key={svc.slug}
+            slug={svc.slug}
+            title={svc.title}
+            focusAreas={svc.focusAreas}
+            approach={svc.approach}
+            index={index}
+            ctaLabel="Explore Service"
+            showCornerArrow
+          />
+        ))}
       </div>
-    </section>
+    </SectionWrapper>
   );
 }
 
 function FutureApproachSection({ title, image }: { title: string; image: string }) {
+  const paraSize = useResponsiveValue({ desktop: "1.1875rem", tablet: "1.0625rem", mobile: "1rem" });
+  const imgPad = useResponsiveValue({ desktop: "42%", tablet: "48%", mobile: "56%" });
+  const imgMargin = useResponsiveValue({ desktop: "48px", tablet: "40px", mobile: "32px" });
+
   return (
-    <section className="bg-white py-14 md:py-16 lg:py-20">
-      <div className="layout-container">
-        <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
-          Industry Foresight
-        </span>
-        <h2 className="mt-2 text-2xl font-semibold text-[#0F1720] md:text-3xl lg:text-4xl">
-          Our Approach to the Future of {title}.
-        </h2>
-        <div className="mt-8 h-0.5 w-12 bg-[#1B3A5C]" />
+    <SectionWrapper background="white">
+      <SectionHeader
+        overline="Industry Foresight"
+        title={`Our Approach to the Future of ${title}.`}
+        showAccentRule={false}
+      />
 
-        <p className="mt-8 max-w-[68ch] text-base leading-[1.65] text-[#475569] md:text-lg">
-          The future of the {title.toLowerCase()} sector will be shaped by accelerating technological change, evolving
-          regulatory environments, and rising expectations from stakeholders. Institutions operating in this space must
-          navigate complex structural shifts while maintaining operational resilience and long-term strategic clarity.
-          Success will increasingly depend on the ability to anticipate disruption rather than merely respond to it.
-        </p>
+      <div style={{ width: "48px", height: "2px", backgroundColor: "var(--a700)", marginTop: "32px", marginBottom: "32px" }} />
 
-        <div className="relative my-10 w-full overflow-hidden rounded-xl pt-[52%] shadow-[0_8px_32px_rgba(0,0,0,0.08)] md:my-12 md:pt-[45%]">
-          <Image
-            src={image}
-            alt={`The future of ${title}`}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 1120px"
-          />
-        </div>
+      <p style={{ fontSize: paraSize, lineHeight: "1.65", color: "var(--n700)", maxWidth: "68ch" }}>
+        The future of the {title.toLowerCase()} sector will be shaped by accelerating technological change, evolving
+        regulatory environments, and rising expectations from stakeholders. Institutions operating in this space must
+        navigate complex structural shifts while maintaining operational resilience and long-term strategic clarity.
+        Success will increasingly depend on the ability to anticipate disruption rather than merely respond to it.
+      </p>
 
-        <p className="max-w-[68ch] text-base leading-[1.65] text-[#475569] md:text-lg">
-          Our advisory approach focuses on helping institutions anticipate disruption, redesign strategic operating
-          models, and implement transformation initiatives that align long-term institutional capabilities with
-          emerging market realities. We combine deep sector knowledge with rigorous analytical frameworks to develop
-          perspectives that are both forward-looking and actionable - enabling leaders to make confident decisions in
-          the face of uncertainty.
-        </p>
+      <div
+        style={{
+          marginTop: imgMargin,
+          marginBottom: imgMargin,
+          position: "relative",
+          width: "100%",
+          paddingBottom: imgPad,
+          borderRadius: "12px",
+          overflow: "hidden",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
+        }}
+      >
+        <Image
+          src={image}
+          alt={`The future of ${title} - strategic transformation landscape`}
+          fill
+          className="object-cover"
+          sizes="(max-width: 1024px) 100vw, 1120px"
+        />
       </div>
-    </section>
+
+      <p style={{ fontSize: paraSize, lineHeight: "1.65", color: "var(--n700)", maxWidth: "68ch" }}>
+        Our advisory approach focuses on helping institutions anticipate disruption, redesign strategic operating
+        models, and implement transformation initiatives that align long-term institutional capabilities with
+        emerging market realities. We combine deep sector knowledge with rigorous analytical frameworks to develop
+        perspectives that are both forward-looking and actionable - enabling leaders to make confident decisions in
+        the face of uncertainty.
+      </p>
+    </SectionWrapper>
   );
 }
 
 function SectorAdvisoryCta({ title, image }: { title: string; image: string }) {
+  const isDesktop = useResponsiveValue({ desktop: true, tablet: true, mobile: false });
+  const px = useResponsiveValue({ desktop: "32px", tablet: "32px", mobile: "24px" });
+  const padTop = useResponsiveValue({ desktop: "80px", tablet: "64px", mobile: "48px" });
+  const padBottom = useResponsiveValue({ desktop: "80px", tablet: "64px", mobile: "48px" });
+  const padLeft = useResponsiveValue({ desktop: "64px", tablet: "48px", mobile: "0" });
+  const padRight = useResponsiveValue({ desktop: "32px", tablet: "24px", mobile: "0" });
+
   return (
-    <section className="bg-[#0C1C2E]">
-      <div className="layout-container grid lg:min-h-120 lg:grid-cols-2">
-        <div className="relative min-h-70 overflow-hidden lg:min-h-full">
+    <section style={{ backgroundColor: "var(--a900)" }}>
+      <div
+        className="mx-auto max-w-[1280px]"
+        style={{
+          paddingLeft: isDesktop ? "0" : px,
+          paddingRight: px,
+          display: "grid",
+          gridTemplateColumns: isDesktop ? "1fr 1fr" : "1fr",
+          minHeight: isDesktop ? "480px" : "auto",
+        }}
+      >
+        <div style={{ position: "relative", minHeight: isDesktop ? "100%" : "280px", overflow: "hidden" }}>
           <Image
             src={image}
             alt={`${title} advisory context`}
@@ -296,34 +417,63 @@ function SectorAdvisoryCta({ title, image }: { title: string; image: string }) {
             style={{ filter: "grayscale(30%) contrast(1.08)" }}
             sizes="(max-width: 1024px) 100vw, 720px"
           />
-          <div className="absolute inset-y-0 right-0 hidden w-28 bg-linear-to-r from-transparent to-[#0C1C2E] lg:block" />
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-[#0C1C2E] to-transparent lg:hidden" />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: isDesktop ? "120px" : "100%",
+              height: isDesktop ? "100%" : "80px",
+              background: isDesktop
+                ? "linear-gradient(to right, transparent, var(--a900))"
+                : "linear-gradient(to top, var(--a900), transparent)",
+              ...(isDesktop ? {} : { top: "auto" }),
+            }}
+          />
         </div>
-        <div className="flex flex-col justify-center py-12 md:py-16 lg:py-20 lg:pl-16">
-          <span className="block text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-white/60">
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            paddingTop: padTop,
+            paddingBottom: padBottom,
+            paddingLeft: padLeft,
+            paddingRight: padRight,
+          }}
+        >
+          <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "16px" }}>
             Sector Advisory
           </span>
-          <h2 className="mt-4 text-[1.5rem] font-semibold leading-[1.2] text-white md:text-[2rem]">
+          <h2
+            style={{
+              fontSize: useResponsiveValue({ desktop: "2rem", tablet: "1.75rem", mobile: "1.5rem" }),
+              fontWeight: 600,
+              lineHeight: useResponsiveValue({ desktop: "1.12", tablet: "1.16", mobile: "1.2" }),
+              letterSpacing: useResponsiveValue({ desktop: "-0.02em", tablet: "-0.015em", mobile: "-0.01em" }),
+              color: "#FFFFFF",
+              maxWidth: "480px",
+            }}
+          >
             How we support leaders in {title.toLowerCase()}.
           </h2>
-          <p className="mt-4 max-w-[46ch] text-base leading-[1.7] text-[#CBD7E6]">
+          <p style={{ fontSize: "var(--text-body)", lineHeight: "var(--line-height-body)", color: "var(--a200)", marginTop: "16px", maxWidth: "440px" }}>
             Our industry team brings deep sector experience across strategy, operations, digital, risk, and
             organizational transformation. Every engagement is structured around your specific context and
             objectives.
           </p>
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <Link
-              href="/contact"
-              className="rounded-lg bg-white px-7 py-3 text-center text-sm font-semibold text-[#0C1C2E] transition hover:bg-[#F1F5F9]"
-            >
-              Schedule an Introduction
-            </Link>
-            <Link
-              href="/services"
-              className="rounded-lg border border-white/30 px-7 py-3 text-center text-sm font-semibold text-white/85 transition hover:border-white/60 hover:text-white"
-            >
-              Explore Related Services
-            </Link>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: useResponsiveValue({ desktop: "row", tablet: "row", mobile: "column" }),
+              gap: "16px",
+              marginTop: "32px",
+            }}
+          >
+            <CtaButton label="Schedule an Introduction" href="/contact" variant="primary" />
+            <CtaButton label="Explore Related Services" href="/services" variant="secondary" />
           </div>
         </div>
       </div>
@@ -331,58 +481,121 @@ function SectorAdvisoryCta({ title, image }: { title: string; image: string }) {
   );
 }
 
-function OutcomeSignalsSection({ signals }: { signals: OutcomeSignal[] }) {
+function CtaButton({
+  label,
+  href,
+  variant,
+}: {
+  label: string;
+  href: string;
+  variant: "primary" | "secondary";
+}) {
+  const [hovered, setHovered] = useState(false);
+  const isPrimary = variant === "primary";
+
   return (
-    <section className="bg-white py-14 md:py-16 lg:py-20">
-      <div className="layout-container">
-        <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-[#1B3A5C]">Outcome Signals</span>
-        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
-          Measurable Impact.
-        </h3>
-        <p className="mt-4 max-w-[60ch] text-base leading-[1.7] text-[#475569]">
-          Outcome metrics are calibrated to each engagement. The following represent typical measurement dimensions
-          across our industry advisory work.
-        </p>
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
-          {signals.map((signal, index) => (
-            <div key={`${signal.label}-${index}`} className="border-t-2 border-[#1B3A5C] pt-6">
-              <p className="text-[1.875rem] font-semibold leading-none text-[#1B3A5C] md:text-[2.25rem]">
-                {signal.value}
-              </p>
-              <h4 className="mt-3 text-base font-semibold text-[#0F1720]">{signal.label}</h4>
-              <p className="mt-2 text-sm leading-[1.6] text-[#64748B]">{signal.note}</p>
-            </div>
-          ))}
-        </div>
+    <Link
+      href={href}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        fontSize: "var(--text-caption)",
+        fontWeight: 600,
+        letterSpacing: "0.02em",
+        textDecoration: "none",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: "14px",
+        paddingBottom: "14px",
+        paddingLeft: "28px",
+        paddingRight: "28px",
+        borderRadius: "4px",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: isPrimary
+          ? hovered
+            ? "#FFFFFF"
+            : "rgba(255,255,255,0.9)"
+          : hovered
+            ? "rgba(255,255,255,0.5)"
+            : "rgba(255,255,255,0.25)",
+        backgroundColor: isPrimary
+          ? hovered
+            ? "#FFFFFF"
+            : "rgba(255,255,255,0.9)"
+          : "transparent",
+        color: isPrimary
+          ? "var(--a900)"
+          : hovered
+            ? "#FFFFFF"
+            : "rgba(255,255,255,0.8)",
+        transition: "background-color 120ms cubic-bezier(0.25, 0.1, 0.25, 1), border-color 120ms cubic-bezier(0.25, 0.1, 0.25, 1), color 120ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function OutcomeSignalsSection({ signals }: { signals: OutcomeSignal[] }) {
+  const gridCols = useResponsiveValue({ desktop: "repeat(3, 1fr)", tablet: "repeat(3, 1fr)", mobile: "1fr" });
+  const gridGap = useResponsiveValue({ desktop: "32px", tablet: "24px", mobile: "20px" });
+  const marginTop = useResponsiveValue({ desktop: "48px", tablet: "40px", mobile: "32px" });
+
+  return (
+    <SectionWrapper background="white">
+      <SectionHeader
+        overline="Outcome Signals"
+        title="Measurable Impact."
+        description="Outcome metrics are calibrated to each engagement. The following represent typical measurement dimensions across our industry advisory work."
+        showAccentRule={false}
+        maxWidth="60ch"
+      />
+      <div style={{ display: "grid", gridTemplateColumns: gridCols, gap: gridGap, marginTop }}>
+        {signals.map((signal, index) => (
+          <div key={`${signal.label}-${index}`} style={{ borderTop: "2px solid var(--a700)", paddingTop: "24px" }}>
+            <span style={{ fontSize: "2rem", fontWeight: 600, lineHeight: "1", color: signal.value === "-" ? "var(--n300)" : "var(--a700)", display: "block", marginBottom: "12px" }}>
+              {signal.value}
+            </span>
+            <h3 style={{ fontSize: "var(--text-body)", fontWeight: 600, lineHeight: "var(--line-height-body)", color: "var(--n900)" }}>
+              {signal.label}
+            </h3>
+            <p style={{ fontSize: "var(--text-caption)", lineHeight: "1.55", color: "var(--n500)", marginTop: "8px" }}>
+              {signal.note}
+            </p>
+          </div>
+        ))}
       </div>
-    </section>
+    </SectionWrapper>
   );
 }
 
 function IndustryRelatedInsights({ insights }: { insights: IndustryRelatedInsight[] }) {
+  const gridCols = useResponsiveValue({ desktop: "repeat(3, 1fr)", tablet: "repeat(2, 1fr)", mobile: "1fr" });
+  const gridGap = useResponsiveValue({ desktop: "24px", tablet: "20px", mobile: "16px" });
+  const marginTop = useResponsiveValue({ desktop: "40px", tablet: "32px", mobile: "24px" });
+
   return (
-    <section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
-      <div className="layout-container">
-        <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">
-          Related Perspectives
-        </span>
-        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
-          Industry Insights.
-        </h3>
-        <p className="mt-4 max-w-[56ch] text-base leading-[1.7] text-[#475569]">
-          Research and analysis relevant to this sector, drawn from our institutional knowledge base.
-        </p>
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-          {insights.map((insight, index) => (
-            <InsightMiniCard
-              key={insight.slug}
-              insight={insight}
-              image={INSIGHT_IMAGES[index % INSIGHT_IMAGES.length]}
-            />
-          ))}
-        </div>
+    <SectionWrapper background="neutral50">
+      <SectionHeader
+        overline="Related Perspectives"
+        title="Industry Insights."
+        description="Research and analysis relevant to this sector, drawn from our institutional knowledge base."
+        showAccentRule={false}
+        maxWidth="56ch"
+      />
+      <div style={{ display: "grid", gridTemplateColumns: gridCols, gap: gridGap, marginTop }}>
+        {insights.map((insight, index) => (
+          <InsightMiniCard
+            key={insight.slug}
+            insight={insight}
+            image={INSIGHT_IMAGES[index % INSIGHT_IMAGES.length]}
+          />
+        ))}
       </div>
-    </section>
+    </SectionWrapper>
   );
 }
 
@@ -393,6 +606,7 @@ function InsightMiniCard({
   insight: IndustryRelatedInsight;
   image: string;
 }) {
+  const [hovered, setHovered] = useState(false);
   const readTime =
     typeof insight.readingTime === "number"
       ? `${insight.readingTime} min read`
@@ -401,7 +615,15 @@ function InsightMiniCard({
   return (
     <Link
       href={`/insights/${insight.slug}`}
-      className="group block overflow-hidden rounded-xl border border-[#E2E8F0] bg-white transition duration-200 ease-out hover:border-[#CBD5E1] hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)]"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="block overflow-hidden rounded-xl border bg-white"
+      style={{
+        borderColor: hovered ? "var(--n300)" : "var(--n200)",
+        transition: "border-color 120ms cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 120ms cubic-bezier(0.25, 0.1, 0.25, 1)",
+        boxShadow: hovered ? "0 1px 4px rgba(0,0,0,0.06)" : "none",
+        textDecoration: "none",
+      }}
     >
       <div className="relative w-full pt-[50%]">
         <Image src={image} alt={insight.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 420px" />
@@ -411,7 +633,10 @@ function InsightMiniCard({
           <span className="font-semibold">{insight.category}</span>
           {readTime ? <span className="text-[#94A3B8]">{readTime}</span> : null}
         </div>
-        <h4 className="text-sm font-semibold leading-[1.4] text-[#0F1720] transition-colors duration-200 group-hover:text-[#1B3A5C] line-clamp-3">
+        <h4
+          className="text-sm font-medium leading-[1.4] line-clamp-3"
+          style={{ color: hovered ? "var(--a700)" : "var(--n900)", transition: "color 120ms cubic-bezier(0.25, 0.1, 0.25, 1)" }}
+        >
           {insight.title}
         </h4>
       </div>
@@ -420,54 +645,32 @@ function InsightMiniCard({
 }
 
 function IndustryRelatedCaseStudies({ caseStudies }: { caseStudies: typeof CASE_STUDIES }) {
-  return (
-    <section className="bg-white py-14 md:py-16 lg:py-20">
-      <div className="layout-container">
-        <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-[#64748B]">Client Impact</span>
-        <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
-          Related Engagements.
-        </h3>
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
-          {caseStudies.map((cs) => (
-            <CaseStudyCard key={cs.slug} cs={cs} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+  const gridCols = useResponsiveValue({ desktop: "repeat(2, 1fr)", tablet: "1fr", mobile: "1fr" });
+  const gridGap = useResponsiveValue({ desktop: "32px", tablet: "24px", mobile: "20px" });
+  const marginTop = useResponsiveValue({ desktop: "40px", tablet: "32px", mobile: "24px" });
 
-function CaseStudyCard({ cs }: { cs: (typeof CASE_STUDIES)[number] }) {
   return (
-    <Link
-      href={`/case-studies/${cs.slug}`}
-      className="group block overflow-hidden rounded-xl border border-[#E2E8F0] bg-white transition duration-200 ease-out hover:border-[#CBD5E1] hover:shadow-[0_6px_18px_rgba(0,0,0,0.08)]"
-    >
-      <div className="relative w-full pt-[50%]">
-        <Image src={cs.image} alt={cs.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 520px" />
+    <SectionWrapper background="white">
+      <SectionHeader
+        overline="Client Impact"
+        title="Related Engagements."
+        showAccentRule={false}
+      />
+      <div style={{ display: "grid", gridTemplateColumns: gridCols, gap: gridGap, marginTop }}>
+        {caseStudies.map((cs) => (
+          <CaseStudyCard
+            key={cs.slug}
+            cs={{
+              slug: cs.slug,
+              title: cs.title,
+              image: cs.image,
+              summary: cs.summary,
+              metrics: cs.metrics,
+            }}
+          />
+        ))}
       </div>
-      <div className="px-5 py-5">
-        <span className="block text-[0.625rem] font-semibold uppercase tracking-[0.06em] text-[#1B3A5C]">
-          Client Impact
-        </span>
-        <h4 className="mt-2 text-base font-semibold text-[#0F1720] transition-colors duration-200 group-hover:text-[#1B3A5C]">
-          {cs.title}
-        </h4>
-        <p className="mt-2 text-sm leading-[1.55] text-[#64748B] line-clamp-3">
-          {cs.summary}
-        </p>
-        <div className="mt-4 flex gap-4 border-t border-[#F1F5F9] pt-3">
-          {cs.metrics.slice(0, 2).map((metric) => (
-            <div key={metric.label}>
-              <span className="block text-sm font-semibold text-[#1B3A5C]">{metric.value}</span>
-              <span className="text-[0.625rem] uppercase tracking-[0.02em] text-[#94A3B8]">
-                {metric.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Link>
+    </SectionWrapper>
   );
 }
 
@@ -505,34 +708,14 @@ function IndustryKnowledgeNav({
 
 function IndustryPreFooterCta() {
   return (
-    <section className="bg-[#1B3A5C] py-16 md:py-20">
-      <div className="layout-container">
-        <span className="block text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-white/60">
-          Next Step
-        </span>
-        <h3 className="mt-3 max-w-[32ch] text-[1.5rem] font-semibold leading-[1.2] text-white md:text-[2rem]">
-          Discuss your sector-specific advisory needs.
-        </h3>
-        <p className="mt-4 max-w-[60ch] text-base leading-[1.7] text-white/75">
-          Every engagement begins with a structured conversation. No obligations - an exchange of context to determine
-          whether there is a basis for collaboration.
-        </p>
-        <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-          <Link
-            href="/contact"
-            className="rounded-lg bg-white px-7 py-3 text-center text-sm font-semibold text-[#1B3A5C] transition hover:bg-[#F1F5F9]"
-          >
-            Speak with our industry team
-          </Link>
-          <Link
-            href="/coverage"
-            className="rounded-lg border border-white/40 px-7 py-3 text-center text-sm font-semibold text-white/85 transition hover:border-white/60 hover:text-white"
-          >
-            View full coverage matrix
-          </Link>
-        </div>
-      </div>
-    </section>
+    <CTABlock
+      heading="Discuss your sector-specific advisory needs."
+      body="Every engagement begins with a structured conversation. No obligations - an exchange of context to determine whether there is a basis for collaboration."
+      primary={{ label: "Speak with our industry team", href: "/contact" }}
+      secondary={{ label: "View full coverage matrix", href: "/coverage" }}
+      variant="dark"
+      align="left"
+    />
   );
 }
 
@@ -555,20 +738,6 @@ function buildServiceItems(relatedServices: IndustryRelatedService[]) {
   });
 
   return items.length > 0 ? items : SERVICES.slice(0, 4);
-}
-
-function getRotatedImage(slug: string, images: string[]) {
-  if (images.length === 0) return "/images/industries/hero/hero-boardroom.jpg";
-  const offset = getSlugOffset(slug, images.length);
-  return images[offset];
-}
-
-function getSlugOffset(slug: string, modulo: number) {
-  let hash = 0;
-  for (let i = 0; i < slug.length; i += 1) {
-    hash = (hash + slug.charCodeAt(i)) % modulo;
-  }
-  return hash;
 }
 
 type OutcomeSignal = {

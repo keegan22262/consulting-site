@@ -10,6 +10,9 @@ import type { ServiceItem } from "./data";
 
 interface Props {
   services: ServiceItem[];
+  overline?: string;
+  title?: string;
+  description?: string;
 }
 
 /**
@@ -25,7 +28,12 @@ interface Props {
  * Spacing: section py-24 (96px); card p-7 (28px); grid gap-6 (24px); mt-12 after header
  * Typography: overline caption, H2 title, H3 card title, 14px body, 13px CTA
  */
-export default function ServicesCardGrid({ services }: Props) {
+export default function ServicesCardGrid({
+  services,
+  overline = "Professional Services",
+  title = "Advisory Disciplines",
+  description,
+}: Props) {
   const gridCols = useResponsiveValue({
     desktop: "repeat(3, 1fr)",
     tablet: "repeat(2, 1fr)",
@@ -35,20 +43,23 @@ export default function ServicesCardGrid({ services }: Props) {
   const gridMarginTop = useResponsiveValue({ desktop: "48px", tablet: "40px", mobile: "32px" });
 
   return (
-    <SectionWrapper
-      className="bg-(--a900)"
-      padV={{ mobile: 48, tablet: 64, desktop: 80 }}
-    >
+    <SectionWrapper background="primary" padV={{ mobile: 48, tablet: 64, desktop: 80 }}>
       <SectionHeader
-        overline="Professional Services"
-        title="Advisory Disciplines"
+        overline={overline}
+        title={title}
+        description={description}
         showAccentRule={false}
         overlineColor="rgba(255, 255, 255, 0.6)"
         titleColor="#FFFFFF"
+        descriptionColor="rgba(255, 255, 255, 0.72)"
+        maxWidth="60ch"
       />
 
       <div
         style={{
+          maxWidth: "1200px",
+          marginLeft: "auto",
+          marginRight: "auto",
           display: "grid",
           gridTemplateColumns: gridCols,
           gap: gridGap,
@@ -73,6 +84,7 @@ function ServiceDarkCard({ service, index }: { service: ServiceItem; index: numb
   const cardBg = hovered ? "rgba(27, 58, 92, 0.55)" : "rgba(27, 58, 92, 0.35)";
   const titleColor = hovered ? "var(--o500)" : "#FFFFFF";
   const ctaColor = hovered ? "#FFFFFF" : "rgba(255, 255, 255, 0.6)";
+  const description = service.approach || service.focusAreas;
 
   return (
     <div
@@ -100,12 +112,14 @@ function ServiceDarkCard({ service, index }: { service: ServiceItem; index: numb
         </h3>
 
         {/* Card body — approach copy */}
-        <p
-          className="mt-3 grow leading-[1.6]"
-          style={{ fontSize: bodySize, color: "rgba(255, 255, 255, 0.72)" }}
-        >
-          {service.approach}
-        </p>
+        {description ? (
+          <p
+            className="mt-3 grow leading-[1.6]"
+            style={{ fontSize: bodySize, color: "rgba(255, 255, 255, 0.72)" }}
+          >
+            {description}
+          </p>
+        ) : null}
 
         {/* Explore CTA */}
         <span

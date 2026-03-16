@@ -9,7 +9,7 @@ import { BORDER_RADIUS, C, F, HERO_BACKGROUNDS, M_CURVE, M_DUR, MAX_WIDTH } from
 
 export default function IndustriesHero() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const heroEntrance = useHeroEntrance();
+  const heroEntrance = useHeroEntrance(true);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const px = useResponsiveValue("32px", "32px", "24px");

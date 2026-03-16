@@ -192,11 +192,14 @@ export interface CaseStudyCardData {
   title: string;
   image: string;
   category?: string;
+  summary?: string;
   excerpt?: string;
+  metrics?: Array<{ value: string; label: string }>;
 }
 
 export function CaseStudyCard({ cs }: { cs: CaseStudyCardData }) {
   const [hovered, setHovered] = useState(false);
+  const metrics = cs.metrics ?? [];
 
   return (
     <Link
@@ -242,7 +245,7 @@ export function CaseStudyCard({ cs }: { cs: CaseStudyCardData }) {
             textTransform: "uppercase",
           }}
         >
-          {cs.category ?? "Engagement"}
+          {cs.category ?? "Client Impact"}
         </span>
         <h3
           style={{
@@ -250,24 +253,68 @@ export function CaseStudyCard({ cs }: { cs: CaseStudyCardData }) {
             fontSize: "var(--text-body)",
             fontWeight: 600,
             lineHeight: "1.4",
-            color: "var(--n900)",
+            color: hovered ? "var(--a700)" : "var(--n900)",
             marginTop: "10px",
+            transition: "color 120ms cubic-bezier(0.25, 0.1, 0.25, 1)",
           }}
         >
           {cs.title}
         </h3>
-        {cs.excerpt ? (
+        {(cs.summary ?? cs.excerpt) ? (
           <p
             style={{
               fontFamily: "var(--font-primary)",
               fontSize: "var(--text-caption)",
               lineHeight: "1.55",
-              color: "var(--n600)",
+              color: "var(--n500)",
               marginTop: "8px",
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
             }}
           >
-            {cs.excerpt}
+            {cs.summary ?? cs.excerpt}
           </p>
+        ) : null}
+
+        {metrics.length > 0 ? (
+          <div
+            style={{
+              display: "flex",
+              gap: "16px",
+              marginTop: "16px",
+              paddingTop: "12px",
+              borderTop: "1px solid var(--n100)",
+            }}
+          >
+            {metrics.slice(0, 2).map((metric) => (
+              <div key={metric.label}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-primary)",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    color: "var(--a700)",
+                    display: "block",
+                  }}
+                >
+                  {metric.value}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-primary)",
+                    fontSize: "0.625rem",
+                    fontWeight: 500,
+                    color: "var(--n500)",
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  {metric.label}
+                </span>
+              </div>
+            ))}
+          </div>
         ) : null}
       </div>
     </Link>

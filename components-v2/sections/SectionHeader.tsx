@@ -1,3 +1,5 @@
+"use client";
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // ALINABSS SectionHeader — Centralized Section Title Block
 // Overline + H2 headline + optional description + optional accent rule.

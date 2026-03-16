@@ -1,7 +1,6 @@
 "use client";
 
 import InstitutionalCTA from "@/components-v2/sections/InstitutionalCTA";
-import { useServices } from "@/lib/hooks/useServices";
 import CapabilityFrameworkMap from "@/src/sections/services/CapabilityFrameworkMap";
 import CinematicHero from "@/src/sections/services/CinematicHero";
 import CreativeDeliverySection from "@/src/sections/services/CreativeDeliverySection";
@@ -10,8 +9,7 @@ import ServicesNavStrip from "@/src/sections/services/ServicesNavStrip";
 import { SERVICES, type ServiceItem } from "@/src/sections/services/data";
 
 export default function ServicesPageClient() {
-  const { data: cmsServices } = useServices<ServiceItem>();
-  const services = cmsServices ?? SERVICES;
+  const services = SERVICES;
 
   return (
     <>

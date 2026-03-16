@@ -53,15 +53,16 @@ export default function InsightCarouselCard({
         overflow: "hidden",
         position: "relative",
         cursor: "pointer",
-        backgroundColor: "rgba(12,28,46,0.65)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        backgroundColor: "rgba(8,18,30,0.12)",
+        backdropFilter: "none",
+        WebkitBackdropFilter: "none",
         boxShadow: isHovered
-          ? "0px 40px 80px rgba(0,0,0,0.45)"
-          : "0px 30px 60px rgba(0,0,0,0.35)",
+          ? "0px 24px 48px rgba(0,0,0,0.35)"
+          : "0px 18px 36px rgba(0,0,0,0.28)",
         opacity: isActive ? 1 : 0.7,
         transform: isActive ? "scale(1)" : "scale(0.92)",
-        transition: `opacity 900ms ${INSIGHT_CAROUSEL_EASING}, transform 900ms ${INSIGHT_CAROUSEL_EASING}, box-shadow 300ms ${INSIGHT_CAROUSEL_EASING}`,
+        transition: `opacity 700ms ${INSIGHT_CAROUSEL_EASING}, transform 700ms ${INSIGHT_CAROUSEL_EASING}, box-shadow 240ms ${INSIGHT_CAROUSEL_EASING}`,
+        willChange: "transform, opacity",
       }}
     >
       <div
@@ -74,8 +75,9 @@ export default function InsightCarouselCard({
           backgroundImage: `url(${insight.image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          transform: isHovered ? "scale(1.04)" : "scale(1)",
-          transition: `transform 900ms ${INSIGHT_CAROUSEL_EASING}`,
+          transform: isHovered ? "scale(1.02)" : "scale(1)",
+          transition: `transform 600ms ${INSIGHT_CAROUSEL_EASING}`,
+          willChange: "transform",
           zIndex: 0,
         }}
       />
@@ -89,7 +91,7 @@ export default function InsightCarouselCard({
           right: 0,
           bottom: 0,
           background:
-            "linear-gradient(to right, rgba(12,28,46,0.85), rgba(12,28,46,0.55), rgba(12,28,46,0.1))",
+            "linear-gradient(to right, rgba(8,18,30,0.55), rgba(8,18,30,0.28), rgba(8,18,30,0.06))",
           zIndex: 1,
         }}
       />

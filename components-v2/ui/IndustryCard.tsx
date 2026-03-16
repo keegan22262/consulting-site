@@ -108,8 +108,8 @@ function CompactIndustryCard({
                 backgroundImage: `url(${image})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                filter: "grayscale(80%) contrast(1.05)",
-                opacity: hovered ? 0.35 : 0.22,
+                filter: "grayscale(15%) contrast(1.02)",
+                opacity: hovered ? 0.9 : 0.75,
                 transition: "opacity 120ms cubic-bezier(0.25, 0.1, 0.25, 1)",
               }}
             />
@@ -196,8 +196,8 @@ function DetailedIndustryCard({
               backgroundImage: `url(${image})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
-              filter: "grayscale(70%) contrast(1.05)",
-              opacity: hovered ? 0.35 : 0.22,
+              filter: "grayscale(12%) contrast(1.02)",
+              opacity: hovered ? 0.9 : 0.75,
               transition: "opacity 120ms cubic-bezier(0.25, 0.1, 0.25, 1)",
             }}
           />

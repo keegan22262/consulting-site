@@ -83,7 +83,7 @@ export default function EditorialIndustryCard({
             right: 0,
             bottom: 0,
             background:
-              "linear-gradient(to top, rgba(12,28,46,0.72) 0%, rgba(12,28,46,0.20) 50%, rgba(12,28,46,0.08) 100%)",
+              "linear-gradient(to top, rgba(8,18,30,0.55) 0%, rgba(8,18,30,0.18) 50%, rgba(8,18,30,0.06) 100%)",
             zIndex: 1,
           }}
         />
@@ -110,7 +110,7 @@ export default function EditorialIndustryCard({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(12,28,46,0.78)",
+            backgroundColor: "rgba(8,18,30,0.55)",
             opacity: hovered ? 1 : 0,
             transition: `opacity 300ms ${CARD_EASING}`,
             zIndex: 3,

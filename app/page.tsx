@@ -9,6 +9,8 @@ import InsightsCarouselSection from "@/components-v2/sections/InsightsCarouselSe
 import EngagementFrameworkSection from "@/components-v2/sections/EngagementFrameworkSection";
 import PridePhilosophySection from "@/components-v2/sections/PridePhilosophySection";
 import InstitutionalMetricsSection from "@/components-v2/sections/InstitutionalMetricsSection";
+import InstitutionalCTA from "@/components-v2/sections/InstitutionalCTA";
+import { CinematicVisualPanel } from "@/components-v2/sections/InstitutionalMetricsSection";
 import AtmosphericLayer from "@/components-v2/sections/AtmosphericLayer";
 import SectionDivider from "@/components-v2/sections/SectionDivider";
 import { sanityClient } from "@/lib/sanity/client";
@@ -201,6 +203,8 @@ export default async function Home() {
         primaryCta={{ label: "See How We Deliver", href: "/services" }}
       />
 
+      <SectionDivider />
+
       <FeaturedServicesSection />
 
       <SectionDivider />
@@ -227,14 +231,10 @@ export default async function Home() {
         <InsightsCarouselSection insights={insights} />
       </div>
 
-      <SectionDivider />
-
       <div className="relative overflow-hidden">
         <AtmosphericLayer />
-        <InstitutionalMetricsSection />
+        <EngagementFrameworkSection phases={deliveryPhases} />
       </div>
-
-      <SectionDivider />
 
       <div className="relative overflow-hidden">
         <AtmosphericLayer />
@@ -244,10 +244,46 @@ export default async function Home() {
         />
       </div>
 
+      <SectionDivider />
+
       <div className="relative overflow-hidden">
         <AtmosphericLayer />
-        <EngagementFrameworkSection phases={deliveryPhases} />
+        <InstitutionalMetricsSection showCta={false} />
       </div>
+
+      {/* CTA + CinematicVisualPanel grid, Figma style */}
+      <section className="relative overflow-hidden" style={{ background: '#0B2239' }}>
+        <div className="layout-container py-20 md:py-28 lg:py-36">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            {/* Left: CTA text/buttons */}
+            <div className="flex flex-col justify-center h-full">
+              <h2 className="text-4xl font-bold leading-tight text-white mb-6 lg:text-5xl">Begin a Conversation With Our Advisory Team.</h2>
+              <p className="max-w-[52ch] text-lg leading-relaxed text-white/80 mb-10">Every engagement begins with a structured conversation. No obligations - simply an exchange of context to determine whether there is a basis for collaboration.</p>
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <a
+                  href="/contact?from=cta&context=Begin%20a%20Conversation%20With%20Our%20Advisory%20Team."
+                  className="inline-block rounded-card bg-white px-8 py-4 text-center text-base font-semibold text-[#071a2f] shadow transition-colors duration-200 hover:bg-slate-200"
+                >
+                  Schedule an Introduction
+                </a>
+                <a
+                  href="/about"
+                  className="inline-flex items-center gap-2 py-4 text-base font-medium text-white/80 transition-colors duration-200 hover:text-white"
+                >
+                  Download Firm Overview
+                  <span aria-hidden="true" className="text-lg">→</span>
+                </a>
+              </div>
+            </div>
+            {/* Right: Static image, aspect ratio and rounded corners */}
+            <div className="flex justify-center items-center w-full h-full">
+              <div className="w-full max-w-xl">
+                <CinematicVisualPanel />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

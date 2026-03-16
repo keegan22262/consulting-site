@@ -45,7 +45,7 @@ export default function ServicesCinematicHero() {
         className="absolute inset-x-0 bottom-0 h-[70%]"
         style={{
           background:
-            "linear-gradient(to top, rgba(12,28,46,0.92) 0%, rgba(12,28,46,0.60) 50%, transparent 100%)",
+            "linear-gradient(to top, rgba(8,18,30,0.7) 0%, rgba(8,18,30,0.35) 55%, transparent 100%)",
         }}
       />
 
