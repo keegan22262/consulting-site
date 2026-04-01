@@ -13,10 +13,9 @@ import Link from "next/link";
 import { useScrollReveal } from "@/components-v2/foundation";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
-const AA_VIDEO_STILL =
-  "https://images.unsplash.com/photo-1573166364839-1bfe9196c23e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3Jwb3JhdGUlMjBzdHJhdGVneSUyMG1lZXRpbmclMjBib2FyZHJvb20lMjBwcm9mZXNzaW9uYWwlMjBzY3JlZW5zfGVufDF8fHx8MTc3MjU4MjIyMHww&ixlib=rb-4.1.0&q=80&w=1080";
+const AA_VIDEO_STILL = "/images/services/advisory-video-still.jpg";
 
-// Vimeo embed — replace with production video ID
+// TODO: replace with production Vimeo video ID before launch
 const VIMEO_SRC =
   "https://player.vimeo.com/video/824804225?autoplay=1&title=0&byline=0&portrait=0";
 
@@ -37,7 +36,7 @@ export default function FeaturedServicesSection({
       <div
         ref={revealRef}
         style={revealStyle}
-        className="layout-container py-14 md:py-18 lg:py-24"
+        className="layout-container py-10 md:py-12 lg:py-14"
       >
         {/* 12-col grid: stacked mobile/tablet → side-by-side desktop */}
         <div className="grid grid-cols-1 items-center gap-10 md:gap-12 lg:grid-cols-2 lg:gap-16">

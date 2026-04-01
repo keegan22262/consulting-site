@@ -55,36 +55,36 @@
 }
 
 .section-wrapper {
-  padding-top: var(--section-pad-mobile, var(--space-48));
-  padding-bottom: var(--section-pad-mobile, var(--space-48));
+  padding-top: var(--section-pad-mobile, var(--space-24));
+  padding-bottom: var(--section-pad-mobile, var(--space-24));
 }
 
 .hero-home {
   padding-top: 80px;
-  padding-bottom: 48px;
+  padding-bottom: 40px;
 }
 
 .hero-standard {
   padding-top: 56px;
-  padding-bottom: 48px;
+  padding-bottom: 40px;
 }
 
 .hero-industries {
-  padding-top: 72px;
-  padding-bottom: 56px;
+  padding-top: 64px;
+  padding-bottom: 40px;
 }
 
 .cta-block-pad {
-  padding-top: 56px;
-  padding-bottom: 56px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .rhythm-heading-grid {
-  margin-top: 32px;
+  margin-top: 20px;
 }
 
 .rhythm-body-cta {
-  margin-top: 40px;
+  margin-top: 28px;
 }
 
 @media (min-width: 768px) {
@@ -94,71 +94,71 @@
   }
 
   .section-wrapper {
-    padding-top: var(--section-pad-tablet, var(--space-64));
-    padding-bottom: var(--section-pad-tablet, var(--space-64));
+    padding-top: var(--section-pad-tablet, var(--space-32));
+    padding-bottom: var(--section-pad-tablet, var(--space-32));
   }
 
   .hero-home {
-    padding-top: 112px;
-    padding-bottom: 64px;
+    padding-top: 96px;
+    padding-bottom: 48px;
   }
 
   .hero-standard {
-    padding-top: 80px;
-    padding-bottom: 64px;
+    padding-top: 72px;
+    padding-bottom: 48px;
   }
 
   .hero-industries {
-    padding-top: 96px;
-    padding-bottom: 72px;
+    padding-top: 80px;
+    padding-bottom: 56px;
   }
 
   .cta-block-pad {
-    padding-top: 72px;
-    padding-bottom: 72px;
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
 
   .rhythm-heading-grid {
-    margin-top: 40px;
+    margin-top: 24px;
   }
 
   .rhythm-body-cta {
-    margin-top: 48px;
+    margin-top: 32px;
   }
 }
 
 @media (min-width: 1024px) {
   .section-wrapper {
-    padding-top: var(--section-pad-desktop, var(--space-96));
-    padding-bottom: var(--section-pad-desktop, var(--space-96));
+    padding-top: var(--section-pad-desktop, 40px);
+    padding-bottom: var(--section-pad-desktop, 40px);
   }
 
   .hero-home {
-    padding-top: 144px;
-    padding-bottom: 96px;
+    padding-top: 120px;
+    padding-bottom: 64px;
   }
 
   .hero-standard {
-    padding-top: 104px;
-    padding-bottom: 80px;
+    padding-top: 88px;
+    padding-bottom: 56px;
   }
 
   .hero-industries {
-    padding-top: 128px;
-    padding-bottom: 96px;
+    padding-top: 104px;
+    padding-bottom: 64px;
   }
 
   .cta-block-pad {
-    padding-top: 96px;
-    padding-bottom: 96px;
+    padding-top: 56px;
+    padding-bottom: 56px;
   }
 
   .rhythm-heading-grid {
-    margin-top: 48px;
+    margin-top: 28px;
   }
 
   .rhythm-body-cta {
-    margin-top: 56px;
+    margin-top: 36px;
   }
 }
 
@@ -211,56 +211,6 @@ p {
   line-height: var(--line-height-body);
 }
 
-section.py-16.md\:py-24.bg-white.border-b.border-slate-100 h1.text-3xl.md\:text-5xl {
-  font-size: 2.5rem;
-  line-height: 1.15;
-  letter-spacing: -0.005em;
-  font-weight: 600;
-}
-
-section.bg-neutral-900 h1.text-4xl.md\:text-3xl.sm\:text-2xl {
-  font-size: 2rem;
-  line-height: 1.12;
-  font-weight: 600;
-}
-
-section.bg-neutral-50 h1.text-4xl.md\:text-3xl.sm\:text-2xl.text-text-primary {
-  font-size: 2.25rem;
-  line-height: 1.12;
-  font-weight: 600;
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  section.py-16.md\:py-24.bg-white.border-b.border-slate-100 h1.text-3xl.md\:text-5xl {
-    font-size: 3rem;
-    line-height: 1.12;
-    letter-spacing: -0.015em;
-  }
-
-  section.bg-neutral-900 h1.text-4xl.md\:text-3xl.sm\:text-2xl {
-    font-size: 2.5rem;
-  }
-
-  section.bg-neutral-50 h1.text-4xl.md\:text-3xl.sm\:text-2xl.text-text-primary {
-    font-size: 2.75rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  section.py-16.md\:py-24.bg-white.border-b.border-slate-100 h1.text-3xl.md\:text-5xl {
-    font-size: 4rem;
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-  }
-
-  section.bg-neutral-900 h1.text-4xl.md\:text-3xl.sm\:text-2xl {
-    font-size: 3rem;
-  }
-
-  section.bg-neutral-50 h1.text-4xl.md\:text-3xl.sm\:text-2xl.text-text-primary {
-    font-size: 3.5rem;
-  }
-}
 
 @layer base {
   /* All @apply rules removed. Use Tailwind classes directly in HTML/JSX. */

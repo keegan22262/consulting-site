@@ -298,7 +298,7 @@ export default function InsightsCarouselSection({
       onTouchEnd={handleTouchEnd}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative overflow-hidden py-16 md:py-24"
+      className="relative overflow-hidden py-10 md:py-12"
       style={{
         background: "linear-gradient(180deg, #0C1C2E 0%, #0E223A 100%)",
         outline: "none",

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 export const dynamic = 'force-dynamic';
 
 
+import { Suspense } from "react";
 import ContactForm from "./ContactForm";
+import ContactContextMessage from "./ContactContextMessage";
 import { getContactPage } from "@/lib/sanity/queries/contactPage";
 import CTABlock from "@/components-v2/sections/CTABlock";
 import ContactFormSection from "@/src/sections/contact/ContactFormSection";
@@ -10,10 +12,10 @@ import ContactHeroSection from "@/src/sections/contact/ContactHeroSection";
 
 export const metadata: Metadata = {
 	title: "Contact",
-	description: "How to reach us.",
+	description: "Begin a conversation with Rill Singh Limited's advisory team.",
 	openGraph: {
-		title: "Contact",
-		description: "How to reach us.",
+		title: "Contact | Rill Singh Limited",
+		description: "Begin a conversation with Rill Singh Limited's advisory team.",
 	},
 	alternates: {
 		canonical: "/contact",
@@ -37,6 +39,9 @@ export default async function ContactPage() {
 			<ContactNarrativeSection />
 			<div className="max-w-7xl mx-auto px-6">
 				<div className="pb-16 md:pb-24">
+					<Suspense fallback={null}>
+						<ContactContextMessage />
+					</Suspense>
 					<ContactFormSection consultationNote={consultationNote}>
 						<ContactForm />
 					</ContactFormSection>
@@ -65,7 +70,7 @@ function ServiceDeliverySection() {
 	];
 
 	return (
-		<section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
+		<section className="bg-[#F8FAFC] py-8 md:py-10 lg:py-12">
 			<div className="mx-auto max-w-7xl px-6 md:px-8">
 				<span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">How We Deliver</span>
 				<h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
@@ -87,7 +92,7 @@ function ServiceDeliverySection() {
 
 function ContactNarrativeSection() {
 	return (
-		<section className="bg-white py-12 md:py-14 lg:py-16">
+		<section className="bg-white py-8 md:py-10 lg:py-12">
 			<div className="mx-auto max-w-7xl px-6 md:px-8">
 				<span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Get In Touch</span>
 				<h2 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
@@ -111,7 +116,7 @@ function WhoWeServeSection() {
 	];
 
 	return (
-		<section className="bg-[#F8FAFC] py-14 md:py-16 lg:py-20">
+		<section className="bg-[#F8FAFC] py-8 md:py-10 lg:py-12">
 			<div className="mx-auto max-w-7xl px-6 md:px-8">
 				<span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Who We Serve</span>
 				<h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
@@ -131,7 +136,7 @@ function WhoWeServeSection() {
 
 function EmployeesInvestorsSection() {
 	return (
-		<section className="bg-white py-14 md:py-16 lg:py-20">
+		<section className="bg-white py-8 md:py-10 lg:py-12">
 			<div className="mx-auto max-w-7xl px-6 md:px-8">
 				<span className="block text-xs font-semibold uppercase tracking-widest text-[#1B3A5C]">Employees & Investors</span>
 				<h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.2] text-[#0F1720] md:text-[2rem]">
@@ -147,7 +152,7 @@ function EmployeesInvestorsSection() {
 
 function ClosingStatementSection() {
 	return (
-		<section className="bg-[#0C1C2E] py-14 md:py-16 lg:py-20">
+		<section className="bg-[#0C1C2E] py-8 md:py-10 lg:py-12">
 			<div className="mx-auto max-w-7xl px-6 md:px-8">
 				<div className="rounded-xl border border-white/15 bg-white/5 p-8 md:p-10">
 					<span className="block text-xs font-semibold uppercase tracking-widest text-white/70">Closing Statement</span>
