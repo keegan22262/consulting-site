@@ -16,10 +16,10 @@ import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPre
 
 // ─── Hero image sequence ─────────────────────────────────────────────────────
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1717256770124-e053bebb13b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjaXR5JTIwc2t5bGluZSUyMG5pZ2h0JTIwZmluYW5jaWFsJTIwdG93ZXJzJTIwZHVza3xlbnwxfHx8fDE3NzI1NzY1NzN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  "https://images.unsplash.com/photo-1709803857154-d20ee16ff763?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxleGVjdXRpdmUlMjBib2FyZHJvb20lMjBBZnJpY2FuJTIwbGVhZGVyc2hpcCUyMHNlcmlvdXMlMjBtZWV0aW5nfGVufDF8fHx8MTc3MjU3NjU2OHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  "https://images.unsplash.com/photo-1599923142561-ee85cfb5550d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXRhJTIwY2VudGVyJTIwZ2l0YWwlMjMinZnJhc3RydWN0dXJlJTIwbmV0d29yayUyMGZ1dHVyaXN0aWN8ZW58MXx8fHwxNzcyNTc2NTY5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-  "https://images.unsplash.com/photo-1761926002909-781a45b71030?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhZXJpYWwlMjBzaGlwcGluZyUyMHBvcnQlMjBpbmR1c3RyaWFsJTIwaW5mcmFzdHJ1Y3R1cmUlMjBjb3JyaWRvcnxlbnwxfHx8fDE3NzI1NzY1NzN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+  "/images/hero/hero-0.jpg",
+  "/images/hero/hero-1.jpg",
+  "/images/hero/hero-2.jpg",
+  "/images/hero/hero-3.jpg",
 ];
 
 // ─── Timing constants ────────────────────────────────────────────────────────
@@ -280,28 +280,24 @@ export default function HeroSection({
                 </Link>
               )}
 
-              {/* Secondary CTA — underlined inline link */}
+              {/* Secondary CTA — outlined/ghost button */}
               {secondaryCta?.label && secondaryCta?.href && (
                 <Link
                   href={secondaryCta.href}
-                  className="text-center md:text-left"
+                  className="inline-block rounded-md px-6 py-4 text-center text-base font-semibold transition-all duration-200 ease-in-out md:w-auto"
                   onMouseEnter={() => setSecondaryHover(true)}
                   onMouseLeave={() => setSecondaryHover(false)}
                   style={{
-                    fontSize: "var(--text-body, 1rem)",
-                    fontWeight: 400,
-                    lineHeight: "1",
-                    color: secondaryHover
-                      ? "#FFFFFF"
-                      : "rgba(255, 255, 255, 0.7)",
-                    textDecoration: "underline",
-                    textUnderlineOffset: "4px",
-                    textDecorationColor: secondaryHover
-                      ? "#FFFFFF"
-                      : "rgba(255, 255, 255, 0.4)",
-                    textDecorationThickness: secondaryHover ? "2px" : "1px",
-                    transition:
-                      "color 200ms ease, text-decoration-thickness 200ms ease, text-decoration-color 200ms ease",
+                    backgroundColor: secondaryHover
+                      ? "rgba(255, 255, 255, 0.1)"
+                      : "transparent",
+                    color: "#FFFFFF",
+                    border: "2px solid rgba(255, 255, 255, 0.6)",
+                    borderColor: secondaryHover ? "#FFFFFF" : "rgba(255, 255, 255, 0.6)",
+                    transform: secondaryHover ? "translateY(-2px)" : "translateY(0)",
+                    boxShadow: secondaryHover
+                      ? "0 14px 30px rgba(0, 0, 0, 0.20)"
+                      : "none",
                   }}
                 >
                   {secondaryCta.label}

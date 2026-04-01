@@ -32,22 +32,23 @@ const INDUSTRIES = [
   { title: "Education & Social Impact", description: "Education institutions, nonprofits, and social enterprises.", href: "/industries/education" },
 ];
 
-// ─── Asymmetric grid layout templates ────────────────────────────────────────
-// Each row is an array of column fractions. "3" = equal thirds, "6/4" = 60%/40%.
+/** Homepage shows a small spotlight set; full lists live on /services and /industries. */
+const FEATURED_SERVICE_INDICES = [0, 1, 2] as const;
+const FEATURED_INDUSTRY_INDICES = [0, 1, 2] as const;
 
-const SERVICE_LAYOUT: { items: number[]; cols: string }[] = [
-  { items: [0, 1, 2], cols: "1fr 1fr 1fr" },
-  { items: [3, 4], cols: "3fr 2fr" },
-  { items: [5, 6, 7], cols: "1fr 1fr 1fr" },
-  { items: [8, 9], cols: "2fr 3fr" },
-];
+const SERVICE_CATALOG_CTA = {
+  href: "/services",
+  headline: "Explore the full capability catalog",
+  body: "Review every advisory track — from strategy and digital transformation to tax, legal, and public sector.",
+  linkLabel: "View all services",
+} as const;
 
-const INDUSTRY_LAYOUT: { items: number[]; cols: string }[] = [
-  { items: [0, 1, 2], cols: "1fr 1fr 1fr" },
-  { items: [3, 4], cols: "3fr 2fr" },
-  { items: [5, 6, 7], cols: "1fr 1fr 1fr" },
-  { items: [8, 9, 10], cols: "1fr 1fr 1fr" },
-];
+const INDUSTRY_CATALOG_CTA = {
+  href: "/industries",
+  headline: "Browse complete industry coverage",
+  body: "See how we apply institutional advisory across regulated sectors, growth markets, and public institutions.",
+  linkLabel: "View all industries",
+} as const;
 
 // ─── Gradient backgrounds for cards without images ───────────────────────────
 
@@ -116,6 +117,48 @@ function EditorialCard({
   );
 }
 
+function ExploreCatalogCard({
+  href,
+  headline,
+  body,
+  linkLabel,
+}: {
+  href: string;
+  headline: string;
+  body: string;
+  linkLabel: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-neutral-200 bg-white p-5 shadow-sm transition-all duration-300 ease-out hover:border-[#0A1628] hover:shadow-md md:p-6"
+      style={{ minHeight: "clamp(180px, 22vw, 240px)" }}
+    >
+      <div>
+        <span
+          className="block text-[0.6875rem] font-semibold uppercase tracking-[0.08em]"
+          style={{ color: "#888" }}
+        >
+          Go deeper
+        </span>
+        <h3 className="mt-2 text-[17px] font-semibold leading-snug md:text-lg" style={{ color: "#0A1628" }}>
+          {headline}
+        </h3>
+        <p className="mt-2 text-[13px] leading-relaxed text-neutral-600">{body}</p>
+      </div>
+      <span
+        className="mt-4 inline-flex items-center gap-1 text-sm font-semibold transition-colors group-hover:text-[#0A1628]"
+        style={{ color: "#1B3A5C" }}
+      >
+        {linkLabel}
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    </Link>
+  );
+}
+
 // ─── Main component ──────────────────────────────────────────────────────────
 
 type Tab = "service" | "industry";
@@ -143,7 +186,8 @@ export default function CapabilityNavigator({ background }: CapabilityNavigatorP
   );
 
   const items = displayTab === "service" ? SERVICES : INDUSTRIES;
-  const layout = displayTab === "service" ? SERVICE_LAYOUT : INDUSTRY_LAYOUT;
+  const featuredIndices = displayTab === "service" ? FEATURED_SERVICE_INDICES : FEATURED_INDUSTRY_INDICES;
+  const catalogCta = displayTab === "service" ? SERVICE_CATALOG_CTA : INDUSTRY_CATALOG_CTA;
 
   return (
     <section
@@ -166,7 +210,7 @@ export default function CapabilityNavigator({ background }: CapabilityNavigatorP
             How can we assist you today?
           </h2>
           <p className="mt-3 max-w-[600px] text-base leading-relaxed" style={{ color: "#666" }}>
-            Select a capability or industry to learn more.
+            Start with a few focal areas, then open the full catalog on the dedicated pages.
           </p>
         </div>
 
@@ -198,59 +242,33 @@ export default function CapabilityNavigator({ background }: CapabilityNavigatorP
           </button>
         </div>
 
-        {/* Editorial Grid */}
+        {/* Spotlight grid: three featured entries + catalog CTA */}
         <div
-          className="mt-6 flex flex-col gap-3 md:gap-3.5"
+          className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-3.5"
           style={{
             opacity: fading ? 0 : 1,
             transition: "opacity 200ms ease-in-out",
           }}
         >
-          {layout.map((row, rowIdx) => (
-            <div
-              key={rowIdx}
-              className="grid gap-3 md:gap-3.5"
-              style={{
-                gridTemplateColumns: "1fr",
-              }}
-            >
-              {/* Desktop: use asymmetric grid template */}
-              <div
-                className="hidden md:grid gap-3.5"
-                style={{ gridTemplateColumns: row.cols }}
-              >
-                {row.items.map((itemIdx) => {
-                  const item = items[itemIdx];
-                  if (!item) return null;
-                  return (
-                    <EditorialCard
-                      key={item.title}
-                      title={item.title}
-                      description={item.description}
-                      href={item.href}
-                      index={itemIdx}
-                    />
-                  );
-                })}
-              </div>
-              {/* Mobile: single column stack */}
-              <div className="flex flex-col gap-3 md:hidden">
-                {row.items.map((itemIdx) => {
-                  const item = items[itemIdx];
-                  if (!item) return null;
-                  return (
-                    <EditorialCard
-                      key={item.title}
-                      title={item.title}
-                      description={item.description}
-                      href={item.href}
-                      index={itemIdx}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+          {featuredIndices.map((itemIdx) => {
+            const item = items[itemIdx];
+            if (!item) return null;
+            return (
+              <EditorialCard
+                key={item.title}
+                title={item.title}
+                description={item.description}
+                href={item.href}
+                index={itemIdx}
+              />
+            );
+          })}
+          <ExploreCatalogCard
+            href={catalogCta.href}
+            headline={catalogCta.headline}
+            body={catalogCta.body}
+            linkLabel={catalogCta.linkLabel}
+          />
         </div>
       </div>
     </section>

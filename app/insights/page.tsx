@@ -4,9 +4,12 @@ import InsightsPageClient from "@/src/sections/insights/InsightsPageClient";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Insights | Rill Singh Limited",
+  title: "Insights",
   description:
-    "Research and perspectives on strategy, transformation, risk, and institutional delivery.",
+    "Strategic analysis on the forces shaping institutions, markets, and transformation across Africa.",
+  alternates: {
+    canonical: "/insights",
+  },
 };
 
 export default function InsightsPage() {

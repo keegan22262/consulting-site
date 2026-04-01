@@ -82,7 +82,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const fallback = CAPABILITIES[slug];
 
   if (!service?.title && !fallback?.title) {
-    console.warn("No data found for service", slug);
     notFound();
   }
 

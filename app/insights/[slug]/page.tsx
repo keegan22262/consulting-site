@@ -105,10 +105,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   });
   const fallback = INSIGHTS_DATA.find((item) => item.slug === slug);
 
-  if (process.env.NODE_ENV === "development") {
-    console.log("Sanity fetch result:", insight);
-  }
-
   if (!insight?.title && !fallback?.headline) {
     // Show in-development placeholder instead of 404
     return <InsightInDevelopmentPlaceholder />;

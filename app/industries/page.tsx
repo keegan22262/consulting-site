@@ -4,9 +4,12 @@ import IndustriesPageClient from "@/src/sections/industries/IndustriesPageClient
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Industries | Rill Singh Limited",
+  title: "Industries",
   description:
-    "Industry-specific advisory across financial services, technology, public sector, and other complex institutional contexts.",
+    "Deep sector expertise across 11 industries shaping Africa's next decade of economic transformation.",
+  alternates: {
+    canonical: "/industries",
+  },
 };
 
 export default function IndustriesPage() {

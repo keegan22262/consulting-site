@@ -7,12 +7,15 @@ import { getPublishedPageBySlug } from "@/lib/sanity/pages";
 const STATIC_ROUTES = [
   "/",
   "/services",
+  "/industries",
   "/insights",
-  "/how-we-work",
+  "/about",
+  "/coverage",
+  "/careers",
   "/contact",
+  "/how-we-work",
   "/privacy-policy",
   "/terms",
-  "/search",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

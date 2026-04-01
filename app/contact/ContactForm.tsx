@@ -3,9 +3,20 @@
 import React, { useState } from "react";
 import Button from "@/components-v2/ui/Button";
 
+const INQUIRY_TYPES = [
+	"Strategy & Transformation",
+	"Digital & AI",
+	"Financial Advisory",
+	"Public Sector Advisory",
+	"Sustainability & ESG",
+	"Legal & Regulatory",
+	"General Inquiry",
+] as const;
+
 type FormValues = {
 	name: string;
 	email: string;
+	inquiryType: string;
 	message: string;
 	company: string;
 };
@@ -20,6 +31,7 @@ export default function ContactForm() {
 	const [values, setValues] = useState<FormValues>({
 		name: "",
 		email: "",
+		inquiryType: "",
 		message: "",
 		company: "",
 	});
@@ -56,6 +68,10 @@ export default function ContactForm() {
 			nextErrors.email = "Enter a valid email address.";
 		}
 
+		if (!nextValues.inquiryType) {
+			nextErrors.inquiryType = "Please select an inquiry type.";
+		}
+
 		if (message.length === 0) {
 			nextErrors.message = "Message is required.";
 		} else if (message.length <= 10) {
@@ -72,6 +88,7 @@ export default function ContactForm() {
 		const nextValues: FormValues = {
 			name: values.name.trim(),
 			email: values.email.trim(),
+			inquiryType: values.inquiryType,
 			message: values.message.trim(),
 			company: values.company.trim(),
 		};
@@ -95,6 +112,7 @@ export default function ContactForm() {
 				body: JSON.stringify({
 					name: nextValues.name,
 					email: nextValues.email,
+					inquiryType: nextValues.inquiryType,
 					message: nextValues.message,
 					company: nextValues.company,
 				}),
@@ -117,7 +135,7 @@ export default function ContactForm() {
 
 			if (response.ok) {
 				setSubmitSuccess(true);
-				setValues({ name: "", email: "", message: "", company: "" });
+				setValues({ name: "", email: "", inquiryType: "", message: "", company: "" });
 				return;
 			}
 
@@ -203,6 +221,31 @@ export default function ContactForm() {
 				{errors.email ? (
 					<p id="contact-email-error" role="alert" className="text-sm text-red-700">
 						{errors.email}
+					</p>
+				) : null}
+			</div>
+
+			<div className="space-y-2">
+				<label htmlFor="contact-inquiry-type" className="text-sm font-medium text-slate-900">
+					Inquiry type
+				</label>
+				<select
+					id="contact-inquiry-type"
+					name="inquiryType"
+					value={values.inquiryType}
+					onChange={(event) => setField("inquiryType", event.target.value)}
+					aria-invalid={Boolean(errors.inquiryType)}
+					aria-describedby={errors.inquiryType ? "contact-inquiry-type-error" : undefined}
+					className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2"
+				>
+					<option value="">Select a topic</option>
+					{INQUIRY_TYPES.map((type) => (
+						<option key={type} value={type}>{type}</option>
+					))}
+				</select>
+				{errors.inquiryType ? (
+					<p id="contact-inquiry-type-error" role="alert" className="text-sm text-red-700">
+						{errors.inquiryType}
 					</p>
 				) : null}
 			</div>

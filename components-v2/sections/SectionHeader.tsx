@@ -1,7 +1,7 @@
 "use client";
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ALINABSS SectionHeader — Centralized Section Title Block
+// RSL SectionHeader — Centralized Section Title Block
 // Overline + H2 headline + optional description + optional accent rule.
 // Supports left-aligned (default) and centered layout for dark bands.
 // ═══════════════════════════════════════════════════════════════════════════════

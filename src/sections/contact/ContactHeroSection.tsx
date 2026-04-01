@@ -36,11 +36,9 @@ export default function ContactHeroSection({
             <Button
               variant="secondary"
               className="w-full sm:w-auto px-8 py-3 text-base font-semibold"
-              href="/firm-overview.pdf"
-              target="_blank"
-              rel="noopener"
+              href="/about"
             >
-              Download Firm Overview
+              Learn About Our Firm
             </Button>
           </div>
         </div>

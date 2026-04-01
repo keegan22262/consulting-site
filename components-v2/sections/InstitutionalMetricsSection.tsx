@@ -109,9 +109,9 @@ const DEFAULT_METRICS = [
 
 // ─── CTA cinematic sequence (matches Figma lower section) ──────────────────
 const IA_CTA_IMAGES = [
-  "https://images.unsplash.com/photo-1758518727707-b023e285b709?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-  "https://images.unsplash.com/photo-1676276375450-3707e4e624c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-  "https://images.unsplash.com/photo-1599908712364-e30b14696fa1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+  "/images/advisory/institutional-01.jpg",
+  "/images/advisory/institutional-02.jpg",
+  "/images/advisory/institutional-03.jpg",
 ];
 
 // ─── Props ──────────────────────────────────────────────────────────────────
@@ -209,7 +209,7 @@ export default function InstitutionalMetricsSection({
                     href="/about"
                     className="inline-flex items-center gap-1.5 py-3.5 text-sm font-medium text-white/70 transition-colors duration-200 hover:text-white"
                   >
-                    Download Firm Overview
+                    Learn About Our Firm
                     <span aria-hidden="true" className="text-base">→</span>
                   </Link>
                 </div>

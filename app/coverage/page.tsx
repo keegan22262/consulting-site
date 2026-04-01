@@ -10,7 +10,7 @@ import CoverageProgressiveIntelligenceSection from "@/src/sections/coverage/Cove
 export const metadata: Metadata = {
   title: "Coverage Matrix",
   description:
-    "Integrated advisory across strategy, digital, finance, people, sustainability, and public sector — aligned to the real challenges organizations face.",
+    "RSL service and industry coverage matrix.",
   alternates: {
     canonical: "/coverage",
   },

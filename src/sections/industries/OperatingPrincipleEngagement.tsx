@@ -165,7 +165,7 @@ export default function OperatingPrincipleEngagement() {
             }}
           >
             <Link
-              href="/contact"
+              href="/contact?from=industries"
               onMouseEnter={() => setPrimaryHover(true)}
               onMouseLeave={() => setPrimaryHover(false)}
               style={{

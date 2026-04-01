@@ -11,6 +11,7 @@ interface InstitutionalCTAProps {
   buttonLabel?: string;
   secondaryLabel?: string;
   secondaryHref?: string;
+  contactFrom?: string;
 }
 
 export default function InstitutionalCTA({
@@ -20,6 +21,7 @@ export default function InstitutionalCTA({
   buttonLabel = "Schedule an Introduction",
   secondaryLabel,
   secondaryHref,
+  contactFrom,
 }: InstitutionalCTAProps) {
   const [primaryHover, setPrimaryHover] = useState(false);
   const [secondaryHover, setSecondaryHover] = useState(false);
@@ -28,6 +30,7 @@ export default function InstitutionalCTA({
   const padV = useResponsiveValue({ desktop: "120px", tablet: "88px", mobile: "64px" });
   const h2Size = useResponsiveValue({ desktop: "var(--text-h2)", tablet: "var(--text-h2)", mobile: "1.5rem" });
   const h2LineHeight = useResponsiveValue({ desktop: "var(--line-height-h2)", tablet: "var(--line-height-h2)", mobile: "1.25" });
+  const fromParam = contactFrom ?? "cta";
   const contextParam = encodeURIComponent(headline);
 
   return (
@@ -97,7 +100,7 @@ export default function InstitutionalCTA({
           }}
         >
           <Link
-            href={`/contact?from=cta&context=${contextParam}`}
+            href={`/contact?from=${fromParam}&context=${contextParam}`}
             onMouseEnter={() => setPrimaryHover(true)}
             onMouseLeave={() => setPrimaryHover(false)}
             style={{

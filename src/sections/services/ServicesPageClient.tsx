@@ -22,7 +22,8 @@ export default function ServicesPageClient() {
         overline="Next Step"
         headline="Ready to discuss a specific challenge?"
         body="Every engagement begins with a structured conversation to determine whether there is a basis for collaboration."
-        buttonLabel="Schedule an Introduction"
+        buttonLabel="Discuss a Challenge"
+        contactFrom="services"
         secondaryLabel="View Industry Coverage"
         secondaryHref="/coverage"
       />

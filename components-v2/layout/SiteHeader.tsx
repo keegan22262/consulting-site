@@ -6,8 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SearchOverlay from "@/components-v2/layout/SearchOverlay";
 
-const NAV_LINKS_DESKTOP = ["Industries", "Services", "Insights", "Coverage", "About", "Contact"] as const;
-const NAV_LINKS_MOBILE = ["Industries", "Services", "About", "Insights", "Coverage", "Contact"] as const;
+const NAV_LINKS_DESKTOP = ["Industries", "Services", "Insights", "Coverage", "About", "Careers", "Contact"] as const;
+const NAV_LINKS_MOBILE = ["Industries", "Services", "About", "Insights", "Coverage", "Careers", "Contact"] as const;
 
 const NAV_HREFS: Record<string, string> = {
   Industries: "/industries",
@@ -15,6 +15,7 @@ const NAV_HREFS: Record<string, string> = {
   Insights: "/insights",
   Coverage: "/coverage",
   About: "/about",
+  Careers: "/careers",
   Contact: "/contact",
 };
 
@@ -133,7 +134,7 @@ export default function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const drawerOpenSafe = isMobile ? drawerOpen : false;
+  const drawerOpenSafe = isMobile || navCollapsed ? drawerOpen : false;
 
   useEffect(() => {
     if (drawerOpenSafe) {
@@ -154,13 +155,16 @@ export default function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [megaPanel]);
 
+  // Close drawer when desktop nav re-appears (scrolled back to top)
+  useEffect(() => {
+    if (!isMobile && !navCollapsed && drawerOpen) {
+      setDrawerOpen(false);
+    }
+  }, [isMobile, navCollapsed, drawerOpen]);
+
   const isInsightsPage = activePage === "Insights";
-  const dynamicLabel = scrolledPast
-    ? isInsightsPage
-      ? "Discuss this Insight"
-      : "Schedule an Introduction"
-    : "See How We Deliver";
-  const dynamicTo = scrolledPast ? "/contact" : "/services";
+  const dynamicLabel = "Schedule an Introduction";
+  const dynamicTo = "/contact";
   const hamburgerClassName =
     "inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-neutral-900 shadow-lg ring-1 ring-black/10 transition-transform duration-120 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:scale-[1.03]";
 
@@ -296,7 +300,7 @@ export default function SiteHeader() {
 
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {isMobile && (
+      {(isMobile || navCollapsed) && (
         <MobileDrawer
           open={drawerOpenSafe}
           onClose={() => setDrawerOpen(false)}
@@ -489,11 +493,24 @@ function MobileDrawer({
 }) {
   const [subMenu, setSubMenu] = useState<"Services" | "Industries" | "Insights" | null>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
-  const handleClose = () => {
+  const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+
+  // Close drawer on route change
+  useEffect(() => {
+    if (!open) return;
     setSubMenu(null);
     onClose();
-  };
+    // Restore focus to hamburger button
+    if (hamburgerButtonRef.current) {
+      hamburgerButtonRef.current.focus();
+    }
+    // Always reset scroll lock
+    document.body.style.overflow = "";
+    // eslint-disable-next-line
+  }, [pathname]);
 
+  // Focus trap and ESC
   useEffect(() => {
     if (!open || !drawerRef.current) return;
     const handleTab = (e: KeyboardEvent) => {
@@ -522,6 +539,16 @@ function MobileDrawer({
       document.removeEventListener("keydown", handleEsc);
     };
   }, [open, onClose]);
+
+  const handleClose = () => {
+    setSubMenu(null);
+    onClose();
+    // Restore focus to hamburger button
+    if (hamburgerButtonRef.current) {
+      hamburgerButtonRef.current.focus();
+    }
+    document.body.style.overflow = "";
+  };
 
   const subItems =
     subMenu === "Services"
@@ -630,11 +657,11 @@ function MobileDrawer({
 
         <div className="border-t border-neutral-200 px-6 py-5">
           <Link
-            href="/services"
+            href="/contact"
             onClick={handleClose}
             className="block rounded-card bg-[--a700] px-6 py-3 text-center text-[0.9375rem] font-semibold text-white"
           >
-            See How We Deliver
+            Schedule an Introduction
           </Link>
         </div>
       </div>

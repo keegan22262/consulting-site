@@ -1,0 +1,14 @@
+{
+  "name": "Rill Singh Limited",
+  "short_name": "RSL",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "theme_color": "#0A1628",
+  "background_color": "#FFFFFF",
+  "display": "browser"
+}

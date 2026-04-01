@@ -76,7 +76,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const fallback = INDUSTRIES.find((item) => item.id === slug);
 
   if (!industry?.title && !fallback?.title) {
-    console.warn("No data found for industry", slug);
     notFound();
   }
 

@@ -47,10 +47,11 @@ export async function POST(req: NextRequest) {
     })
 
     await transporter.sendMail({
-      from: email,
+      from: `"RSL Contact Form" <${process.env.SMTP_USER}>`,
       to: process.env.CONTACT_RECEIVER_EMAIL,
-      subject: "Inquiry: " + inquiryType,
-      text: message,
+      replyTo: email,
+      subject: `[RSL Inquiry] ${inquiryType} — ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nInquiry type: ${inquiryType}\n\n${message}`,
     })
 
     return Response.json({ success: true })
