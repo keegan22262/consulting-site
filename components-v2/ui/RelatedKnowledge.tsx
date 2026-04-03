@@ -30,8 +30,6 @@ export function ExploreRelatedKnowledge({
     { label: "Related Engagements", items: caseStudies, icon: "+" },
   ].filter((section) => section.items && section.items.length > 0);
 
-  if (sections.length === 0) return null;
-
   const px = useResponsiveValue({ desktop: "32px", tablet: "32px", mobile: "24px" });
   const padY = useResponsiveValue({ desktop: "72px", tablet: "56px", mobile: "40px" });
   const headerSize = useResponsiveValue({ desktop: "1.75rem", tablet: "1.5rem", mobile: "1.25rem" });
@@ -43,6 +41,8 @@ export function ExploreRelatedKnowledge({
     tablet: `repeat(${Math.min(sections.length, 2)}, 1fr)`,
     mobile: "1fr",
   });
+
+  if (sections.length === 0) return null;
 
   return (
     <section style={{ backgroundColor: "var(--n50)" }}>

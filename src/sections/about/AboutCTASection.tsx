@@ -92,7 +92,7 @@ export default function AboutCTASection() {
                 marginBottom: "36px",
               }}
             >
-              Engage with our advisory team to explore how we can support your institution's strategic transformation.
+              Engage with our advisory team to explore how we can support your institution&apos;s strategic transformation.
             </p>
 
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: "16px" }}>

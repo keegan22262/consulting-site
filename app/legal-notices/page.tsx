@@ -16,7 +16,7 @@ export default function LegalNoticesPage() {
       <p className="mt-6 text-base leading-relaxed text-neutral-600">
         Rill Singh Limited is a pan-African management advisory firm. The information published on
         this website is for general informational purposes only and does not constitute legal,
-        financial, or professional advice. Engagement of Rill Singh Limited's services is governed
+        financial, or professional advice. Engagement of Rill Singh Limited&apos;s services is governed
         by the terms of a formal engagement letter or service agreement.
       </p>
       <p className="mt-4 text-base leading-relaxed text-neutral-600">

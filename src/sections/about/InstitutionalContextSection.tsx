@@ -76,7 +76,7 @@ export default function InstitutionalContextSection() {
               color: "#475569",
             }}
           >
-            The firm's operating philosophy - PRIDE: Precision, Resilience, Integrity, Discipline, Execution - is not aspirational. It is the behavioral architecture that governs how every engagement is scoped, staffed, delivered, and sustained. Precision means starting with facts and a clear problem definition. Integrity means transparent timelines, costs, and advice. Discipline means protecting delivery through cadence and governance. Execution means staying close to implementation until outcomes are verified.
+            The firm&apos;s operating philosophy - PRIDE: Precision, Resilience, Integrity, Discipline, Execution - is not aspirational. It is the behavioral architecture that governs how every engagement is scoped, staffed, delivered, and sustained. Precision means starting with facts and a clear problem definition. Integrity means transparent timelines, costs, and advice. Discipline means protecting delivery through cadence and governance. Execution means staying close to implementation until outcomes are verified.
           </p>
         </div>
 

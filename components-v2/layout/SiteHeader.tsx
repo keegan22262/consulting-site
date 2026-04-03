@@ -155,13 +155,6 @@ export default function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [megaPanel]);
 
-  // Close drawer when desktop nav re-appears (scrolled back to top)
-  useEffect(() => {
-    if (!isMobile && !navCollapsed && drawerOpen) {
-      setDrawerOpen(false);
-    }
-  }, [isMobile, navCollapsed, drawerOpen]);
-
   const isInsightsPage = activePage === "Insights";
   const dynamicLabel = "Schedule an Introduction";
   const dynamicTo = "/contact";
@@ -494,21 +487,6 @@ function MobileDrawer({
   const [subMenu, setSubMenu] = useState<"Services" | "Industries" | "Insights" | null>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
-  const pathname = usePathname();
-
-  // Close drawer on route change
-  useEffect(() => {
-    if (!open) return;
-    setSubMenu(null);
-    onClose();
-    // Restore focus to hamburger button
-    if (hamburgerButtonRef.current) {
-      hamburgerButtonRef.current.focus();
-    }
-    // Always reset scroll lock
-    document.body.style.overflow = "";
-    // eslint-disable-next-line
-  }, [pathname]);
 
   // Focus trap and ESC
   useEffect(() => {

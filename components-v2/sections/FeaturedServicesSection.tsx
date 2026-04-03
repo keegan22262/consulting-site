@@ -1,145 +1,130 @@
 "use client";
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// FeaturedServicesSection — "Advisory Architecture"
-// Dark navy (#0C1C2E) structural authority layout.
-// 12-col grid: 6 editorial text / 6 video panel with play button.
-// Scroll-reveal entrance. Responsive stacking on mobile/tablet.
-// ═══════════════════════════════════════════════════════════════════════════════
-
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useScrollReveal } from "@/components-v2/foundation";
 
-// ─── Constants ───────────────────────────────────────────────────────────────
-const AA_VIDEO_STILL = "/images/services/advisory-video-still.jpg";
+// ─── Featured items (top 3 of each) ────────────────────────────────────────
 
-// TODO: replace with production Vimeo video ID before launch
-const VIMEO_SRC =
-  "https://player.vimeo.com/video/824804225?autoplay=1&title=0&byline=0&portrait=0";
+const FEATURED_SERVICES = [
+  { title: "Strategy & Corporate Transformation", description: "Enterprise strategy, M&A advisory, and transformation roadmaps for growth-stage institutions.", image: "/images/capabilities/strategy.jpg", href: "/services/strategy" },
+  { title: "Digital & AI Transformation", description: "Digital modernization, AI readiness, and platform implementation across the enterprise.", image: "/images/capabilities/digital-ai.jpg", href: "/services/digital" },
+  { title: "Financial Advisory, Audit & Risk", description: "Financial resilience, governance, risk frameworks, and control architecture.", image: "/images/capabilities/financial.jpg", href: "/services/financial" },
+];
 
-// ─── Props ───────────────────────────────────────────────────────────────────
-export interface FeaturedServicesSectionProps {
-  /** CMS services data for the gateway link (optional override) */
-  servicesHref?: string;
+const FEATURED_INDUSTRIES = [
+  { title: "Financial Services", description: "Banks, capital markets, insurers, and fintechs navigating regulatory complexity.", image: "/images/industries/sectors/financial-services.jpg", href: "/industries/financial-services" },
+  { title: "Healthcare & Life Sciences", description: "Healthcare providers, pharmaceutical companies, and medtech innovators.", image: "/images/industries/sectors/healthcare-life-sciences.jpg", href: "/industries/healthcare-life-sciences" },
+  { title: "Energy & Natural Resources", description: "Oil, gas, utilities, renewables, and mining operations across the continent.", image: "/images/industries/sectors/energy-resources.jpg", href: "/industries/energy-resources" },
+];
+
+// ─── Horizontal marquee card ────────────────────────────────────────────────
+
+function HorizontalMarqueeCard({
+  title,
+  description,
+  image,
+  href,
+}: {
+  title: string;
+  description: string;
+  image: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="featured-marquee-card group"
+    >
+      <div className="featured-marquee-card__image">
+        <Image
+          src={image}
+          alt=""
+          fill
+          sizes="200px"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          aria-hidden="true"
+        />
+      </div>
+      <div className="featured-marquee-card__body">
+        <h3 className="featured-marquee-card__title">{title}</h3>
+        <p className="featured-marquee-card__desc">{description}</p>
+        <span className="featured-marquee-card__link">
+          Learn more <span aria-hidden="true">→</span>
+        </span>
+      </div>
+    </Link>
+  );
 }
 
-export default function FeaturedServicesSection({
-  servicesHref = "/services",
-}: FeaturedServicesSectionProps) {
-  const [revealRef, revealStyle] = useScrollReveal();
-  const [videoPlaying, setVideoPlaying] = useState(false);
+// ─── Main section ────────────────────────────────────────────────────────────
+
+export default function FeaturedServicesSection() {
+  // Duplicate for seamless infinite loop
+  const servicesDouble = [...FEATURED_SERVICES, ...FEATURED_SERVICES];
+  const industriesDouble = [...FEATURED_INDUSTRIES, ...FEATURED_INDUSTRIES];
 
   return (
-    <section className="bg-[#0C1C2E] min-h-0 md:min-h-120 lg:min-h-120">
-      <div
-        ref={revealRef}
-        style={revealStyle}
-        className="layout-container py-10 md:py-12 lg:py-14"
-      >
-        {/* 12-col grid: stacked mobile/tablet → side-by-side desktop */}
-        <div className="grid grid-cols-1 items-center gap-10 md:gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* ── Left: Editorial Text Block ── */}
-          <div>
-            {/* Institutional marker */}
-            <span className="mb-4 block text-xs font-medium uppercase tracking-widest text-white/50">
-              RSL Integrated Advisory
-            </span>
+    <section className="featured-section">
+      {/* Centered heading */}
+      <div className="layout-container" style={{ textAlign: "center" }}>
+        <span
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "12px",
+            fontWeight: 500,
+            textTransform: "uppercase",
+            letterSpacing: "4.5px",
+            color: "#7DA0CA",
+            display: "block",
+          }}
+        >
+          Featured
+        </span>
+        <h2
+          className="mt-3"
+          style={{
+            fontFamily: "var(--font-heading)",
+            fontSize: "32px",
+            fontWeight: 400,
+            lineHeight: 1.2,
+            color: "#021024",
+          }}
+        >
+          Services & Industries
+        </h2>
+      </div>
 
-            {/* Overline */}
-            <span className="mb-4 block text-sm font-semibold uppercase tracking-wide text-white/70">
-              Advisory Architecture
-            </span>
+      {/* Row 1: Services — scrolls left to right */}
+      <div className="marquee-row relative mt-8" style={{ overflow: "hidden" }}>
+        <div className="featured-fade featured-fade--left" />
+        <div className="featured-fade featured-fade--right" />
+        <div className="marquee-track-left flex gap-5" style={{ width: "max-content" }}>
+          {servicesDouble.map((item, idx) => (
+            <HorizontalMarqueeCard
+              key={`svc-${idx}`}
+              title={item.title}
+              description={item.description}
+              image={item.image}
+              href={item.href}
+            />
+          ))}
+        </div>
+      </div>
 
-            {/* Heading */}
-            <h2 className="max-w-160 text-3xl font-semibold leading-tight tracking-tight text-white md:text-4xl lg:text-5xl lg:leading-none">
-              <Link href="/services" className="cursor-pointer transition-colors hover:text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent rounded-sm">
-                Ten disciplines. One integrated practice.
-              </Link>
-            </h2>
-
-            {/* Description */}
-            <p className="mt-8 max-w-140 text-base leading-relaxed text-white/85 md:text-[17px] md:leading-relaxed">
-              Ten advisory disciplines operate within a unified governance and
-              delivery architecture - eliminating fragmentation, aligning
-              strategic intent with execution mechanics, and ensuring
-              institutional coherence across every engagement.
-            </p>
-
-            {/* Gateway link — light text for dark background */}
-            <div className="mt-10">
-              <Link
-                href={servicesHref}
-                className="group inline-flex items-center gap-2 text-base font-semibold text-white underline underline-offset-4 decoration-1 decoration-white/60 transition-all duration-200 hover:decoration-2 hover:decoration-white/90"
-              >
-                Explore all services
-                <span className="opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                  →
-                </span>
-              </Link>
-            </div>
-          </div>
-
-          {/* ── Right: Video Panel — 16:9 premium mockup ── */}
-          <div className="relative w-full overflow-hidden rounded-md border border-white/10 shadow-2xl"
-               style={{ paddingBottom: "56.25%" }}>
-            {videoPlaying ? (
-              <iframe
-                src={VIMEO_SRC}
-                className="absolute inset-0 h-full w-full border-none"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowFullScreen
-                title="RSL Advisory Overview"
-              />
-            ) : (
-              <>
-                {/* Still frame */}
-                <Image
-                  src={AA_VIDEO_STILL}
-                  alt="Corporate strategy meeting — RSL advisory overview"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                  priority={false}
-                />
-
-                {/* Subtle dark overlay */}
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-black/20"
-                />
-
-                {/* Centered play button */}
-                <button
-                  onClick={() => setVideoPlaying(true)}
-                  aria-label="Play video"
-                  className="absolute inset-0 z-2 flex cursor-pointer items-center justify-center border-none bg-transparent p-0"
-                >
-                  <div
-                    className="flex size-14 items-center justify-center rounded-full bg-white/95 shadow-lg transition-all duration-200 ease-out hover:scale-105 hover:shadow-2xl md:size-16 lg:size-18"
-                  >
-                    {/* Play triangle — accent fill, offset right for optical centering */}
-                    <svg
-                      width="20"
-                      height="24"
-                      viewBox="0 0 24 28"
-                      fill="none"
-                      className="ml-0.5"
-                    >
-                      <path
-                        d="M2 1.5L22 14L2 26.5V1.5Z"
-                        fill="var(--a700)"
-                        stroke="var(--a700)"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              </>
-            )}
-          </div>
+      {/* Row 2: Industries — scrolls right to left */}
+      <div className="marquee-row relative" style={{ marginTop: "24px", overflow: "hidden" }}>
+        <div className="featured-fade featured-fade--left" />
+        <div className="featured-fade featured-fade--right" />
+        <div className="marquee-track-right flex gap-5" style={{ width: "max-content" }}>
+          {industriesDouble.map((item, idx) => (
+            <HorizontalMarqueeCard
+              key={`ind-${idx}`}
+              title={item.title}
+              description={item.description}
+              image={item.image}
+              href={item.href}
+            />
+          ))}
         </div>
       </div>
     </section>

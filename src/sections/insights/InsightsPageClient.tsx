@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
 import InsightsHeroSection from "@/src/sections/insights/InsightsHeroSection";
 import FeaturedInsightsSection from "@/src/sections/insights/FeaturedInsightsSection";
@@ -20,9 +20,10 @@ export default function InsightsPageClient() {
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const loadMoreMargin = useResponsiveValue({ desktop: "56px", tablet: "48px", mobile: "40px" });
 
-  useEffect(() => {
+  const handleFilterChange = (nextFilter: string) => {
+    setActiveFilter(nextFilter);
     setVisibleCount(ITEMS_PER_PAGE);
-  }, [activeFilter]);
+  };
 
   const filtered = useMemo(() => {
     const topic = TOPIC_FILTERS.find((item) => item.label === activeFilter);
@@ -44,7 +45,7 @@ export default function InsightsPageClient() {
         <InsightFilterBar
           filters={TOPIC_FILTERS}
           activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
+          onFilterChange={handleFilterChange}
         />
 
         {filtered.length > 0 ? (

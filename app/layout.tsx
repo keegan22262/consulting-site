@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans, Playfair_Display } from "next/font/google";
 
 import ClientLayout from "./ClientLayout";
 import "./globals.css";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-dm-sans",
+});
+
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair",
 });
 
 export const metadata: Metadata = {
@@ -59,11 +66,11 @@ export default function RootLayout({
     ],
   };
   return (
-    <html lang="en">
+    <html lang="en" className={`${dmSans.variable} ${playfairDisplay.variable}`}>
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#0A1628" />
+        <meta name="theme-color" content="#021024" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -71,7 +78,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${dmSans.className} antialiased`}>
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

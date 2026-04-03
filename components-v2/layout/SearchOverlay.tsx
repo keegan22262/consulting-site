@@ -72,13 +72,6 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ open, onClose }) => {
     };
   }, [open, onClose]);
 
-  useEffect(() => {
-    if (!open) {
-      setState({ query: "", results: [], loading: false });
-      setInputFocused(false);
-    }
-  }, [open]);
-
   const runSearch = useCallback(async (query: string, controller: AbortController) => {
     if (query.length < 3) {
       setState((prev) => ({ ...prev, results: [], loading: false }));

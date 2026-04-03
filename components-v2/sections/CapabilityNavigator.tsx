@@ -2,156 +2,141 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 // ─── Service data ────────────────────────────────────────────────────────────
 
 const SERVICES = [
-  { title: "Strategy & Corporate Transformation", description: "Corporate strategy, M&A advisory, and organizational transformation.", href: "/services/strategy" },
-  { title: "Digital & AI Transformation", description: "Digital strategy, AI implementation, automation, and cloud migration.", href: "/services/digital" },
-  { title: "Financial Advisory, Audit & Risk", description: "Regulatory compliance, risk assessment, and financial restructuring.", href: "/services/financial" },
-  { title: "People & Organization", description: "Talent management, leadership development, and organizational design.", href: "/services/people" },
-  { title: "Sustainability & ESG", description: "ESG reporting, climate risk assessment, and sustainable practices.", href: "/services/sustainability" },
-  { title: "Public Sector Advisory", description: "Policy analysis, public sector reform, and digital government.", href: "/services/public-sector" },
-  { title: "Digital Communication", description: "Social media strategy, digital brand management, and content marketing.", href: "/services/communication" },
-  { title: "Tax & Asset Management", description: "Tax compliance, international tax planning, and wealth management.", href: "/services/tax" },
-  { title: "Legal & Regulatory", description: "Corporate governance, regulatory compliance, and trade law.", href: "/services/legal" },
-  { title: "SME Development & Growth", description: "Business incubation, SME financing, and market entry strategy.", href: "/services/sme" },
+  { title: "Strategy & Corporate Transformation", description: "Corporate strategy, M&A advisory, and organizational transformation.", href: "/services/strategy", image: "/images/capabilities/strategy.jpg" },
+  { title: "Digital & AI Transformation", description: "Digital strategy, AI implementation, automation, and cloud migration.", href: "/services/digital", image: "/images/capabilities/digital-ai.jpg" },
+  { title: "Financial Advisory, Audit & Risk", description: "Regulatory compliance, risk assessment, and financial restructuring.", href: "/services/financial", image: "/images/capabilities/financial.jpg" },
+  { title: "People & Organization", description: "Talent management, leadership development, and organizational design.", href: "/services/people", image: "/images/industries/sectors/healthcare-life-sciences.jpg" },
+  { title: "Sustainability & ESG", description: "ESG reporting, climate risk assessment, and sustainable practices.", href: "/services/sustainability", image: "/images/industries/sectors/energy-resources.jpg" },
+  { title: "Public Sector Advisory", description: "Policy analysis, public sector reform, and digital government.", href: "/services/public-sector", image: "/images/industries/sectors/public-sector-government.jpg" },
+  { title: "Digital Communication", description: "Social media strategy, digital brand management, and content marketing.", href: "/services/communication", image: "/images/industries/sectors/technology-digital.jpg" },
+  { title: "Tax & Asset Management", description: "Tax compliance, international tax planning, and wealth management.", href: "/services/tax", image: "/images/industries/sectors/financial-services.jpg" },
+  { title: "Legal & Regulatory", description: "Corporate governance, regulatory compliance, and trade law.", href: "/services/legal", image: "/images/industries/sectors/private-capital.jpg" },
+  { title: "SME Development & Growth", description: "Business incubation, SME financing, and market entry strategy.", href: "/services/sme", image: "/images/industries/sectors/consumer-retail.jpg" },
 ];
 
 const INDUSTRIES = [
-  { title: "Financial Services", description: "Banks, capital markets, insurers, fintechs, and asset managers.", href: "/industries/financial-services" },
-  { title: "Healthcare & Life Sciences", description: "Healthcare providers, pharma, biotech, and medtech.", href: "/industries/healthcare-life-sciences" },
-  { title: "Energy & Natural Resources", description: "Oil, gas, utilities, renewables, power, and mining.", href: "/industries/energy-resources" },
-  { title: "Industrials & Manufacturing", description: "Industrial companies, productivity, and supply chain.", href: "/industries/industrials-manufacturing" },
-  { title: "Consumer & Retail", description: "Retail, CPG, consumer goods, and omnichannel strategy.", href: "/industries/consumer-retail" },
-  { title: "Technology, Media & Telecom", description: "Technology companies, media organizations, and telecom operators.", href: "/industries/technology-digital" },
-  { title: "Transportation & Logistics", description: "Airlines, shippers, logistics, and travel/hospitality.", href: "/industries/transport-logistics" },
-  { title: "Public Sector & Government", description: "Governments, agencies, and defense organizations.", href: "/industries/public-sector-government" },
-  { title: "Real Estate & Infrastructure", description: "Real estate, infrastructure, and construction.", href: "/industries/real-estate-infrastructure" },
-  { title: "Private Capital", description: "PE firms, principal investors, and value creation.", href: "/industries/private-capital" },
-  { title: "Education & Social Impact", description: "Education institutions, nonprofits, and social enterprises.", href: "/industries/education" },
+  { title: "Financial Services", description: "Banks, capital markets, insurers, fintechs, and asset managers.", href: "/industries/financial-services", image: "/images/industries/sectors/financial-services.jpg" },
+  { title: "Healthcare & Life Sciences", description: "Healthcare providers, pharma, biotech, and medtech.", href: "/industries/healthcare-life-sciences", image: "/images/industries/sectors/healthcare-life-sciences.jpg" },
+  { title: "Energy & Natural Resources", description: "Oil, gas, utilities, renewables, power, and mining.", href: "/industries/energy-resources", image: "/images/industries/sectors/energy-resources.jpg" },
+  { title: "Industrials & Manufacturing", description: "Industrial companies, productivity, and supply chain.", href: "/industries/industrials-manufacturing", image: "/images/industries/sectors/industrials-manufacturing.jpg" },
+  { title: "Consumer & Retail", description: "Retail, CPG, consumer goods, and omnichannel strategy.", href: "/industries/consumer-retail", image: "/images/industries/sectors/consumer-retail.jpg" },
+  { title: "Technology, Media & Telecom", description: "Technology companies, media organizations, and telecom operators.", href: "/industries/technology-digital", image: "/images/industries/sectors/technology-digital.jpg" },
+  { title: "Transportation & Logistics", description: "Airlines, shippers, logistics, and travel/hospitality.", href: "/industries/transport-logistics", image: "/images/industries/sectors/transport-logistics.jpg" },
+  { title: "Public Sector & Government", description: "Governments, agencies, and defense organizations.", href: "/industries/public-sector-government", image: "/images/industries/sectors/public-sector-government.jpg" },
+  { title: "Real Estate & Infrastructure", description: "Real estate, infrastructure, and construction.", href: "/industries/real-estate-infrastructure", image: "/images/industries/sectors/real-estate-infrastructure.jpg" },
+  { title: "Private Capital", description: "PE firms, principal investors, and value creation.", href: "/industries/private-capital", image: "/images/industries/sectors/private-capital.jpg" },
+  { title: "Education & Social Impact", description: "Education institutions, nonprofits, and social enterprises.", href: "/industries/education", image: "/images/industries/sectors/education.jpg" },
 ];
 
-/** Homepage shows a small spotlight set; full lists live on /services and /industries. */
-const FEATURED_SERVICE_INDICES = [0, 1, 2] as const;
-const FEATURED_INDUSTRY_INDICES = [0, 1, 2] as const;
+// ─── Asymmetric grid layout helpers ──────────────────────────────────────────
 
-const SERVICE_CATALOG_CTA = {
-  href: "/services",
-  headline: "Explore the full capability catalog",
-  body: "Review every advisory track — from strategy and digital transformation to tax, legal, and public sector.",
-  linkLabel: "View all services",
-} as const;
+// Services (10 items): 3, 2, 3, 2
+const SERVICE_GRID_ROWS = [
+  { items: [0, 1, 2], widths: ["1fr", "1fr", "1fr"] },
+  { items: [3, 4], widths: ["3fr", "2fr"] },
+  { items: [5, 6, 7], widths: ["1fr", "1fr", "1fr"] },
+  { items: [8, 9], widths: ["2fr", "3fr"] },
+];
 
-const INDUSTRY_CATALOG_CTA = {
-  href: "/industries",
-  headline: "Browse complete industry coverage",
-  body: "See how we apply institutional advisory across regulated sectors, growth markets, and public institutions.",
-  linkLabel: "View all industries",
-} as const;
-
-// ─── Gradient backgrounds for cards without images ───────────────────────────
-
-const CARD_GRADIENTS = [
-  "linear-gradient(135deg, #0A1628 0%, #1B3A5C 100%)",
-  "linear-gradient(135deg, #0E223A 0%, #1B3A5C 100%)",
-  "linear-gradient(135deg, #0A1628 0%, #162D48 100%)",
-  "linear-gradient(135deg, #132942 0%, #1B3A5C 100%)",
-  "linear-gradient(135deg, #0C1C2E 0%, #1A3655 100%)",
-  "linear-gradient(135deg, #0A1628 0%, #1E4068 100%)",
-  "linear-gradient(135deg, #0E223A 0%, #162D48 100%)",
-  "linear-gradient(135deg, #0A1628 0%, #1B3A5C 100%)",
-  "linear-gradient(135deg, #132942 0%, #0C1C2E 100%)",
-  "linear-gradient(135deg, #0C1C2E 0%, #1A3655 100%)",
-  "linear-gradient(135deg, #0A1628 0%, #162D48 100%)",
+// Industries (11 items): 3, 2, 3, 3
+const INDUSTRY_GRID_ROWS = [
+  { items: [0, 1, 2], widths: ["1fr", "1fr", "1fr"] },
+  { items: [3, 4], widths: ["3fr", "2fr"] },
+  { items: [5, 6, 7], widths: ["1fr", "1fr", "1fr"] },
+  { items: [8, 9, 10], widths: ["1fr", "1fr", "1fr"] },
 ];
 
 // ─── Card component ──────────────────────────────────────────────────────────
 
-function EditorialCard({
+function ExploreCard({
   title,
   description,
   href,
-  index,
+  image,
 }: {
   title: string;
   description: string;
   href: string;
-  index: number;
+  image?: string;
 }) {
   return (
     <Link
       href={href}
-      className="group relative block overflow-hidden rounded-xl transition-transform duration-300 ease-out hover:scale-[1.015]"
+      className="group relative block overflow-hidden transition-transform duration-300 ease-out hover:scale-[1.02]"
       style={{
-        height: "clamp(180px, 22vw, 240px)",
-        background: CARD_GRADIENTS[index % CARD_GRADIENTS.length],
+        height: "210px",
+        borderRadius: "10px",
+        background: image ? undefined : "linear-gradient(135deg, #052659 0%, #021024 100%)",
       }}
     >
-      {/* Hover overlay */}
+      {/* Background image */}
+      {image && (
+        <Image
+          src={image}
+          alt=""
+          fill
+          sizes="(max-width: 768px) 100vw, 400px"
+          className="object-cover"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Gradient overlay */}
       <div
-        className="absolute inset-0 bg-white/0 transition-colors duration-300 group-hover:bg-white/10"
-        style={{ borderRadius: "inherit" }}
+        className="absolute inset-0 transition-opacity duration-300"
+        style={{
+          background: image
+            ? "linear-gradient(to top, rgba(2,16,36,0.88) 0%, rgba(2,16,36,0.4) 50%, rgba(2,16,36,0.2) 100%)"
+            : "none",
+          borderRadius: "inherit",
+        }}
+      />
+      {/* Hover lighten */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: "linear-gradient(to top, rgba(2,16,36,0.73) 0%, rgba(2,16,36,0.25) 50%, rgba(2,16,36,0.05) 100%)",
+          borderRadius: "inherit",
+        }}
       />
 
-      {/* Content — bottom-left positioned */}
-      <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-6">
-        <h3 className="text-[17px] font-semibold leading-snug text-white md:text-lg">
+      {/* Content */}
+      <div className="absolute inset-0 flex flex-col justify-end p-6" style={{ borderRadius: "inherit" }}>
+        <h3
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "17px",
+            fontWeight: 600,
+            color: "#FFFFFF",
+            lineHeight: 1.3,
+          }}
+        >
           {title}
         </h3>
-        <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-white/70">
+        <p
+          className="mt-1 line-clamp-2"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "13px",
+            color: "rgba(255,255,255,0.7)",
+            lineHeight: 1.5,
+          }}
+        >
           {description}
         </p>
       </div>
 
-      {/* Arrow — bottom-right */}
+      {/* Arrow */}
       <span
-        className="absolute bottom-5 right-5 text-white/50 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white/90 md:bottom-6 md:right-6"
+        className="absolute bottom-6 right-6 text-white/50 transition-all duration-300 group-hover:translate-x-[5px] group-hover:text-white/90"
         aria-hidden="true"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </span>
-    </Link>
-  );
-}
-
-function ExploreCatalogCard({
-  href,
-  headline,
-  body,
-  linkLabel,
-}: {
-  href: string;
-  headline: string;
-  body: string;
-  linkLabel: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-neutral-200 bg-white p-5 shadow-sm transition-all duration-300 ease-out hover:border-[#0A1628] hover:shadow-md md:p-6"
-      style={{ minHeight: "clamp(180px, 22vw, 240px)" }}
-    >
-      <div>
-        <span
-          className="block text-[0.6875rem] font-semibold uppercase tracking-[0.08em]"
-          style={{ color: "#888" }}
-        >
-          Go deeper
-        </span>
-        <h3 className="mt-2 text-[17px] font-semibold leading-snug md:text-lg" style={{ color: "#0A1628" }}>
-          {headline}
-        </h3>
-        <p className="mt-2 text-[13px] leading-relaxed text-neutral-600">{body}</p>
-      </div>
-      <span
-        className="mt-4 inline-flex items-center gap-1 text-sm font-semibold transition-colors group-hover:text-[#0A1628]"
-        style={{ color: "#1B3A5C" }}
-      >
-        {linkLabel}
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </span>
@@ -186,89 +171,127 @@ export default function CapabilityNavigator({ background }: CapabilityNavigatorP
   );
 
   const items = displayTab === "service" ? SERVICES : INDUSTRIES;
-  const featuredIndices = displayTab === "service" ? FEATURED_SERVICE_INDICES : FEATURED_INDUSTRY_INDICES;
-  const catalogCta = displayTab === "service" ? SERVICE_CATALOG_CTA : INDUSTRY_CATALOG_CTA;
+  const gridRows = displayTab === "service" ? SERVICE_GRID_ROWS : INDUSTRY_GRID_ROWS;
 
   return (
     <section
-      className="section-wrapper"
-      style={background ? { backgroundColor: background } : undefined}
+      style={{
+        backgroundColor: background || "#FFFFFF",
+        paddingTop: "80px",
+        paddingBottom: "60px",
+      }}
     >
       <div className="layout-container">
         {/* Header */}
         <div className="max-w-2xl">
           <span
-            className="block text-xs font-semibold uppercase"
-            style={{ letterSpacing: "0.08em", color: "#888" }}
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "12px",
+              fontWeight: 500,
+              textTransform: "uppercase",
+              letterSpacing: "4.5px",
+              color: "#7DA0CA",
+              display: "block",
+            }}
           >
             Explore
           </span>
           <h2
-            className="mt-2 text-[2rem] font-semibold leading-[1.2] md:text-[2.25rem]"
-            style={{ color: "#0A1628", fontFamily: "Georgia, 'Times New Roman', serif" }}
+            className="mt-4"
+            style={{
+              fontFamily: "var(--font-heading)",
+              fontSize: "clamp(28px, 3.5vw, 40px)",
+              fontWeight: 400,
+              lineHeight: 1.2,
+              color: "#021024",
+            }}
           >
             How can we assist you today?
           </h2>
-          <p className="mt-3 max-w-[600px] text-base leading-relaxed" style={{ color: "#666" }}>
-            Start with a few focal areas, then open the full catalog on the dedicated pages.
+          <p
+            className="mt-3"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "16px",
+              color: "#6B7280",
+              lineHeight: 1.7,
+              maxWidth: "600px",
+            }}
+          >
+            Select a capability or industry to learn more.
           </p>
         </div>
 
         {/* Tab Switcher */}
-        <div className="mt-6 flex gap-2">
-          <button
-            type="button"
-            onClick={() => switchTab("service")}
-            className="rounded-full px-5 py-2 text-sm font-semibold transition-all duration-200"
-            style={{
-              backgroundColor: activeTab === "service" ? "#0A1628" : "transparent",
-              color: activeTab === "service" ? "#FFFFFF" : "#666",
-              border: activeTab === "service" ? "1px solid #0A1628" : "1px solid #D0D0D0",
-            }}
-          >
-            By Capability
-          </button>
-          <button
-            type="button"
-            onClick={() => switchTab("industry")}
-            className="rounded-full px-5 py-2 text-sm font-semibold transition-all duration-200"
-            style={{
-              backgroundColor: activeTab === "industry" ? "#0A1628" : "transparent",
-              color: activeTab === "industry" ? "#FFFFFF" : "#666",
-              border: activeTab === "industry" ? "1px solid #0A1628" : "1px solid #D0D0D0",
-            }}
-          >
-            By Industry
-          </button>
-        </div>
-
-        {/* Spotlight grid: three featured entries + catalog CTA */}
-        <div
-          className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-3.5"
-          style={{
-            opacity: fading ? 0 : 1,
-            transition: "opacity 200ms ease-in-out",
-          }}
-        >
-          {featuredIndices.map((itemIdx) => {
-            const item = items[itemIdx];
-            if (!item) return null;
+        <div className="mt-6 flex gap-3">
+          {(["service", "industry"] as const).map((tab) => {
+            const isActive = activeTab === tab;
             return (
-              <EditorialCard
-                key={item.title}
-                title={item.title}
-                description={item.description}
-                href={item.href}
-                index={itemIdx}
-              />
+              <button
+                key={tab}
+                type="button"
+                onClick={() => switchTab(tab)}
+                className="transition-all duration-300"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  padding: "10px 28px",
+                  borderRadius: "30px",
+                  backgroundColor: isActive ? "#052659" : "transparent",
+                  color: isActive ? "#FFFFFF" : "#5483B3",
+                  border: isActive ? "1px solid #052659" : "1px solid rgba(84,131,179,0.3)",
+                  cursor: "pointer",
+                }}
+              >
+                {tab === "service" ? "By Capability" : "By Industry"}
+              </button>
             );
           })}
-          <ExploreCatalogCard
-            href={catalogCta.href}
-            headline={catalogCta.headline}
-            body={catalogCta.body}
-            linkLabel={catalogCta.linkLabel}
-          />
+        </div>
+
+        {/* Asymmetric Grid */}
+        <div
+          className="mt-8"
+          style={{
+            opacity: fading ? 0 : 1,
+            transition: "opacity 250ms ease-in-out",
+          }}
+        >
+          {gridRows.map((row, rowIdx) => (
+            <div
+              key={rowIdx}
+              className="grid gap-[14px]"
+              style={{
+                gridTemplateColumns: row.widths.join(" "),
+                marginTop: rowIdx > 0 ? "14px" : 0,
+              }}
+            >
+              {row.items.map((itemIdx) => {
+                const item = items[itemIdx];
+                if (!item) return null;
+                return (
+                  <ExploreCard
+                    key={item.title}
+                    title={item.title}
+                    description={item.description}
+                    href={item.href}
+                    image={item.image}
+                  />
+                );
+              })}
+            </div>
+          ))}
+
+          {/* Mobile fallback: single column */}
+          <style>{`
+            @media (max-width: 767px) {
+              .grid[style*="gridTemplateColumns"] {
+                grid-template-columns: 1fr !important;
+              }
+            }
+          `}</style>
         </div>
       </div>
     </section>
