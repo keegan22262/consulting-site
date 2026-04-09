@@ -36,28 +36,51 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const smtpHost = process.env.SMTP_HOST
+    const smtpPort = Number(process.env.SMTP_PORT || "587")
+    const smtpUser = process.env.SMTP_USER
+    const smtpPass = process.env.SMTP_PASS
+    const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "vanrillsingh@gmail.com"
+
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      console.error("SMTP environment variables are not configured")
+      return Response.json(
+        { success: false, error: "Mail service is not configured. Please try again later." },
+        { status: 500 }
+      )
+    }
+
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: false,
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpPort === 465,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: smtpUser,
+        pass: smtpPass,
       },
     })
 
     await transporter.sendMail({
-      from: `"RSL Contact Form" <${process.env.SMTP_USER}>`,
-      to: process.env.CONTACT_RECEIVER_EMAIL,
+      from: `"RSL Contact Form" <${smtpUser}>`,
+      to: receiverEmail,
       replyTo: email,
       subject: `[RSL Inquiry] ${inquiryType} — ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nInquiry type: ${inquiryType}\n\n${message}`,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Inquiry Type:</strong> ${inquiryType}</p>
+        <hr />
+        <p>${message.replace(/\n/g, "<br />")}</p>
+      `,
     })
 
     return Response.json({ success: true })
-  } catch {
+  } catch (err) {
+    console.error("Contact form error:", err)
     return Response.json(
-      { success: false, error: "Internal server error." },
+      { success: false, error: "Failed to send your message. Please try again or contact us via WhatsApp." },
       { status: 500 }
     )
   }
