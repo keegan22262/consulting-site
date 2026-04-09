@@ -40,8 +40,9 @@ export default function HomepageClient({ insights }: HomepageClientProps) {
             fill
             sizes="100vw"
             className="object-cover"
-            quality={90}
+            quality={100}
             priority
+            unoptimized
           />
           <div className="homepage-hero__overlay" />
         </div>
@@ -64,29 +65,32 @@ export default function HomepageClient({ insights }: HomepageClientProps) {
           <div className="homepage-intro__images">
             <div className="homepage-intro__img-main">
               <Image
-                src="/images/advisory/institutional-01.jpg"
+                src="/images/sections/office-team.jpeg"
                 alt="Advisory setting"
                 fill
                 sizes="320px"
                 className="object-cover"
+                quality={90}
               />
             </div>
             <div className="homepage-intro__img-top">
               <Image
-                src="/images/advisory/institutional-02.jpg"
-                alt="Team meeting"
+                src="/images/sections/real-estate-investment.jpeg"
+                alt="Strategic investment"
                 fill
                 sizes="200px"
                 className="object-cover"
+                quality={90}
               />
             </div>
             <div className="homepage-intro__img-bottom">
               <Image
-                src="/images/advisory/institutional-03.jpg"
-                alt="Workspace"
+                src="/images/sections/mentorship.jpeg"
+                alt="Mentorship"
                 fill
                 sizes="220px"
                 className="object-cover"
+                quality={90}
               />
             </div>
             <div className="homepage-intro__badge">
@@ -139,20 +143,22 @@ export default function HomepageClient({ insights }: HomepageClientProps) {
           <div className="homepage-advisory__images">
             <div className="homepage-advisory__img-circle">
               <Image
-                src="/images/gateway/executive.jpg"
+                src="/images/sections/teamwork-conference.jpeg"
                 alt="Advisory boardroom"
                 fill
                 sizes="300px"
                 className="object-cover"
+                quality={90}
               />
             </div>
             <div className="homepage-advisory__img-rect">
               <Image
-                src="/images/capabilities/strategy.jpg"
+                src="/images/sections/real-estate-investment.jpeg"
                 alt="Team collaboration"
                 fill
                 sizes="240px"
                 className="object-cover"
+                quality={90}
               />
             </div>
             <div className="homepage-advisory__stats-badge">
@@ -231,12 +237,12 @@ export default function HomepageClient({ insights }: HomepageClientProps) {
       <section className="homepage-cta">
         <div className="homepage-cta__bg">
           <Image
-            src="/images/services/hero-services.jpg"
+            src="/images/sections/teamwork-conference.jpeg"
             alt=""
             fill
             sizes="100vw"
             className="object-cover"
-            quality={85}
+            quality={90}
           />
           <div className="homepage-cta__overlay" />
         </div>
