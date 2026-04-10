@@ -22,23 +22,24 @@ export const metadata: Metadata = {
 	},
 };
 
-type SearchPageProps = {
-	searchParams?: {
-		q?: string | string[];
-		category?: string | string[];
-		theme?: string | string[];
-	};
-};
-
 function getSingleParam(value: string | string[] | undefined): string {
 	return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 export const revalidate = 300;
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
-	const q = getSingleParam(searchParams?.q).trim();
-	const category = getSingleParam(searchParams?.category).trim();
-	const theme = getSingleParam(searchParams?.theme).trim();
+export default async function SearchPage({
+	searchParams,
+}: {
+	searchParams?: Promise<{
+		q?: string | string[];
+		category?: string | string[];
+		theme?: string | string[];
+	}>;
+}) {
+	const resolvedParams = await searchParams;
+	const q = getSingleParam(resolvedParams?.q).trim();
+	const category = getSingleParam(resolvedParams?.category).trim();
+	const theme = getSingleParam(resolvedParams?.theme).trim();
 
 	const hasQuery = q.length > 0;
 
@@ -158,7 +159,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 										   approach={service.summary}
 										   index={index}
 									   />
-									   // Note: v2 ServiceCard expects focusAreas and approach, but only summary is available from searchServices. If more detail is needed, update searchServices to include those fields.
 								   ))}
 							</div>
 						</div>
@@ -184,7 +184,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 								   		   variant="compact"
 										   href={`/insights/${insight.slug}`}
 									   />
-									   // Note: v2 IndustryCard expects title, description, href. Only summary is available for description from searchInsights.
 								   ))}
 							</div>
 						</div>

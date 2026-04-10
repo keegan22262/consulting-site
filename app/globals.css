@@ -295,7 +295,7 @@ a {
   position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   text-align: center;
 }
@@ -321,7 +321,7 @@ a {
   position: relative;
   z-index: 1;
   max-width: 800px;
-  padding: 0 24px 80px;
+  padding: 0 24px;
 }
 
 .homepage-hero__overline {
