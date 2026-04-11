@@ -1,31 +1,17 @@
 "use client";
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// RSL SectionHeader — Centralized Section Title Block
-// Overline + H2 headline + optional description + optional accent rule.
-// Supports left-aligned (default) and centered layout for dark bands.
-// ═══════════════════════════════════════════════════════════════════════════════
-
+import { useEffect, useRef, useState } from "react";
 import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
 
 interface SectionHeaderProps {
-  /** Optional uppercase overline label above the title */
   overline?: string;
-  /** Section heading — renders as H2 */
   title: string;
-  /** Optional supporting paragraph below the title */
   description?: string;
-  /** Text alignment — 'left' for standard sections, 'center' for dark bands */
   align?: "left" | "center";
-  /** Show A-700 accent rule between title and description (default: true) */
   showAccentRule?: boolean;
-  /** Max width constraint on the description paragraph (default: '65ch') */
   maxWidth?: string;
-  /** Override overline color — useful for inverted (dark) backgrounds */
   overlineColor?: string;
-  /** Override title color — useful for inverted (dark) backgrounds */
   titleColor?: string;
-  /** Override description color — useful for inverted (dark) backgrounds */
   descriptionColor?: string;
 }
 
@@ -52,8 +38,43 @@ export default function SectionHeader({
   });
   const isCentered = align === "center";
 
+  // Scroll reveal for header elements
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -30px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const revealBase = (delay: number) => ({
+    opacity: isVisible ? 1 : 0,
+    transform: isVisible ? "translate3d(0, 0, 0)" : "translate3d(0, 20px, 0)",
+    transition: `opacity 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}ms, transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}ms`,
+  });
+
   return (
     <div
+      ref={containerRef}
       style={{
         textAlign: isCentered ? "center" : undefined,
         display: "flex",
@@ -64,12 +85,13 @@ export default function SectionHeader({
       {overline && (
         <span
           style={{
-            fontFamily: "var(--font-primary)",
+            fontFamily: "var(--font-body)",
             fontSize: "var(--text-caption)",
             fontWeight: 600,
             color: overlineColor,
             textTransform: "uppercase",
             letterSpacing: "0.06em",
+            ...revealBase(0),
           }}
         >
           {overline}
@@ -78,12 +100,13 @@ export default function SectionHeader({
 
       <h2
         style={{
-          fontFamily: "var(--font-primary)",
+          fontFamily: "var(--font-heading)",
           fontSize: h2Size,
           fontWeight: 600,
           lineHeight: h2LineHeight,
           color: titleColor,
           marginTop: overline ? "6px" : undefined,
+          ...revealBase(120),
         }}
       >
         {title}
@@ -97,6 +120,7 @@ export default function SectionHeader({
             backgroundColor: "var(--a700)",
             marginTop: "24px",
             marginBottom: description ? "24px" : undefined,
+            ...revealBase(240),
           }}
         />
       ) : null}
@@ -104,12 +128,13 @@ export default function SectionHeader({
       {description && (
         <p
           style={{
-            fontFamily: "var(--font-primary)",
+            fontFamily: "var(--font-body)",
             fontSize: "var(--text-body)",
             lineHeight: "var(--line-height-body)",
             color: descriptionColor,
             marginTop: showAccentRule ? undefined : "12px",
             maxWidth,
+            ...revealBase(300),
           }}
         >
           {description}

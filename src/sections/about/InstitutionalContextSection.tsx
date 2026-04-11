@@ -1,20 +1,31 @@
 "use client";
 
+import { useScrollReveal } from "@/src/hooks/useScrollReveal";
+
 export default function InstitutionalContextSection() {
+  const imageReveal = useScrollReveal({ direction: "left", delay: 100, distance: 50, duration: 900 });
+  const labelReveal = useScrollReveal({ direction: "right", delay: 200, distance: 30, duration: 800 });
+  const headingReveal = useScrollReveal({ direction: "right", delay: 300, distance: 30, duration: 800 });
+  const bodyReveal = useScrollReveal({ direction: "up", delay: 400, distance: 25, duration: 800 });
+  const body2Reveal = useScrollReveal({ direction: "up", delay: 500, distance: 25, duration: 800 });
+  const feature1 = useScrollReveal({ direction: "up", delay: 600, distance: 20, duration: 700 });
+  const feature2 = useScrollReveal({ direction: "up", delay: 750, distance: 20, duration: 700 });
+
   return (
     <section className="bg-white pt-[100px] pb-20">
       <div className="max-w-[1200px] mx-auto px-6 md:px-10">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* LEFT SIDE — Image with decorative border */}
-          <div className="w-full lg:w-[45%]">
+          <div
+            className="w-full lg:w-[45%]"
+            ref={imageReveal.ref as React.RefObject<HTMLDivElement>}
+            style={imageReveal.style}
+          >
             <div className="relative">
-              {/* Decorative border behind image — hidden on mobile */}
               <div
                 className="hidden md:block absolute top-3 left-3 w-full h-full rounded-xl border-2 -z-[1]"
                 style={{ borderColor: "#C1E8FF" }}
               />
-
-              {/* Main image */}
               <div className="relative w-full h-[320px] md:h-[480px] lg:h-[520px] rounded-xl overflow-hidden shadow-2xl">
                 <img
                   src="/images/about/firm-main.jpg"
@@ -22,33 +33,16 @@ export default function InstitutionalContextSection() {
                   className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                 />
               </div>
-
-              {/* Accent card — hidden on mobile */}
               <div
                 className="hidden md:flex absolute -bottom-5 -right-5 items-center gap-3 rounded-xl px-7 py-5 z-10"
                 style={{ backgroundColor: "#052659" }}
               >
-                {/* Globe icon */}
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#7DA0CA"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7DA0CA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M2 12h20" />
                   <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                 </svg>
-                <span
-                  className="text-[13px] text-white font-medium"
-                  style={{
-                    fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
-                  }}
-                >
+                <span className="text-[13px] text-white font-medium" style={{ fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif" }}>
                   Pan-African & Emerging Markets
                 </span>
               </div>
@@ -58,30 +52,36 @@ export default function InstitutionalContextSection() {
           {/* RIGHT SIDE — Content */}
           <div className="w-full lg:w-[55%]">
             <span
+              ref={labelReveal.ref as React.RefObject<HTMLSpanElement>}
               className="block text-[12px] uppercase tracking-[4px] mb-3"
               style={{
                 fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
                 color: "#5483B3",
+                ...labelReveal.style,
               }}
             >
               THE FIRM
             </span>
             <h2
+              ref={headingReveal.ref as React.RefObject<HTMLHeadingElement>}
               className="text-[34px] mb-5"
               style={{
                 fontFamily: "var(--font-playfair), 'Playfair Display', serif",
                 fontWeight: 400,
                 color: "#021024",
+                ...headingReveal.style,
               }}
             >
               Institutional Context.
             </h2>
 
             <p
+              ref={bodyReveal.ref as React.RefObject<HTMLParagraphElement>}
               className="text-[15px] leading-[1.75]"
               style={{
                 fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
                 color: "#4A4A4A",
+                ...bodyReveal.style,
               }}
             >
               Rill Singh Limited (RSL) is a pan-African advisory firm established
@@ -94,10 +94,12 @@ export default function InstitutionalContextSection() {
             </p>
 
             <p
+              ref={body2Reveal.ref as React.RefObject<HTMLParagraphElement>}
               className="mt-4 text-[15px] leading-[1.75]"
               style={{
                 fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
                 color: "#4A4A4A",
+                ...body2Reveal.style,
               }}
             >
               RSL was designed to close that gap. The firm brings end-to-end
@@ -110,93 +112,45 @@ export default function InstitutionalContextSection() {
 
             {/* Feature highlight rows */}
             <div className="mt-7 flex flex-col gap-5">
-              {/* Row 1 */}
-              <div className="flex items-start gap-3.5">
-                <div
-                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: "#C1E8FF" }}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#052659"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
+              <div
+                ref={feature1.ref as React.RefObject<HTMLDivElement>}
+                className="flex items-start gap-3.5"
+                style={feature1.style}
+              >
+                <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: "#C1E8FF" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#052659" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                     <polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
                 </div>
                 <div>
-                  <h4
-                    className="text-[15px] font-semibold"
-                    style={{
-                      fontFamily:
-                        "var(--font-dm-sans), 'DM Sans', sans-serif",
-                      color: "#021024",
-                    }}
-                  >
+                  <h4 className="text-[15px] font-semibold" style={{ fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif", color: "#021024" }}>
                     End-to-End Capability
                   </h4>
-                  <p
-                    className="text-[13px]"
-                    style={{
-                      fontFamily:
-                        "var(--font-dm-sans), 'DM Sans', sans-serif",
-                      color: "#6B7280",
-                    }}
-                  >
-                    Strategy, digital, finance, people, and governance under one
-                    roof.
+                  <p className="text-[13px]" style={{ fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif", color: "#6B7280" }}>
+                    Strategy, digital, finance, people, and governance under one roof.
                   </p>
                 </div>
               </div>
 
-              {/* Row 2 */}
-              <div className="flex items-start gap-3.5">
-                <div
-                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: "#C1E8FF" }}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#052659"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
+              <div
+                ref={feature2.ref as React.RefObject<HTMLDivElement>}
+                className="flex items-start gap-3.5"
+                style={feature2.style}
+              >
+                <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: "#C1E8FF" }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#052659" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10" />
                     <circle cx="12" cy="12" r="6" />
                     <circle cx="12" cy="12" r="2" />
                   </svg>
                 </div>
                 <div>
-                  <h4
-                    className="text-[15px] font-semibold"
-                    style={{
-                      fontFamily:
-                        "var(--font-dm-sans), 'DM Sans', sans-serif",
-                      color: "#021024",
-                    }}
-                  >
+                  <h4 className="text-[15px] font-semibold" style={{ fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif", color: "#021024" }}>
                     Execution Discipline
                   </h4>
-                  <p
-                    className="text-[13px]"
-                    style={{
-                      fontFamily:
-                        "var(--font-dm-sans), 'DM Sans', sans-serif",
-                      color: "#6B7280",
-                    }}
-                  >
-                    PRIDE philosophy governs every engagement — Precision,
-                    Resilience, Integrity, Discipline, Execution.
+                  <p className="text-[13px]" style={{ fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif", color: "#6B7280" }}>
+                    PRIDE philosophy governs every engagement — Precision, Resilience, Integrity, Discipline, Execution.
                   </p>
                 </div>
               </div>

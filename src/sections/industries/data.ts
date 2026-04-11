@@ -13,7 +13,7 @@ export const C = {
   n50: "#F8FAFC",
 };
 
-export const F = "Inter, system-ui, -apple-system, Segoe UI, sans-serif";
+export const F = "var(--font-dm-sans), 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 export const M_DUR = "200ms";
 export const M_CURVE = "ease";
 export const BORDER_RADIUS = "8px";

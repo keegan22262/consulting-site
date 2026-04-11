@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import AtmosphericLayer from "./AtmosphericLayer";
 import SectionDivider from "./SectionDivider";
 import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
@@ -23,15 +23,13 @@ interface SectionWrapperProps {
     | "neutral50"
     | string;
   className?: string;
-  /** Override vertical padding: [desktop, tablet, mobile] */
   padV?: PadVTuple | PadVObject;
   style?: CSSProperties;
-  /** HTML id attribute for anchor linking */
   id?: string;
-  /** Render subtle institutional gradient + texture behind content */
   withAtmosphere?: boolean;
-  /** Render a subtle glow divider after this section */
   withDivider?: boolean;
+  /** Disable the scroll-reveal entrance animation */
+  noReveal?: boolean;
 }
 
 const DEFAULT_PAD_V: PadVTuple = ["96px", "64px", "48px"];
@@ -77,6 +75,7 @@ export default function SectionWrapper({
   id,
   withAtmosphere = false,
   withDivider = false,
+  noReveal = false,
 }: SectionWrapperProps) {
   const [desktopPad, tabletPad, mobilePad] = resolvePadV(padV);
   const px = useResponsiveValue({ desktop: "32px", tablet: "32px", mobile: "24px" });
@@ -86,9 +85,48 @@ export default function SectionWrapper({
     mobile: mobilePad,
   });
 
+  // Scroll reveal for the section
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [isVisible, setIsVisible] = useState(noReveal);
+
+  useEffect(() => {
+    if (noReveal) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -30px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [noReveal]);
+
+  const revealStyle: CSSProperties = noReveal
+    ? {}
+    : {
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translate3d(0, 0, 0)" : "translate3d(0, 30px, 0)",
+        transition: "opacity 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        willChange: "opacity, transform",
+      };
+
   return (
     <>
       <section
+        ref={sectionRef}
         id={id}
         className={["relative", className].filter(Boolean).join(" ")}
         style={{
@@ -97,6 +135,7 @@ export default function SectionWrapper({
           paddingBottom: verticalPad,
           paddingLeft: "0",
           paddingRight: "0",
+          ...revealStyle,
           ...style,
         }}
       >
