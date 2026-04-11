@@ -1,165 +1,209 @@
 "use client";
 
-import SectionWrapper from "@/components-v2/sections/SectionWrapper";
-import SectionHeader from "@/components-v2/sections/SectionHeader";
-
-const INSTITUTIONAL_IMAGE =
-  "https://images.unsplash.com/photo-1760740962486-1f358391170e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBZnJpY2FuJTIwY29ycG9yYXRlJTIwZGlzdHJpY3QlMjBhZXJpYWwlMjBtb2Rlcm4lMjBidWlsZGluZ3N8ZW58MXx8fHwxNzczMzI0OTkzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
-
-const CLIENT_SEGMENTS = [
-  {
-    segment: "Startups",
-    scope: "Essential foundations: strategy, finance, tax, and go-to-market.",
-  },
-  {
-    segment: "SMEs",
-    scope: "Scaling with structure: operations, compliance, digital enablement, and growth.",
-  },
-  {
-    segment: "Mid-size & large organizations",
-    scope: "Transformation: operating model, risk, technology, people, and ESG.",
-  },
-];
-
 export default function InstitutionalContextSection() {
   return (
-    <SectionWrapper background="white">
-      <SectionHeader overline="The Firm" title="Institutional Context." showAccentRule={false} />
-      <div
-        style={{
-          width: "48px",
-          height: "2px",
-          backgroundColor: "#1B3A5C",
-          marginTop: "32px",
-          marginBottom: "32px",
-        }}
-      />
+    <section className="bg-white pt-[100px] pb-20">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-10">
+        <div className="flex flex-col lg:flex-row gap-12 items-center">
+          {/* LEFT SIDE — Image with decorative border */}
+          <div className="w-full lg:w-[45%]">
+            <div className="relative">
+              {/* Decorative border behind image — hidden on mobile */}
+              <div
+                className="hidden md:block absolute top-3 left-3 w-full h-full rounded-xl border-2 -z-[1]"
+                style={{ borderColor: "#C1E8FF" }}
+              />
 
-      <div className="grid gap-6 md:gap-8 lg:grid-cols-[7fr_5fr] lg:gap-16">
-        <div style={{ maxWidth: "65ch" }}>
-          <p
-            style={{
-              fontFamily: "var(--font-primary)",
-              fontSize: "var(--text-body-lg)",
-              lineHeight: "1.65",
-              color: "#334155",
-            }}
-          >
-            Rill Singh Limited (RSL) is a pan-African advisory firm established to address a persistent structural gap in the consulting market: the fragmentation between strategic advice and operational execution. Too often, organizations engage multiple firms for strategy, technology, finance, people, and compliance - then absorb the coordination cost themselves. The result is delayed outcomes, diluted accountability, and eroded momentum.
-          </p>
+              {/* Main image */}
+              <div className="relative w-full h-[320px] md:h-[480px] lg:h-[520px] rounded-xl overflow-hidden shadow-2xl">
+                <img
+                  src="/images/about/firm-main.jpg"
+                  alt="RSL advisory and boardroom setting"
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+              </div>
 
-          <div style={{ marginTop: "40px", marginBottom: "40px" }}>
-            <img
-              src={INSTITUTIONAL_IMAGE}
-              alt="African corporate district - the institutional environments where RSL operates"
-              className="h-[220px] w-full rounded-[12px] object-cover object-center md:h-[280px] lg:h-[340px]"
-            />
+              {/* Accent card — hidden on mobile */}
+              <div
+                className="hidden md:flex absolute -bottom-5 -right-5 items-center gap-3 rounded-xl px-7 py-5 z-10"
+                style={{ backgroundColor: "#052659" }}
+              >
+                {/* Globe icon */}
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#7DA0CA"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+                <span
+                  className="text-[13px] text-white font-medium"
+                  style={{
+                    fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+                  }}
+                >
+                  Pan-African & Emerging Markets
+                </span>
+              </div>
+            </div>
           </div>
 
-          <p
-            style={{
-              fontFamily: "var(--font-primary)",
-              fontSize: "var(--text-body-lg)",
-              lineHeight: "1.65",
-              color: "#334155",
-            }}
-          >
-            RSL was designed to close that gap. The firm brings end-to-end capability under one roof - strategy and corporate transformation, digital and AI, financial advisory and risk, people and organizational effectiveness, sustainability and ESG, and public-sector advisory - delivered through small, senior teams operating within a shared governance and methodology framework.
-          </p>
-
-          <p
-            style={{
-              marginTop: "24px",
-              fontFamily: "var(--font-primary)",
-              fontSize: "var(--text-body)",
-              lineHeight: "var(--line-height-body)",
-              color: "#475569",
-            }}
-          >
-            The firm&apos;s operating philosophy - PRIDE: Precision, Resilience, Integrity, Discipline, Execution - is not aspirational. It is the behavioral architecture that governs how every engagement is scoped, staffed, delivered, and sustained. Precision means starting with facts and a clear problem definition. Integrity means transparent timelines, costs, and advice. Discipline means protecting delivery through cadence and governance. Execution means staying close to implementation until outcomes are verified.
-          </p>
-        </div>
-
-        <div>
-          <div
-            style={{
-              borderLeft: "3px solid #1B3A5C",
-              paddingLeft: "24px",
-              marginBottom: "32px",
-            }}
-          >
+          {/* RIGHT SIDE — Content */}
+          <div className="w-full lg:w-[55%]">
             <span
+              className="block text-[12px] uppercase tracking-[4px] mb-3"
               style={{
-                fontFamily: "var(--font-primary)",
-                fontSize: "0.6875rem",
-                fontWeight: 600,
-                color: "#1B3A5C",
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                display: "block",
-                marginBottom: "8px",
+                fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+                color: "#5483B3",
               }}
             >
-              Mission
+              THE FIRM
             </span>
+            <h2
+              className="text-[34px] mb-5"
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                fontWeight: 400,
+                color: "#021024",
+              }}
+            >
+              Institutional Context.
+            </h2>
+
             <p
+              className="text-[15px] leading-[1.75]"
               style={{
-                fontFamily: "var(--font-primary)",
-                fontSize: "var(--text-body)",
-                lineHeight: "var(--line-height-body)",
-                color: "#475569",
-                maxWidth: "40ch",
+                fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+                color: "#4A4A4A",
               }}
             >
-              To deliver comprehensive, innovative solutions that drive sustainable growth and transformation for startups, SMEs, and enterprises - globally - through strategy, technology integration, financial optimization, and human capital development.
+              Rill Singh Limited (RSL) is a pan-African advisory firm established
+              to address a persistent structural gap in the consulting market: the
+              fragmentation between strategic advice and operational execution. Too
+              often, organizations engage multiple firms for strategy, technology,
+              finance, people, and compliance - then absorb the coordination cost
+              themselves. The result is delayed outcomes, diluted accountability,
+              and eroded momentum.
             </p>
-          </div>
 
-          <div style={{ borderLeft: "3px solid #CBD5E1", paddingLeft: "24px" }}>
-            <span
+            <p
+              className="mt-4 text-[15px] leading-[1.75]"
               style={{
-                fontFamily: "var(--font-primary)",
-                fontSize: "0.6875rem",
-                fontWeight: 600,
-                color: "#94A3B8",
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                display: "block",
-                marginBottom: "8px",
+                fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+                color: "#4A4A4A",
               }}
             >
-              Client Segments
-            </span>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {CLIENT_SEGMENTS.map((segment) => (
-                <div key={segment.segment}>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-primary)",
-                      fontSize: "var(--text-caption)",
-                      fontWeight: 600,
-                      color: "#0F172A",
-                      display: "block",
-                    }}
+              RSL was designed to close that gap. The firm brings end-to-end
+              capability under one roof - strategy and corporate transformation,
+              digital and AI, financial advisory and risk, people and
+              organizational effectiveness, sustainability and ESG, and
+              public-sector advisory - delivered through small, senior teams
+              operating within a shared governance and methodology framework.
+            </p>
+
+            {/* Feature highlight rows */}
+            <div className="mt-7 flex flex-col gap-5">
+              {/* Row 1 */}
+              <div className="flex items-start gap-3.5">
+                <div
+                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "#C1E8FF" }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#052659"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    {segment.segment}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-primary)",
-                      fontSize: "var(--text-caption)",
-                      lineHeight: "1.55",
-                      color: "#64748B",
-                    }}
-                  >
-                    {segment.scope}
-                  </span>
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
                 </div>
-              ))}
+                <div>
+                  <h4
+                    className="text-[15px] font-semibold"
+                    style={{
+                      fontFamily:
+                        "var(--font-dm-sans), 'DM Sans', sans-serif",
+                      color: "#021024",
+                    }}
+                  >
+                    End-to-End Capability
+                  </h4>
+                  <p
+                    className="text-[13px]"
+                    style={{
+                      fontFamily:
+                        "var(--font-dm-sans), 'DM Sans', sans-serif",
+                      color: "#6B7280",
+                    }}
+                  >
+                    Strategy, digital, finance, people, and governance under one
+                    roof.
+                  </p>
+                </div>
+              </div>
+
+              {/* Row 2 */}
+              <div className="flex items-start gap-3.5">
+                <div
+                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "#C1E8FF" }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#052659"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="6" />
+                    <circle cx="12" cy="12" r="2" />
+                  </svg>
+                </div>
+                <div>
+                  <h4
+                    className="text-[15px] font-semibold"
+                    style={{
+                      fontFamily:
+                        "var(--font-dm-sans), 'DM Sans', sans-serif",
+                      color: "#021024",
+                    }}
+                  >
+                    Execution Discipline
+                  </h4>
+                  <p
+                    className="text-[13px]"
+                    style={{
+                      fontFamily:
+                        "var(--font-dm-sans), 'DM Sans', sans-serif",
+                      color: "#6B7280",
+                    }}
+                  >
+                    PRIDE philosophy governs every engagement — Precision,
+                    Resilience, Integrity, Discipline, Execution.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </SectionWrapper>
+    </section>
   );
 }

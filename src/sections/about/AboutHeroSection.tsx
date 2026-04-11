@@ -1,101 +1,153 @@
 "use client";
 
-import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
+import Link from "next/link";
 
-const ABOUT_HERO_IMAGE =
-  "https://images.unsplash.com/photo-1669333490889-194e8f46a766?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxOYWlyb2JpJTIwc2t5bGluZSUyMGNvcnBvcmF0ZSUyMHRvd2VycyUyMGFlcmlhbHxlbnwxfHx8fDE3NzMzMjQ2MTB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
+const STATS = [
+  { value: "10", label: "Integrated Advisory Disciplines" },
+  { value: "11", label: "Industry Sectors Served" },
+  { value: "4", label: "Phase Delivery Methodology" },
+  { value: "100%", label: "Senior-Led Engagement Teams" },
+];
 
 export default function AboutHeroSection() {
-  const heroHeight = useResponsiveValue({ desktop: "620px", tablet: "520px", mobile: "420px" });
-  const px = useResponsiveValue({ desktop: "48px", tablet: "32px", mobile: "24px" });
-  const headingSize = useResponsiveValue({ desktop: "3.25rem", tablet: "2.5rem", mobile: "2rem" });
-  const headingLineHeight = useResponsiveValue({ desktop: "1.08", tablet: "1.08", mobile: "1.15" });
-  const headingLetterSpacing = useResponsiveValue({ desktop: "-0.025em", tablet: "-0.02em", mobile: "-0.01em" });
-  const bodySize = useResponsiveValue({ desktop: "1.0625rem", tablet: "1.0625rem", mobile: "0.9375rem" });
-  const topPad = useResponsiveValue({ desktop: "104px", tablet: "80px", mobile: "56px" });
-
   return (
-    <section
-      aria-labelledby="about-hero-title"
-      style={{
-        position: "relative",
-        width: "100%",
-        height: heroHeight,
-        overflow: "hidden",
-        backgroundColor: "#0F172A",
-      }}
-    >
-      <img
-        src={ABOUT_HERO_IMAGE}
-        alt="Nairobi skyline and Britam Towers - institutional presence of Rill Singh Limited"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          objectPosition: "center",
-        }}
-      />
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(135deg, rgba(8,18,30,0.5) 0%, rgba(8,18,30,0.2) 55%, transparent 100%)",
-        }}
-      />
-
-      <div
-        style={{
-          position: "relative",
-          height: "100%",
-        }}
-      >
+    <section aria-labelledby="about-hero-title" className="relative w-full">
+      {/* LAYER 1 — Background banner */}
+      <div className="relative h-[420px] md:h-[540px] lg:h-[600px] overflow-hidden">
+        <img
+          src="/images/about/about-hero.jpg"
+          alt="Corporate skyline - institutional presence of Rill Singh Limited"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ imageRendering: "auto" }}
+          loading="eager"
+        />
         <div
+          aria-hidden="true"
+          className="absolute inset-0"
           style={{
-            maxWidth: "1280px",
-            marginLeft: "auto",
-            marginRight: "auto",
-            paddingTop: topPad,
-            paddingLeft: px,
-            paddingRight: px,
-            boxSizing: "border-box",
+            background:
+              "linear-gradient(to bottom, rgba(2,16,36,0.35) 0%, rgba(5,38,89,0.55) 60%, rgba(5,38,89,0.7) 100%)",
+          }}
+        />
+
+        <div className="relative h-full flex items-center">
+          <div className="max-w-[1200px] mx-auto w-full px-6 md:px-10">
+            <h1
+              id="about-hero-title"
+              className="text-[32px] md:text-[46px] lg:text-[52px] text-white leading-tight"
+              style={{
+                fontFamily: "var(--font-playfair), 'Playfair Display', serif",
+                fontWeight: 400,
+                textShadow: "0 2px 8px rgba(0,0,0,0.3)",
+              }}
+            >
+              About Rill Singh Limited
+            </h1>
+            <p
+              className="mt-4 max-w-[560px] text-[15px] md:text-[17px] leading-[1.7]"
+              style={{
+                fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+                color: "rgba(255,255,255,0.85)",
+                textShadow: "0 1px 3px rgba(0,0,0,0.3)",
+              }}
+            >
+              We partner with institutions to solve complex strategic challenges,
+              build resilient organizations, and deliver long-term value.
+            </p>
+            <Link
+              href="/contact"
+              className="inline-block mt-6 px-8 py-3 rounded-[6px] text-[13px] uppercase tracking-[1.5px] text-white transition-all duration-300 hover:brightness-110"
+              style={{
+                fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+                backgroundColor: "#5483B3",
+                fontWeight: 500,
+              }}
+            >
+              Schedule a Consultation
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* LAYER 2 — Overlapping stats card */}
+      <div className="relative z-10 -mt-[60px] max-w-[1000px] mx-auto px-4 md:px-6">
+        <div
+          className="bg-white rounded-2xl px-6 py-8 md:px-12 md:py-10"
+          style={{
+            boxShadow: "0 20px 60px rgba(2,16,36,0.1)",
           }}
         >
-          <div style={{ marginBottom: "32px", color: "rgba(255, 255, 255, 0.85)" }}>
-            <span style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-              RSL / About
-            </span>
+          {/* Desktop: row layout */}
+          <div className="hidden md:flex items-stretch justify-between">
+            {STATS.map((stat, i) => (
+              <div key={stat.label} className="flex items-stretch flex-1">
+                <div className="flex-1 text-center px-5">
+                  <div
+                    className="text-[40px] leading-none"
+                    style={{
+                      fontFamily:
+                        "var(--font-playfair), 'Playfair Display', serif",
+                      fontWeight: 600,
+                      color: "#052659",
+                    }}
+                  >
+                    {stat.value}
+                  </div>
+                  <div
+                    className="mt-2 text-[13px]"
+                    style={{
+                      fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+                      color: "#6B7280",
+                    }}
+                  >
+                    {stat.label}
+                  </div>
+                </div>
+                {i < STATS.length - 1 && (
+                  <div
+                    className="w-px self-stretch"
+                    style={{ backgroundColor: "#C1E8FF" }}
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
-          <h1
-            id="about-hero-title"
-            style={{
-              fontFamily: "var(--font-primary)",
-              fontSize: headingSize,
-              fontWeight: 600,
-              lineHeight: headingLineHeight,
-              letterSpacing: headingLetterSpacing,
-              color: "#FFFFFF",
-              maxWidth: "600px",
-            }}
-          >
-            About Rill Singh Limited
-          </h1>
-          <p
-            style={{
-              marginTop: "20px",
-              maxWidth: "480px",
-              fontFamily: "var(--font-primary)",
-              fontSize: bodySize,
-              lineHeight: "1.6",
-              color: "rgba(255, 255, 255, 0.85)",
-            }}
-          >
-            We partner with institutions to solve complex strategic challenges, build resilient organizations, and deliver long-term value.
-          </p>
+          {/* Mobile: 2x2 grid */}
+          <div className="grid grid-cols-2 gap-6 md:hidden">
+            {STATS.map((stat, i) => (
+              <div
+                key={stat.label}
+                className="text-center"
+                style={{
+                  paddingBottom: i < 2 ? "24px" : "0",
+                  borderBottom:
+                    i < 2 ? "1px solid #C1E8FF" : "none",
+                }}
+              >
+                <div
+                  className="text-[32px] leading-none"
+                  style={{
+                    fontFamily:
+                      "var(--font-playfair), 'Playfair Display', serif",
+                    fontWeight: 600,
+                    color: "#052659",
+                  }}
+                >
+                  {stat.value}
+                </div>
+                <div
+                  className="mt-2 text-[12px]"
+                  style={{
+                    fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
+                    color: "#6B7280",
+                  }}
+                >
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
