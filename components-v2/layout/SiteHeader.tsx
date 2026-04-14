@@ -22,11 +22,11 @@ const NAV_HREFS: Record<string, string> = {
 const NAV_SUB_SERVICES = [
   { label: "Strategy & Corporate Transformation", href: "/services/strategy" },
   { label: "Digital & AI Transformation", href: "/services/digital" },
-  { label: "Financial Advisory, Audit & Risk", href: "/services/financial" },
+  { label: "Financial Advisory, Audit & Risk", href: "/services/finance" },
   { label: "People & Organization", href: "/services/people" },
-  { label: "Sustainability & ESG", href: "/services/sustainability" },
-  { label: "Public Sector Advisory", href: "/services/public-sector" },
-  { label: "Digital Communication", href: "/services/communication" },
+  { label: "Sustainability & ESG", href: "/services/esg" },
+  { label: "Public Sector Advisory", href: "/services/public" },
+  { label: "Digital Communication", href: "/services/comms" },
   { label: "Tax & Asset Management", href: "/services/tax" },
   { label: "Legal & Regulatory", href: "/services/legal" },
   { label: "SME Development", href: "/services/sme" },
@@ -54,7 +54,7 @@ const MEGA_INDUSTRIES = {
   relatedServices: [
     { label: "Strategy & Corporate Transformation", href: "/services/strategy" },
     { label: "Digital & AI Transformation", href: "/services/digital" },
-    { label: "Financial Advisory, Audit & Risk", href: "/services/financial" },
+    { label: "Financial Advisory, Audit & Risk", href: "/services/finance" },
   ],
   relatedInsights: [
     { label: "AI Readiness in Banking", href: "/insights/ai-readiness-assessment" },

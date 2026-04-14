@@ -5,8 +5,12 @@ import { getServiceBySlugQuery } from "@/lib/sanity/queries";
 import ServiceDetailSections from "@/src/sections/service-detail/ServiceDetailSections";
 import { CAPABILITIES } from "@/src/sections/service-detail/capabilities";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 60;
+export const dynamicParams = true;
+
+export function generateStaticParams() {
+  return Object.keys(CAPABILITIES).map((slug) => ({ slug }));
+}
 
 type Deliverable = {
   overline?: string;
@@ -42,9 +46,18 @@ type ServiceResult = {
   finalCtaImage?: { url?: string };
 };
 
+async function fetchService(slug: string): Promise<ServiceResult | null> {
+  try {
+    return await sanityClient.fetch<ServiceResult | null>(getServiceBySlugQuery, { slug });
+  } catch (err) {
+    console.error(`[services/${slug}] Sanity fetch failed, using fallback:`, err);
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const service = await sanityClient.fetch<ServiceResult | null>(getServiceBySlugQuery, { slug });
+  const service = await fetchService(slug);
   const fallback = CAPABILITIES[slug];
 
   if (!service?.title && !fallback?.title) {
@@ -76,9 +89,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const service = await sanityClient.fetch<ServiceResult | null>(getServiceBySlugQuery, {
-    slug,
-  });
+  const service = await fetchService(slug);
   const fallback = CAPABILITIES[slug];
 
   if (!service?.title && !fallback?.title) {

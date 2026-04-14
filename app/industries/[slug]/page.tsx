@@ -7,8 +7,12 @@ import { INDUSTRIES, INDUSTRY_IMAGES } from "@/src/sections/industries/data";
 import { INSIGHTS_DATA } from "@/src/sections/insights/data";
 import { SERVICES } from "@/src/sections/services/data";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 60;
+export const dynamicParams = true;
+
+export function generateStaticParams() {
+  return INDUSTRIES.map((item) => ({ slug: item.id }));
+}
 
 type RelatedService = {
   slug?: string;
@@ -36,9 +40,18 @@ type IndustryResult = {
   heroImage?: { url?: string };
 };
 
+async function fetchIndustry(slug: string): Promise<IndustryResult | null> {
+  try {
+    return await sanityClient.fetch<IndustryResult | null>(getIndustryBySlugQuery, { slug });
+  } catch (err) {
+    console.error(`[industries/${slug}] Sanity fetch failed, using fallback:`, err);
+    return null;
+  }
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const industry = await sanityClient.fetch<IndustryResult | null>(getIndustryBySlugQuery, { slug });
+  const industry = await fetchIndustry(slug);
   const fallback = INDUSTRIES.find((item) => item.id === slug);
 
   if (!industry?.title && !fallback?.title) {
@@ -70,9 +83,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const industry = await sanityClient.fetch<IndustryResult | null>(getIndustryBySlugQuery, {
-    slug,
-  });
+  const industry = await fetchIndustry(slug);
   const fallback = INDUSTRIES.find((item) => item.id === slug);
 
   if (!industry?.title && !fallback?.title) {

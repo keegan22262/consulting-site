@@ -8,7 +8,7 @@ import Link from "next/link";
 const FEATURED_SERVICES = [
   { title: "Strategy & Corporate Transformation", description: "Enterprise strategy, M&A advisory, and transformation roadmaps for growth-stage institutions.", image: "/images/capabilities/strategy.jpg", href: "/services/strategy" },
   { title: "Digital & AI Transformation", description: "Digital modernization, AI readiness, and platform implementation across the enterprise.", image: "/images/capabilities/digital-ai.jpg", href: "/services/digital" },
-  { title: "Financial Advisory, Audit & Risk", description: "Financial resilience, governance, risk frameworks, and control architecture.", image: "/images/capabilities/financial.jpg", href: "/services/financial" },
+  { title: "Financial Advisory, Audit & Risk", description: "Financial resilience, governance, risk frameworks, and control architecture.", image: "/images/capabilities/financial.jpg", href: "/services/finance" },
 ];
 
 const FEATURED_INDUSTRIES = [
