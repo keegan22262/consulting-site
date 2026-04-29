@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import FeaturedServicesSection from "@/components-v2/sections/FeaturedServicesSection";
 import InsightsCarouselSection from "@/components-v2/sections/InsightsCarouselSection";
+import ConstellationHero from "@/components-v2/sections/ConstellationHero";
 import ScrollReveal from "@/src/components/ScrollReveal";
 
 interface HomepageClientProps {
@@ -30,33 +31,7 @@ export default function HomepageClient({ insights }: HomepageClientProps) {
   return (
     <>
       {/* SECTION 1: HERO */}
-      <section className="homepage-hero">
-        <div className="homepage-hero__bg">
-          <Image
-            src="/images/hero/hero-bg.jpg"
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover"
-            quality={100}
-            priority
-            unoptimized
-          />
-          <div className="homepage-hero__overlay" />
-        </div>
-        <div className="homepage-hero__content">
-          <ScrollReveal direction="up" delay={200} distance={25} duration={900}>
-            <p className="homepage-hero__overline">
-              Pan-African Institutional Advisory
-            </p>
-          </ScrollReveal>
-          <ScrollReveal direction="up" delay={400} distance={30} duration={1000}>
-            <h1 className="homepage-hero__headline">
-              Institutional Advisory Built for Growth, Transformation, and Execution.
-            </h1>
-          </ScrollReveal>
-        </div>
-      </section>
+      <ConstellationHero />
 
       {/* SECTION 2: INTRODUCTION */}
       <section className="homepage-intro">
