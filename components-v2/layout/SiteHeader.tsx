@@ -106,13 +106,13 @@ const MEGA_INSIGHTS = {
 export default function SiteHeader() {
   const pathname = usePathname();
   const bp = useBreakpoint();
-  const isMobile = bp === "mobile" || bp === "tablet";
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [megaPanel, setMegaPanel] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [scrolledPast, setScrolledPast] = useState(false);
   const [navCollapsed, setNavCollapsed] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const megaTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activePage = NAV_LINKS_DESKTOP.find((label) => {
@@ -121,6 +121,10 @@ export default function SiteHeader() {
     if (href === "/") return pathname === "/";
     return pathname?.startsWith(href);
   });
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -134,7 +138,8 @@ export default function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const drawerOpenSafe = isMobile || navCollapsed ? drawerOpen : false;
+  const isMobileViewport = hasMounted && (bp === "mobile" || bp === "tablet");
+  const drawerOpenSafe = isMobileViewport || navCollapsed ? drawerOpen : false;
 
   useEffect(() => {
     if (drawerOpenSafe) {
@@ -204,7 +209,7 @@ export default function SiteHeader() {
             Rill Singh Limited
           </Link>
 
-          {!isMobile ? (
+          {!isMobileViewport ? (
             navCollapsed ? (
               <button
                 type="button"
@@ -283,7 +288,7 @@ export default function SiteHeader() {
         </div>
       </nav>
 
-      {!isMobile && megaPanel && (
+      {!isMobileViewport && megaPanel && (
         <MegaNavPanel
           activePanel={megaPanel}
           onMouseEnter={handleMegaPanelEnter}
@@ -293,7 +298,7 @@ export default function SiteHeader() {
 
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {(isMobile || navCollapsed) && (
+      {(isMobileViewport || navCollapsed) && (
         <MobileDrawer
           open={drawerOpenSafe}
           onClose={() => setDrawerOpen(false)}

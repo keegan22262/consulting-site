@@ -31,6 +31,7 @@ export default async function ContactPage() {
 					src="/images/contact/contacthero.jpeg"
 					alt="Advisory team meeting"
 					fill
+					sizes="100vw"
 					priority
 					quality={90}
 					className="object-cover object-center"
@@ -332,6 +333,7 @@ export default async function ContactPage() {
 									src="/images/contact/contactimage2.jpg"
 									alt="Office location"
 									fill
+									sizes="(min-width: 768px) 50vw, 100vw"
 									quality={90}
 									className="object-cover object-center"
 								/>

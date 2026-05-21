@@ -5,6 +5,7 @@ import React, { useState } from "react";
 type FormValues = {
 	name: string;
 	email: string;
+	phone: string;
 	inquiryType: string;
 	message: string;
 	honeypot: string;
@@ -39,6 +40,7 @@ export default function ContactForm() {
 	const [values, setValues] = useState<FormValues>({
 		name: "",
 		email: "",
+		phone: "",
 		inquiryType: "",
 		message: "",
 		honeypot: "",
@@ -83,6 +85,7 @@ export default function ContactForm() {
 		const trimmed: FormValues = {
 			name: values.name.trim(),
 			email: values.email.trim(),
+			phone: values.phone.trim(),
 			inquiryType: values.inquiryType.trim(),
 			message: values.message.trim(),
 			honeypot: values.honeypot.trim(),
@@ -103,6 +106,7 @@ export default function ContactForm() {
 				body: JSON.stringify({
 					name: trimmed.name,
 					email: trimmed.email,
+					phone: trimmed.phone || undefined,
 					inquiryType: trimmed.inquiryType || "General Inquiry",
 					message: trimmed.message,
 					company: trimmed.honeypot, // honeypot
@@ -129,6 +133,7 @@ export default function ContactForm() {
 				setValues({
 					name: "",
 					email: "",
+					phone: "",
 					inquiryType: "",
 					message: "",
 					honeypot: "",
@@ -276,7 +281,32 @@ export default function ContactForm() {
 				)}
 			</div>
 
-			{/* Row 3: Inquiry Type (dropdown) */}
+			{/* Row 3: Phone */}
+			<div className="mt-5">
+				<label
+					htmlFor="contact-phone"
+					className={LABEL_STYLE}
+					style={{ color: "#5483B3" }}
+				>
+					Phone (optional)
+				</label>
+				<input
+					id="contact-phone"
+					type="tel"
+					autoComplete="tel"
+					inputMode="tel"
+					placeholder="Phone number"
+					value={values.phone}
+					onChange={(e) => setField("phone", e.target.value)}
+					className={INPUT_BASE}
+					style={{
+						borderColor: "rgba(84,131,179,0.2)",
+						color: "#1A1A2E",
+					}}
+				/>
+			</div>
+
+			{/* Row 4: Inquiry Type (dropdown) */}
 			<div className="mt-5">
 				<label
 					htmlFor="contact-inquiry"
@@ -310,7 +340,7 @@ export default function ContactForm() {
 				</select>
 			</div>
 
-			{/* Row 4: Message */}
+			{/* Row 5: Message */}
 			<div className="mt-5">
 				<label
 					htmlFor="contact-message"
@@ -344,7 +374,7 @@ export default function ContactForm() {
 				)}
 			</div>
 
-			{/* Row 5: Submit */}
+			{/* Row 6: Submit */}
 			<div className="mt-6">
 				<button
 					type="submit"

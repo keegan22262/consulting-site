@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
+import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPreference";
 
 interface SectionHeaderProps {
   overline?: string;
@@ -41,16 +42,13 @@ export default function SectionHeader({
   // Scroll reveal for header elements
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const prefersReducedMotion = useReducedMotionPreference();
+  const revealVisible = prefersReducedMotion ? true : isVisible;
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
     const el = containerRef.current;
     if (!el) return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
-      setIsVisible(true);
-      return;
-    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -64,11 +62,11 @@ export default function SectionHeader({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [prefersReducedMotion]);
 
   const revealBase = (delay: number) => ({
-    opacity: isVisible ? 1 : 0,
-    transform: isVisible ? "translate3d(0, 0, 0)" : "translate3d(0, 20px, 0)",
+    opacity: revealVisible ? 1 : 0,
+    transform: revealVisible ? "translate3d(0, 0, 0)" : "translate3d(0, 20px, 0)",
     transition: `opacity 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}ms, transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}ms`,
   });
 

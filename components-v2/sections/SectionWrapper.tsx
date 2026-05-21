@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import AtmosphericLayer from "./AtmosphericLayer";
 import SectionDivider from "./SectionDivider";
 import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
+import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPreference";
 
 type PadVTuple = [string, string, string];
 type PadVObject = {
@@ -88,17 +89,14 @@ export default function SectionWrapper({
   // Scroll reveal for the section
   const sectionRef = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(noReveal);
+  const prefersReducedMotion = useReducedMotionPreference();
+  const revealVisible = noReveal || prefersReducedMotion || isVisible;
+  const shouldReveal = !noReveal && !prefersReducedMotion;
 
   useEffect(() => {
-    if (noReveal) return;
+    if (!shouldReveal) return;
     const el = sectionRef.current;
     if (!el) return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
-      setIsVisible(true);
-      return;
-    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -112,13 +110,13 @@ export default function SectionWrapper({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [noReveal]);
+  }, [shouldReveal]);
 
   const revealStyle: CSSProperties = noReveal
     ? {}
     : {
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translate3d(0, 0, 0)" : "translate3d(0, 30px, 0)",
+        opacity: revealVisible ? 1 : 0,
+        transform: revealVisible ? "translate3d(0, 0, 0)" : "translate3d(0, 30px, 0)",
         transition: "opacity 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         willChange: "opacity, transform",
       };

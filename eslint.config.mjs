@@ -15,6 +15,11 @@ const config = [
     ],
   },
   ...nextConfig,
+  {
+    rules: {
+      "react-hooks/refs": "off",
+    },
+  },
 ];
 
 export default config;

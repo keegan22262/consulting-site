@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
+import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPreference";
 
 type RevealDirection = "up" | "down" | "left" | "right" | "fade";
 
@@ -28,19 +29,13 @@ export function useScrollReveal({
 }: UseScrollRevealOptions = {}): ScrollRevealResult {
   const ref = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const prefersReducedMotion = useReducedMotionPreference();
+  const revealVisible = prefersReducedMotion ? true : isVisible;
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
     const el = ref.current;
     if (!el) return;
-
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-    if (prefersReducedMotion) {
-      setIsVisible(true);
-      return;
-    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -56,10 +51,10 @@ export function useScrollReveal({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold, once]);
+  }, [prefersReducedMotion, threshold, once]);
 
   const getTransform = (): string => {
-    if (isVisible) return "translate3d(0, 0, 0)";
+    if (revealVisible) return "translate3d(0, 0, 0)";
     switch (direction) {
       case "up":
         return `translate3d(0, ${distance}px, 0)`;
@@ -75,7 +70,7 @@ export function useScrollReveal({
   };
 
   const style: React.CSSProperties = {
-    opacity: isVisible ? 1 : 0,
+    opacity: revealVisible ? 1 : 0,
     transform: getTransform(),
     transition: `opacity ${duration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}ms, transform ${duration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94) ${delay}ms`,
     willChange: "opacity, transform",
