@@ -4,7 +4,7 @@ import { success, error } from "@/lib/server/apiResponse";
 export const runtime = "nodejs";
 
 export async function GET() {
-  if (!process.env.POSTGRES_URL) {
+  if (!process.env.DATABASE_URL) {
     return error("Service unavailable.", 503);
   }
 
