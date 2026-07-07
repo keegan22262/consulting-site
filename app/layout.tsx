@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Playfair_Display } from "next/font/google";
+import { DM_Sans, Source_Serif_4 } from "next/font/google";
 
 import ClientLayout from "./ClientLayout";
 import "./globals.css";
@@ -10,7 +10,7 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
 });
 
-const playfairDisplay = Playfair_Display({
+const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-playfair",
@@ -69,7 +69,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${dmSans.variable} ${playfairDisplay.variable}`}
+      className={`${dmSans.variable} ${sourceSerif.variable}`}
     >
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
