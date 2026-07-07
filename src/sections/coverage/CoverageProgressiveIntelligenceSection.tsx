@@ -101,6 +101,7 @@ export default function CoverageProgressiveIntelligenceSection() {
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <h3 style={{ fontSize: "var(--text-body)", fontWeight: 600, color: "var(--n900)" }}>{step.label}</h3>
+                  {/* TODO: verify if 1.55 vs caption's 1.5 is intentional */}
                   <p style={{ fontSize: "var(--text-caption)", lineHeight: "1.55", color: "var(--n600)", marginTop: "6px", maxWidth: "48ch" }}>
                     {step.body}
                   </p>

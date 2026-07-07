@@ -7,7 +7,10 @@ export type InsightItem = {
   category: string;
   title: string;
   excerpt: string;
-  industry?: string;
+  publishedAt?: string;
+  mainImage?: string;
+  sourceUrl?: string;
+  readingTime?: string;
 };
 
 type InsightsResponse = {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
@@ -74,17 +75,12 @@ export default function ClientImpactSection() {
                 height: cardHeight,
               }}
             >
-              <img
+              <Image
                 src={eng.image}
                 alt={eng.imageAlt}
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center",
-                }}
+                fill
+                sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                className="object-cover object-center"
               />
               <div
                 aria-hidden="true"
@@ -110,7 +106,7 @@ export default function ClientImpactSection() {
               >
                 <span
                   style={{
-                    fontSize: "0.6875rem",
+                    fontSize: "var(--text-overline)",
                     fontWeight: 600,
                     letterSpacing: "0.06em",
                     textTransform: "uppercase",
@@ -123,7 +119,8 @@ export default function ClientImpactSection() {
                 <h3 style={{ fontSize: "1.1875rem", fontWeight: 600, color: "#FFFFFF", marginBottom: "8px" }}>
                   {eng.title}
                 </h3>
-                <p style={{ fontSize: "0.8125rem", lineHeight: "1.6", color: "rgba(255, 255, 255, 0.78)", maxWidth: "36ch" }}>
+                {/* TODO: verify if 1.6 vs caption's 1.5 is intentional */}
+                <p style={{ fontSize: "var(--text-caption)", lineHeight: "1.6", color: "rgba(255, 255, 255, 0.78)", maxWidth: "36ch" }}>
                   {eng.description}
                 </p>
                 <span
@@ -132,7 +129,7 @@ export default function ClientImpactSection() {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: "6px",
-                    fontSize: "0.8125rem",
+                    fontSize: "var(--text-caption)",
                     fontWeight: 600,
                     color: isHovered ? "#F59E0B" : "rgba(255, 255, 255, 0.9)",
                     letterSpacing: "0.02em",

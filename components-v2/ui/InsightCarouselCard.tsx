@@ -141,7 +141,8 @@ export default function InsightCarouselCard({
         <p
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.9375rem",
+            fontSize: "var(--text-body)",
+            // TODO: verify if 1.65 vs body's 1.7 is intentional
             lineHeight: "1.65",
             color: "rgba(255,255,255,0.78)",
             marginBottom: "20px",

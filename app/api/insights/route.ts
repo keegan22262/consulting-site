@@ -10,8 +10,11 @@ export async function GET() {
       slug: item.slug,
       category: item.category ?? "Insight",
       title: item.title,
-      excerpt: item.summary,
-      industry: item.domain,
+      excerpt: item.excerpt ?? item.summary ?? "",
+      publishedAt: item.publishedAt ?? item.date ?? "",
+      mainImage: item.mainImage ?? "",
+      sourceUrl: item.sourceUrl ?? "",
+      readingTime: item.readingTime ?? "",
     }));
     return success(data);
   } catch {

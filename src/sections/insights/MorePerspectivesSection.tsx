@@ -74,7 +74,7 @@ export default function MorePerspectivesSection({ insights }: MorePerspectivesSe
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--text-overline)",
             fontWeight: 600,
             textTransform: "uppercase",
             letterSpacing: "0.06em",

@@ -1,8 +1,6 @@
 "use client";
 
 import { BpCtx, useBreakpoint } from "@/lib/breakpoints";
-import SiteFooter from "@/components-v2/layout/SiteFooter";
-import SiteHeader from "@/components-v2/layout/SiteHeader";
 import { useFeaturedInsights } from "@/lib/hooks/useFeaturedInsights";
 import { useIndustries } from "@/lib/hooks/useIndustries";
 import AdvisoryPhilosophySection from "@/src/sections/industries/AdvisoryPhilosophySection";
@@ -29,7 +27,6 @@ export default function IndustriesPageClient() {
   return (
     <BpCtx.Provider value={bp}>
       <div style={{ fontFamily: F }}>
-        <SiteHeader />
         <IndustriesHero />
         <AdvisoryPhilosophySection />
         <SectorCoverageSection industries={industries} />
@@ -37,7 +34,6 @@ export default function IndustriesPageClient() {
         <AnalyticalAdvantageSection />
         <TransformationForcesSection />
         <OperatingPrincipleEngagement />
-        <SiteFooter />
       </div>
     </BpCtx.Provider>
   );

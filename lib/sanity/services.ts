@@ -4,7 +4,7 @@ import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 import { isNextDynamicServerUsageError } from "@/lib/sanity/nextErrors";
 import {
-	ALL_PUBLISHED_SERVICES_QUERY,
+	SERVICES_LISTING_QUERY,
 	PUBLISHED_SERVICE_BY_SLUG_EXPANDED_QUERY,
 } from "@/lib/sanity/queries";
 
@@ -12,11 +12,14 @@ export type ServiceListItem = {
 	id?: string;
 	title: string;
 	slug: string;
-	summary: string;
+	summary?: string;
+	description?: string;
 	category?: string;
 	engagementType?: string;
 	timeHorizon?: string;
 	operationalScope?: string;
+	icon?: unknown;
+	image?: string;
 };
 
 export type ServiceDetail = ServiceListItem & {
@@ -40,32 +43,38 @@ export type RelatedInsightListItem = {
 };
 
 type PublishedServiceRecord = {
-	id?: string;
+	_id: string;
 	title?: string;
 	slug?: string;
 	category?: string;
+	description?: string;
 	summary?: string;
+	icon?: unknown;
+	image?: string;
 	targetClients?: string;
 	focusAreas?: string[];
 	approach?: string;
 	order?: number;
+	[key: string]: unknown;
 };
 
 export const getAllServices = async (): Promise<ServiceListItem[]> => {
 	// sanityClient is always defined
 
 	try {
-		const result = await sanityFetch<PublishedServiceRecord[]>(ALL_PUBLISHED_SERVICES_QUERY, {}, {});
+		const result = await sanityFetch<PublishedServiceRecord[]>(SERVICES_LISTING_QUERY, {}, {});
 
 		const items = Array.isArray(result)
 			? result
 					.filter((item) => Boolean(item?.slug))
 					.map((item) => ({
-						id: item.id,
 						title: item.title ?? "",
 						slug: item.slug ?? "",
-						summary: item.summary ?? "",
+						summary: item.description ?? "",
+						description: item.description ?? "",
 						category: item.category ?? "",
+						icon: item.icon,
+						image: item.image ?? "",
 					}))
 			: [];
 
@@ -92,7 +101,7 @@ export const getServiceBySlug = async (slug: string): Promise<ServiceDetail | nu
 		if (!result || !result.slug) return null;
 
 		return {
-			id: result.id,
+			id: result._id,
 			title: result.title ?? "",
 			slug: result.slug ?? "",
 			summary: result.summary ?? "",

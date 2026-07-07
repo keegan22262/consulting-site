@@ -1,9 +1,8 @@
 "use client";
-
 import Link from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "text" | "arrow";
+export type ButtonVariant = "primary" | "ghost" | "ghost-dark" | "text" | "arrow";
 
 type BaseProps = {
   variant?: ButtonVariant;
@@ -26,18 +25,21 @@ type LinkButtonProps = BaseProps &
 
 type Props = ButtonProps | LinkButtonProps;
 
-function getVariantClasses(variant: ButtonVariant) {
+function getVariantClasses(variant: ButtonVariant): string {
   switch (variant) {
     case "primary":
-      return "bg-accent-700 text-white hover:bg-accent-800";
-    case "secondary":
-      return "bg-white border border-neutral-300 text-neutral-800 hover:border-neutral-400 hover:bg-neutral-50";
+      // Solid RSL blue — used on light backgrounds
+      return "bg-blue-mid text-white hover:bg-blue-light transition-colors duration-normal";
     case "ghost":
-      return "bg-transparent text-accent-700 hover:bg-accent-50";
+      // Ghost on light background — navy border, navy text
+      return "bg-transparent border border-navy-darkest text-navy-darkest hover:bg-navy-darkest hover:text-white transition-colors duration-normal";
+    case "ghost-dark":
+      // Ghost on dark background — white/translucent border
+      return "bg-transparent border border-white/30 text-white hover:bg-white/10 hover:border-white/60 transition-colors duration-normal";
     case "text":
-      return "bg-transparent text-accent-700 underline-offset-4 hover:underline px-0 h-auto";
+      return "bg-transparent text-blue-mid hover:text-blue-light underline-offset-4 hover:underline px-0 h-auto transition-colors duration-normal";
     case "arrow":
-      return "bg-transparent text-accent-700 hover:underline underline-offset-4";
+      return "bg-transparent text-blue-mid hover:text-blue-light underline-offset-4 hover:underline px-0 h-auto transition-colors duration-normal";
     default:
       return "";
   }
@@ -49,36 +51,45 @@ function ButtonContent({
   iconPosition = "left",
   variant,
 }: Pick<BaseProps, "children" | "icon" | "iconPosition" | "variant">) {
-  const arrow = variant === "arrow";
+  const showArrow = variant === "arrow";
   return (
     <span className="inline-flex items-center gap-2">
-      {icon && iconPosition === "left" ? (
+      {icon && iconPosition === "left" && (
         <span className="inline-flex h-4 w-4 items-center justify-center">{icon}</span>
-      ) : null}
+      )}
       <span>{children}</span>
-      {icon && iconPosition === "right" ? (
+      {icon && iconPosition === "right" && (
         <span className="inline-flex h-4 w-4 items-center justify-center">{icon}</span>
-      ) : null}
-      {arrow ? (
-        <span className="inline-flex h-4 w-4 items-center justify-center transition duration-[200ms] ease opacity-0 -translate-x-0 group-hover:opacity-100 group-hover:translate-x-1">
+      )}
+      {showArrow && (
+        <span className="inline-flex h-4 w-4 items-center justify-center transition-transform duration-normal group-hover:translate-x-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
             <path d="M5 12h14M13 6l6 6-6 6" />
           </svg>
         </span>
-      ) : null}
+      )}
     </span>
   );
 }
 
 export default function Button(props: Props) {
-  const { variant = "primary", className, icon, iconPosition, children, ...rest } = props as Props & {
-    href?: string;
-  };
+  const {
+    variant = "primary",
+    className,
+    icon,
+    iconPosition,
+    children,
+    ...rest
+  } = props as Props & { href?: string };
+
+  const isTextOrArrow = variant === "text" || variant === "arrow";
 
   const baseClasses = [
-    "group inline-flex items-center justify-center gap-2 rounded-[8px] px-6 h-[40px] md:h-[44px] lg:h-[48px] text-base font-semibold tracking-[-0.005em] transition duration-[200ms] ease disabled:opacity-60 disabled:cursor-not-allowed",
-    variant === "text" ? "h-auto px-0 py-0" : null,
-    variant === "arrow" ? "px-0 h-auto" : null,
+    "group inline-flex items-center justify-center gap-2 font-body font-medium tracking-wide",
+    "disabled:opacity-60 disabled:cursor-not-allowed",
+    isTextOrArrow
+      ? "text-body px-0 h-auto"
+      : "text-[13px] uppercase tracking-[0.12em] px-8 h-[44px] rounded-[4px]",
     getVariantClasses(variant),
     className,
   ]
@@ -88,7 +99,7 @@ export default function Button(props: Props) {
   if ("href" in props && props.href) {
     const { href, prefetch, ...anchorProps } = props as LinkButtonProps;
     return (
-      <Link href={href} prefetch={prefetch} className={baseClasses} {...anchorProps}>
+      <Link href={href} prefetch={prefetch} className={baseClasses} {...(anchorProps as object)}>
         <ButtonContent icon={icon} iconPosition={iconPosition} variant={variant}>
           {children}
         </ButtonContent>
@@ -97,7 +108,11 @@ export default function Button(props: Props) {
   }
 
   return (
-    <button type={(props as ButtonProps).type ?? "button"} className={baseClasses} {...(rest as ButtonProps)}>
+    <button
+      type={(props as ButtonProps).type ?? "button"}
+      className={baseClasses}
+      {...(rest as ButtonProps)}
+    >
       <ButtonContent icon={icon} iconPosition={iconPosition} variant={variant}>
         {children}
       </ButtonContent>

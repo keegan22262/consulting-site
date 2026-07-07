@@ -141,7 +141,7 @@ function CompactIndustryCard({
             style={{
               fontFamily: "var(--font-primary)",
               fontSize: "var(--text-caption)",
-              lineHeight: "1.5",
+              lineHeight: "var(--line-height-caption)",
               color: "var(--n600)",
               marginTop: "8px",
             }}
@@ -238,6 +238,7 @@ function DetailedIndustryCard({
           style={{
             fontFamily: "var(--font-primary)",
             fontSize: "var(--text-caption)",
+            // TODO: verify if 1.55 vs caption's 1.5 is intentional
             lineHeight: "1.55",
             color: "var(--n600)",
             marginTop: "8px",

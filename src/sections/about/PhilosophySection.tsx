@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import ScrollReveal from "@/src/components/ScrollReveal";
-import { useScrollReveal } from "@/src/hooks/useScrollReveal";
+import ScrollReveal from "@/components-v2/ui/ScrollReveal";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 const PRIDE_VALUES = [
   {

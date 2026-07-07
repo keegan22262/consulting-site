@@ -3,23 +3,9 @@ import { Suspense } from "react";
 import SiteHeader from "@/components-v2/layout/SiteHeader";
 import SiteFooter from "@/components-v2/layout/SiteFooter";
 import PreviewBanner from "@/components-v2/ui/PreviewBanner";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  // Industries index page composes its own nav/footer to preserve 1:1 reference order.
-  if (pathname === "/industries") {
-    return (
-      <>
-        {children}
-        <Suspense fallback={null}>
-          <PreviewBannerGate />
-        </Suspense>
-      </>
-    );
-  }
-
   return (
     <>
       <SiteHeader />

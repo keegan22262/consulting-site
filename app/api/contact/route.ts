@@ -43,9 +43,11 @@ export async function POST(req: NextRequest) {
 
     // Save to database
     try {
-      await sql`INSERT INTO contact_submissions (name, email, phone, message) VALUES (${name}, ${email}, ${phone}, ${message})`
+      if (sql) await sql`INSERT INTO contact_submissions (name, email, phone, message) VALUES (${name}, ${email}, ${phone}, ${message})`
+      console.log("Contact submission stored:", email, new Date().toISOString())
     } catch (dbErr) {
-      console.error("DB insert error:", dbErr)
+      console.error("DB insert failed — name:", name, "email:", email, "error:", dbErr)
+      // Continue to email sending even if DB fails — do not block the user
     }
 
     const receiverEmail = process.env.CONTACT_RECEIVER_EMAIL || "vanrillsingh@gmail.com"

@@ -50,7 +50,7 @@ export default function CoverageHero() {
           <div style={{ maxWidth: isMobile ? "100%" : "720px" }}>
             <span
               style={{
-                fontSize: "0.6875rem",
+                fontSize: "var(--text-overline)",
                 fontWeight: 600,
                 textTransform: "uppercase",
                 letterSpacing: "0.06em",

@@ -127,7 +127,7 @@ function CinematicInsightCard({
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--text-overline)",
             fontWeight: 600,
             textTransform: "uppercase",
             letterSpacing: "0.06em",
@@ -169,7 +169,7 @@ function CinematicInsightCard({
           <span
             style={{
               fontFamily: "var(--font-primary)",
-              fontSize: "0.6875rem",
+              fontSize: "var(--text-overline)",
               color: "rgba(255,255,255,0.45)",
               display: "block",
               marginBottom: "12px",
@@ -182,7 +182,7 @@ function CinematicInsightCard({
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.8125rem",
+            fontSize: "var(--text-caption)",
             fontWeight: 600,
             color: "#FFFFFF",
             opacity: hovered ? 1 : 0,

@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import ScrollReveal from "@/src/components/ScrollReveal";
-import { useScrollReveal } from "@/src/hooks/useScrollReveal";
+import ScrollReveal from "@/components-v2/ui/ScrollReveal";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 const STATS = [
   { value: "10", label: "Integrated Advisory Disciplines" },
@@ -20,11 +21,13 @@ export default function AboutHeroSection() {
   return (
     <section aria-labelledby="about-hero-title" className="relative w-full">
       <div className="relative h-[420px] md:h-[540px] lg:h-[600px] overflow-hidden">
-        <img
+        <Image
           src="/images/about/about-hero.jpg"
           alt="Corporate skyline - institutional presence of Rill Singh Limited"
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="eager"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
         <div
           aria-hidden="true"

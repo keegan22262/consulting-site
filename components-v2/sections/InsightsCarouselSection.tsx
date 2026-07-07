@@ -3,70 +3,40 @@
 import Link from "next/link";
 import Image from "next/image";
 
-// ─── Fallback insight data ──────────────────────────────────────────────────
 const FALLBACK_INSIGHTS = [
   {
     category: "Technology",
-    title: "AI Readiness Assessment for African Enterprises",
-    excerpt:
-      "Evaluating organizational, data, and infrastructure readiness for AI adoption across industries.",
+    title: "AI Governance as a Competitive Differentiator",
+    excerpt: "How institutional AI governance frameworks are becoming the defining capability separating leading organizations.",
     date: "January 2026",
     image: "/images/insights/insight-1.jpg",
-    slug: "ai-readiness-assessment",
-  },
-  {
-    category: "Finance",
-    title: "Capital Structure Optimization in Volatile Currency Environments",
-    excerpt:
-      "Analytical methodology for managing multi-currency exposure and debt structuring in African markets.",
-    date: "December 2025",
-    image: "/images/insights/insight-2.jpg",
-    slug: "capital-structure-optimization",
-  },
-  {
-    category: "Infrastructure",
-    title: "Corridor-Led Development: Unlocking Continental Trade Routes",
-    excerpt:
-      "How integrated transport and logistics corridors are reshaping intra-African trade.",
-    date: "November 2025",
-    image: "/images/insights/insight-3.jpg",
-    slug: "corridor-led-development",
+    slug: "ai-governance-competitive-differentiator",
   },
   {
     category: "Strategy",
-    title: "Scaling Advisory-Led Growth in Sub-Saharan Africa",
-    excerpt:
-      "A framework for enterprise advisory firms positioning against global incumbents.",
-    date: "February 2026",
-    image: "/images/insights/insight-5.jpg",
-    slug: "scaling-advisory-led-growth",
+    title: "Africa's Growth Outlook: Execution Determines Trajectory",
+    excerpt: "Structural tailwinds are real — but execution discipline separates institutions that compound from those that stagnate.",
+    date: "December 2025",
+    image: "/images/insights/insight-2.jpg",
+    slug: "africa-growth-outlook-execution-determines",
+  },
+  {
+    category: "Technology",
+    title: "Connectivity, Digital Identity, and Payment Rails Form a Growth Stack",
+    excerpt: "The convergence of mobile connectivity, digital ID, and payment infrastructure is creating Africa's most consequential economic layer.",
+    date: "November 2025",
+    image: "/images/insights/insight-3.jpg",
+    slug: "connectivity-digital-identity-payments-rails",
   },
 ];
 
-type InsightCardData = {
-  category: string;
-  title: string;
-  excerpt: string;
-  date: string;
-  image: string;
-  slug: string;
-};
-
 interface InsightsCarouselSectionProps {
-  insights?: Array<{
-    slug: string;
-    category?: string;
-    title: string;
-    excerpt?: string;
-    summary?: string;
-  }>;
+  insights?: Array<{ slug: string; category?: string; title: string; excerpt?: string; summary?: string; }>;
   overline?: string;
   title?: string;
   description?: string;
-  titleHref?: string | null;
   exploreHref?: string;
   exploreLabel?: string;
-  hideFilters?: boolean;
   centered?: boolean;
 }
 
@@ -74,12 +44,10 @@ export default function InsightsCarouselSection({
   insights,
   overline,
   title: customTitle,
-  description: customDescription,
   exploreHref,
   exploreLabel,
-  centered = false,
 }: InsightsCarouselSectionProps) {
-  const cards: InsightCardData[] =
+  const cards =
     insights && insights.length > 0
       ? insights.map((item, idx) => ({
           category: item.category ?? "Insight",
@@ -91,109 +59,165 @@ export default function InsightsCarouselSection({
         }))
       : FALLBACK_INSIGHTS;
 
-  // Show max 3 cards
   const displayCards = cards.slice(0, 3);
 
   return (
-    <section
-      style={{
-        backgroundColor: "#FFFFFF",
-        paddingTop: "80px",
-        paddingBottom: "60px",
-      }}
-    >
-      <div className="layout-container" style={centered ? { textAlign: "center" } : undefined}>
-        {/* Header */}
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "12px",
-            fontWeight: 500,
-            textTransform: "uppercase",
-            letterSpacing: "4.5px",
-            color: "#7DA0CA",
-            display: "block",
-          }}
-        >
-          {overline || "Insights"}
-        </span>
-        <h2
-          className="mt-4"
-          style={{
-            fontFamily: "var(--font-heading)",
-            fontSize: "clamp(28px, 3.5vw, 38px)",
-            fontWeight: 400,
-            lineHeight: 1.2,
-            color: "#021024",
-            ...(centered ? { margin: "12px auto 8px" } : {}),
-          }}
-        >
-          {customTitle || "Ideas shaping tomorrow\u2019s institutions."}
-        </h2>
-        <p
-          className="mt-3"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "16px",
-            color: "#6B7280",
-            lineHeight: 1.7,
-            maxWidth: "640px",
-            ...(centered ? { margin: "0 auto 40px" } : {}),
-          }}
-        >
-          {customDescription || "Explore perspectives drawn from advisory engagements, sector research, and institutional transformation across Africa\u2019s evolving economic landscape."}
-        </p>
+    <section style={{ backgroundColor: "#021024", padding: "100px 0 80px" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 40px" }}>
 
-        {/* Insight Cards Grid */}
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "48px", gap: "24px" }}>
+          <div>
+            <p style={{
+              fontFamily: "var(--font-dm-sans), sans-serif",
+              fontSize: "var(--text-overline)",
+              textTransform: "uppercase",
+              letterSpacing: "6px",
+              color: "rgba(125,160,202,0.5)",
+              marginBottom: "16px",
+            }}>
+              {overline || "LATEST THINKING"}
+            </p>
+            <h2 style={{
+              fontFamily: "var(--font-playfair), Georgia, serif",
+              fontSize: "clamp(30px, 3.5vw, 44px)",
+              fontWeight: 400,
+              color: "#FFFFFF",
+              lineHeight: 1.15,
+              margin: 0,
+              maxWidth: "700px",
+            }}>
+              {customTitle || "Ideas shaping tomorrow\u2019s institutions."}
+            </h2>
+          </div>
+          <Link
+            href={exploreHref || "/insights"}
+            style={{
+              fontFamily: "var(--font-dm-sans), sans-serif",
+              fontSize: "var(--text-caption)",
+              fontWeight: 500,
+              color: "#5483B3",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+              marginBottom: "4px",
+              transition: "color 0.25s ease",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#7DA0CA"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "#5483B3"; }}
+          >
+            {exploreLabel || "Explore All Insights"} →
+          </Link>
+        </div>
+
+        {/* Cards grid — hairline separators, no border-radius */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "1px",
+          backgroundColor: "rgba(255,255,255,0.06)",
+        }}>
           {displayCards.map((card) => (
             <Link
               key={card.slug}
               href={`/insights/${card.slug}`}
-              className="homepage-insight-card group"
+              style={{
+                display: "block",
+                textDecoration: "none",
+                backgroundColor: "#021024",
+                transition: "background 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#031629";
+                const title = e.currentTarget.querySelector(".ins-title") as HTMLElement;
+                const read = e.currentTarget.querySelector(".ins-read") as HTMLElement;
+                const overlay = e.currentTarget.querySelector(".ins-overlay") as HTMLElement;
+                if (title) title.style.color = "#7DA0CA";
+                if (read) read.style.color = "#7DA0CA";
+                if (overlay) overlay.style.opacity = "0";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#021024";
+                const title = e.currentTarget.querySelector(".ins-title") as HTMLElement;
+                const read = e.currentTarget.querySelector(".ins-read") as HTMLElement;
+                const overlay = e.currentTarget.querySelector(".ins-overlay") as HTMLElement;
+                if (title) title.style.color = "#FFFFFF";
+                if (read) read.style.color = "rgba(255,255,255,0.35)";
+                if (overlay) overlay.style.opacity = "1";
+              }}
             >
-              <div className="homepage-insight-card__image">
+              {/* Image */}
+              <div style={{ position: "relative", height: "240px", overflow: "hidden" }}>
                 <Image
                   src={card.image}
                   alt=""
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  aria-hidden="true"
+                  style={{ objectFit: "cover" }}
+                  aria-hidden
+                  quality={85}
+                />
+                <div
+                  className="ins-overlay"
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    backgroundColor: "rgba(2,16,36,0.3)",
+                    transition: "opacity 0.3s ease",
+                  }}
                 />
               </div>
-              <div className="homepage-insight-card__body">
-                <span className="homepage-insight-card__category">
+
+              {/* Body */}
+              <div style={{ padding: "28px 0" }}>
+                <span style={{
+                  display: "block",
+                  fontFamily: "var(--font-dm-sans), sans-serif",
+                  fontSize: "var(--text-overline)",
+                  textTransform: "uppercase",
+                  letterSpacing: "3px",
+                  color: "#5483B3",
+                  marginBottom: "12px",
+                }}>
                   {card.category}
                 </span>
-                <h3 className="homepage-insight-card__title">
+                <h3
+                  className="ins-title"
+                  style={{
+                    fontFamily: "var(--font-playfair), Georgia, serif",
+                    fontSize: "20px",
+                    fontWeight: 400,
+                    color: "#FFFFFF",
+                    lineHeight: 1.3,
+                    margin: "0 0 12px",
+                    transition: "color 0.3s ease",
+                  }}
+                >
                   {card.title}
                 </h3>
-                <p className="homepage-insight-card__date">
+                <p style={{
+                  fontFamily: "var(--font-dm-sans), sans-serif",
+                  fontSize: "12px",
+                  color: "rgba(255,255,255,0.25)",
+                  marginBottom: "20px",
+                }}>
                   {card.date}
                 </p>
+                <span
+                  className="ins-read"
+                  style={{
+                    display: "block",
+                    fontFamily: "var(--font-dm-sans), sans-serif",
+                    fontSize: "var(--text-caption)",
+                    color: "rgba(255,255,255,0.35)",
+                    transition: "color 0.3s ease",
+                  }}
+                >
+                  Read Article →
+                </span>
               </div>
             </Link>
           ))}
-        </div>
-
-        {/* Explore all link */}
-        <div className={`mt-10 flex ${centered ? "justify-center" : "justify-end"}`}>
-          <Link
-            href={exploreHref || "/insights"}
-            className="inline-flex items-center gap-1.5 transition-colors duration-300"
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "15px",
-              fontWeight: 500,
-              color: "#5483B3",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "#7DA0CA"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "#5483B3"; }}
-          >
-            {exploreLabel || "Explore All Insights"}
-            <span aria-hidden="true">→</span>
-          </Link>
         </div>
       </div>
     </section>

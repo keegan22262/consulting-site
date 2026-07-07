@@ -284,9 +284,10 @@ function IndustryNarrativeSection({ body, includes }: { body: string; includes: 
         </div>
         <div>
           <div style={{ borderLeft: "3px solid var(--a700)", paddingLeft: "24px" }}>
-            <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: "var(--a700)", letterSpacing: "0.04em", textTransform: "uppercase", display: "block", marginBottom: "8px" }}>
+            <span style={{ fontSize: "var(--text-overline)", fontWeight: 600, color: "var(--a700)", letterSpacing: "0.04em", textTransform: "uppercase", display: "block", marginBottom: "8px" }}>
               Includes
             </span>
+            {/* TODO: verify if 1.55 vs caption's 1.5 is intentional */}
             <p style={{ fontSize: "var(--text-caption)", lineHeight: "1.55", color: "var(--n600)", maxWidth: "40ch" }}>
               {includes}
             </p>
@@ -444,7 +445,7 @@ function SectorAdvisoryCta({ title, image }: { title: string; image: string }) {
             paddingRight: padRight,
           }}
         >
-          <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "16px" }}>
+          <span style={{ fontSize: "var(--text-overline)", fontWeight: 600, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "16px" }}>
             Sector Advisory
           </span>
           <h2
@@ -562,6 +563,7 @@ function OutcomeSignalsSection({ signals }: { signals: OutcomeSignal[] }) {
             <h3 style={{ fontSize: "var(--text-body)", fontWeight: 600, lineHeight: "var(--line-height-body)", color: "var(--n900)" }}>
               {signal.label}
             </h3>
+            {/* TODO: verify if 1.55 vs caption's 1.5 is intentional */}
             <p style={{ fontSize: "var(--text-caption)", lineHeight: "1.55", color: "var(--n500)", marginTop: "8px" }}>
               {signal.note}
             </p>

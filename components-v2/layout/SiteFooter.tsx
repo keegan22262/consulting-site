@@ -19,38 +19,20 @@ const LEGAL_LINKS = [
 
 export default function SiteFooter() {
   return (
-    <footer style={{ backgroundColor: "#021024" }}>
+    <footer className="bg-navy-darkest">
       {/* Separator line from CTA section above */}
-      <div
-        className="mx-auto w-full max-w-[1280px] px-6 lg:px-8"
-        style={{ borderTop: "1px solid rgba(125,160,202,0.15)" }}
-      >
+      <div className="mx-auto w-full max-w-[1280px] border-t border-blue-light/15 px-6 lg:px-8">
         {/* ═══ TOP ROW ═══ */}
-        <div
-          className="flex flex-col lg:flex-row gap-8 lg:gap-0"
-          style={{ paddingTop: "48px" }}
-        >
+        <div className="flex flex-col gap-8 pt-12 lg:flex-row lg:gap-0">
           {/* Left 55% — Brand */}
           <div className="lg:w-[55%]">
             <span
-              style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: "22px",
-                fontWeight: 400,
-                color: "#FFFFFF",
-              }}
+              className="font-[var(--font-heading)] text-[22px] font-normal text-white"
             >
               Rill Singh Limited
             </span>
             <p
-              className="mt-3"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "14px",
-                color: "#7DA0CA",
-                lineHeight: 1.6,
-                maxWidth: "400px",
-              }}
+              className="mt-3 max-w-[400px] font-[var(--font-body)] text-[14px] leading-[1.6] text-blue-light"
             >
               Pan-African institutional advisory. Precision-led consulting for growth,
               transformation, and execution.
@@ -64,12 +46,7 @@ export default function SiteFooter() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="transition-colors duration-300 hover:text-white"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "13px",
-                    color: "rgba(255,255,255,0.6)",
-                  }}
+                  className="font-[var(--font-body)] text-[13px] text-white/60 transition-colors duration-300 hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -80,12 +57,7 @@ export default function SiteFooter() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="transition-colors duration-300 hover:text-white"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "13px",
-                    color: "rgba(255,255,255,0.6)",
-                  }}
+                  className="font-[var(--font-body)] text-[13px] text-white/60 transition-colors duration-300 hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -95,21 +67,11 @@ export default function SiteFooter() {
         </div>
 
         {/* ═══ MIDDLE ROW ═══ */}
-        <div
-          style={{
-            marginTop: "40px",
-            borderTop: "1px solid rgba(125,160,202,0.1)",
-            padding: "20px 0",
-          }}
-        >
+        <div className="mt-10 border-t border-blue-light/10 py-5">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <span
-                style={{
-                  fontFamily: "var(--font-body)",
-                  fontSize: "12px",
-                  color: "#7DA0CA",
-                }}
+                className="font-[var(--font-body)] text-[12px] text-blue-light"
               >
                 Follow us
               </span>
@@ -136,50 +98,30 @@ export default function SiteFooter() {
                 <span className="sr-only">WhatsApp</span>
               </Link>
             </div>
-            <span
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "12px",
-                color: "#7DA0CA",
-              }}
-            >
+            <span className="font-[var(--font-body)] text-[12px] text-blue-light">
               Nairobi, Kenya
             </span>
           </div>
         </div>
 
         {/* ═══ BOTTOM ROW ═══ */}
-        <div
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
-          style={{ paddingBottom: "32px" }}
-        >
+        <div className="flex flex-col items-start justify-between gap-3 pb-8 sm:flex-row sm:items-center">
           <div className="flex items-center gap-1">
             {LEGAL_LINKS.map((link, i) => (
               <span key={link.label} className="flex items-center gap-1">
                 {i > 0 && (
-                  <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "12px" }} aria-hidden="true">·</span>
+                  <span className="text-[12px] text-white/20" aria-hidden="true">·</span>
                 )}
                 <Link
                   href={link.href}
-                  className="transition-colors duration-300 hover:text-white"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "12px",
-                    color: "rgba(255,255,255,0.4)",
-                  }}
+                  className="font-[var(--font-body)] text-[12px] text-white/40 transition-colors duration-300 hover:text-white"
                 >
                   {link.label}
                 </Link>
               </span>
             ))}
           </div>
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "12px",
-              color: "rgba(255,255,255,0.4)",
-            }}
-          >
+          <span className="font-[var(--font-body)] text-[12px] text-white/40">
             &copy; {new Date().getFullYear()} Rill Singh Limited
           </span>
         </div>

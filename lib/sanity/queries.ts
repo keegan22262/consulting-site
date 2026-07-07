@@ -53,6 +53,19 @@ export const getAllServicesQuery = groq`
   }
 `;
 
+// Services listing (Sanity source of truth)
+export const SERVICES_LISTING_QUERY = groq`
+  *[_type == "service" && (status == "published" || !defined(status))]
+    | order(coalesce(order, 999) asc) {
+      title,
+      "slug": coalesce(slug.current, slug),
+      description,
+      category,
+      icon,
+      "image": image.asset->url
+    }
+`;
+
 // 2. Service by Slug
 export const getServiceBySlugQuery = groq`
   *[_type == "service" && (status == "published" || !defined(status)) && slug == $slug][0] {
@@ -101,6 +114,21 @@ export const getAllInsightsQuery = groq`
     readingTime,
     sourceUrl
   }
+`;
+
+// Insights listing (Sanity source of truth)
+export const INSIGHTS_LISTING_QUERY = groq`
+  *[_type == "insight" && (status == "published" || !defined(status))]
+    | order(coalesce(publishedAt, _createdAt) desc) {
+      title,
+      "slug": coalesce(slug.current, slug),
+      "excerpt": coalesce(excerpt, summary),
+      "category": coalesce(theme->title, category),
+      "publishedAt": coalesce(publishedAt, _createdAt),
+      "mainImage": mainImage.asset->url,
+      readingTime,
+      sourceUrl
+    }
 `;
 
 // 4. Insight by Slug

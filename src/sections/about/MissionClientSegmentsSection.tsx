@@ -1,7 +1,8 @@
 "use client";
 
-import ScrollReveal from "@/src/components/ScrollReveal";
-import { useScrollReveal } from "@/src/hooks/useScrollReveal";
+import Image from "next/image";
+import ScrollReveal from "@/components-v2/ui/ScrollReveal";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 const CLIENT_SEGMENTS = [
   { title: "Startups", description: "Essential foundations: strategy, finance, tax, and go-to-market.", borderColor: "#5483B3" },
@@ -83,15 +84,27 @@ export default function MissionClientSegmentsSection() {
                 className="relative w-full h-[320px] md:h-[440px] lg:h-[500px] rounded-xl overflow-hidden shadow-2xl"
                 style={imageReveal.style}
               >
-                <img src="/images/about/mission-main.jpg" alt="RSL team collaboration" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+                <Image
+                  src="/images/about/mission-main.jpg"
+                  alt="RSL team collaboration"
+                  fill
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                />
               </div>
               <div ref={overlayImage.ref as React.RefObject<HTMLDivElement>} style={overlayImage.style}>
-                <img
-                  src="/images/about/mission-overlay.jpg"
-                  alt="RSL advisory team"
-                  className="hidden md:block absolute -top-6 -left-6 w-[180px] h-[180px] lg:w-[200px] lg:h-[200px] rounded-xl object-cover z-[2] transition-transform duration-500 hover:scale-105"
+                <div
+                  className="hidden md:block absolute -top-6 -left-6 w-[180px] h-[180px] lg:w-[200px] lg:h-[200px] rounded-xl overflow-hidden z-[2]"
                   style={{ border: "4px solid white", boxShadow: "0 12px 36px rgba(2,16,36,0.15)" }}
-                />
+                >
+                  <Image
+                    src="/images/about/mission-overlay.jpg"
+                    alt="RSL advisory team"
+                    fill
+                    sizes="(min-width: 1024px) 200px, 180px"
+                    className="object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,8 @@
 "use client";
 
-import ScrollReveal from "@/src/components/ScrollReveal";
-import { useScrollReveal } from "@/src/hooks/useScrollReveal";
+import Image from "next/image";
+import ScrollReveal from "@/components-v2/ui/ScrollReveal";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 const INDUSTRIES = [
   "Financial Services", "Technology", "Energy", "Healthcare", "Public Sector",
@@ -70,10 +71,12 @@ export default function InstitutionalFootprintSection() {
             style={imageReveal.style}
           >
             <div className="relative overflow-hidden rounded-xl shadow-2xl">
-              <img
+              <Image
                 src="/images/about/footprint-map.jpg"
                 alt="Global advisory presence - world and Africa map"
-                className="w-full h-[300px] md:h-[400px] lg:h-[460px] object-cover transition-transform duration-700 hover:scale-105"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover transition-transform duration-700 hover:scale-105"
               />
             </div>
           </div>

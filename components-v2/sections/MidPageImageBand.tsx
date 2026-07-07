@@ -37,7 +37,7 @@ export default function MidPageImageBand({
           <span
             style={{
               fontFamily: "var(--font-primary)",
-              fontSize: "0.6875rem",
+              fontSize: "var(--text-overline)",
               fontWeight: 400,
               color: "var(--n400)",
               textTransform: "uppercase",

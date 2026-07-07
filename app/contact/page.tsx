@@ -6,7 +6,7 @@ import Image from "next/image";
 import ContactForm from "./ContactForm";
 import ContactContextMessage from "./ContactContextMessage";
 import NewsletterSection from "./NewsletterSection";
-import ScrollReveal from "@/src/components/ScrollReveal";
+import ScrollReveal from "@/components-v2/ui/ScrollReveal";
 
 export const metadata: Metadata = {
 	title: "Contact",

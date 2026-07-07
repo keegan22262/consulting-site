@@ -26,8 +26,8 @@ const HOW_WE_WORK_QUERY = `
 *[_type == "howWeWork"][0]{
   intro,
   "steps": coalesce(steps, [])[]{
-    title,
-    description
+		"title": coalesce(title, @),
+		"description": coalesce(description, @)
   },
   deliveryModel,
   partnerships
@@ -43,6 +43,12 @@ function normalizeSteps(value: unknown): HowWeWorkStep[] {
 
 	const steps: HowWeWorkStep[] = [];
 	for (const item of value) {
+		if (typeof item === "string") {
+			const legacy = normalizeString(item);
+			if (!legacy) continue;
+			steps.push({ title: legacy, description: legacy });
+			continue;
+		}
 		if (!item || typeof item !== "object") continue;
 		const record = item as Record<string, unknown>;
 		const title = normalizeString(record.title);

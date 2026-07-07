@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useScrollReveal } from "@/src/hooks/useScrollReveal";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 export default function AboutCTASection() {
   const heading = useScrollReveal({ direction: "up", delay: 200, distance: 30, duration: 900 });
@@ -10,11 +11,13 @@ export default function AboutCTASection() {
 
   return (
     <section className="relative py-28 md:py-36 overflow-hidden">
-      <img
+      <Image
         src="/images/about/cta-bg.jpg"
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover scale-105"
+        fill
+        sizes="100vw"
+        className="object-cover scale-105"
       />
       <div
         aria-hidden="true"

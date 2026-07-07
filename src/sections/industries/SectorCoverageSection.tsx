@@ -149,7 +149,7 @@ function FilterPill({
       onMouseLeave={() => setHovered(false)}
       style={{
         fontFamily: F,
-        fontSize: "0.8125rem",
+        fontSize: "var(--text-caption)",
         fontWeight: isActive ? 600 : 500,
         lineHeight: "1",
         color: isActive ? C.white : hovered ? C.a700 : C.n700,

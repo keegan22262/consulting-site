@@ -1,12 +1,10 @@
 "use client";
-
 import { useRef, useState, useEffect, useMemo } from "react";
 import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPreference";
 
-// ─── Scroll-reveal motion constants ──────────────────────────────────────────
 const DURATION_MS = 800;
 const STAGGER_MS = 120;
-const TRANSLATE_Y = 32; // px
+const TRANSLATE_Y = 32;
 
 export interface ScrollRevealStyle {
   opacity: number;
@@ -15,34 +13,32 @@ export interface ScrollRevealStyle {
   willChange: string;
 }
 
-/**
- * IntersectionObserver-based scroll reveal with optional stagger delay.
- *
- * Usage:
- *   const [revealRef, revealStyle] = useScrollReveal();       // standalone
- *   const [revealRef, revealStyle] = useScrollReveal(index);  // staggered
- *
- * Attach `revealRef` to the container, spread `revealStyle` onto it.
- * Respects `prefers-reduced-motion` — skips animation entirely.
- */
+export interface ScrollRevealOptions {
+  direction?: "up" | "down" | "left" | "right";
+  delay?: number;
+  distance?: number;
+  duration?: number;
+  staggerIndex?: number;
+}
+
 export function useScrollReveal(
-  staggerIndex = 0,
+  options: number | ScrollRevealOptions = 0,
 ): [React.RefCallback<HTMLElement>, ScrollRevealStyle] {
+  const staggerIndex = typeof options === "number" ? options : (options.staggerIndex ?? 0);
+  const delayOverride = typeof options === "number" ? undefined : options.delay;
+  const durationOverride = typeof options === "number" ? undefined : options.duration;
+
   const reducedMotion = useReducedMotionPreference();
   const [visible, setVisible] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Stable ref callback — avoids stale closure issues
   const refCallback: React.RefCallback<HTMLElement> = useMemo(() => {
     return (node: HTMLElement | null) => {
-      // Clean up previous observer
       if (observerRef.current) {
         observerRef.current.disconnect();
         observerRef.current = null;
       }
-
       if (!node || typeof IntersectionObserver === "undefined") return;
-
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
@@ -52,31 +48,22 @@ export function useScrollReveal(
         },
         { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
       );
-
       observer.observe(node);
       observerRef.current = observer;
     };
   }, []);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       observerRef.current?.disconnect();
     };
   }, []);
 
-  const delay = staggerIndex * STAGGER_MS;
+  const delay = delayOverride ?? (staggerIndex * STAGGER_MS);
+  const duration = durationOverride ?? DURATION_MS;
 
   if (reducedMotion) {
-    return [
-      refCallback,
-      {
-        opacity: 1,
-        transform: "none",
-        transition: "none",
-        willChange: "auto",
-      },
-    ];
+    return [refCallback, { opacity: 1, transform: "none", transition: "none", willChange: "auto" }];
   }
 
   return [
@@ -85,7 +72,7 @@ export function useScrollReveal(
       opacity: visible ? 1 : 0,
       transform: visible ? "translateY(0)" : `translateY(${TRANSLATE_Y}px)`,
       transition: visible
-        ? `opacity ${DURATION_MS}ms cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform ${DURATION_MS}ms cubic-bezier(0.22,1,0.36,1) ${delay}ms`
+        ? `opacity ${duration}ms cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform ${duration}ms cubic-bezier(0.22,1,0.36,1) ${delay}ms`
         : "none",
       willChange: visible ? "auto" : "opacity, transform",
     },

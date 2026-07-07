@@ -1,5 +1,5 @@
-// Static fallback data for Services page.
-// Used when Sanity CMS returns no results.
+// FALLBACK DATA — used only when Sanity CMS returns empty. Do not edit for live content.
+// Sanity type: service
 // Copy preserved verbatim from Figma reference (figma-reference/rslservices.tsx).
 
 export interface ServiceItem {

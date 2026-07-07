@@ -4,7 +4,7 @@ import { sanityClient } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/fetch";
 import { isNextDynamicServerUsageError } from "@/lib/sanity/nextErrors";
 import {
-	ALL_PUBLISHED_INSIGHTS_QUERY,
+	INSIGHTS_LISTING_QUERY,
 	LATEST_PUBLISHED_INSIGHTS_QUERY,
 	PUBLISHED_INSIGHT_BY_SLUG_EXPANDED_QUERY,
 } from "@/lib/sanity/queries";
@@ -13,11 +13,15 @@ export type InsightListItem = {
 	title: string;
 	slug: string;
 	category?: string;
-	summary: string;
+	summary?: string;
+	excerpt?: string;
 	date?: string;
+	publishedAt?: string;
+	mainImage?: string;
 	documentType?: string;
 	domain?: string;
 	readingTime?: string;
+	sourceUrl?: string;
 };
 
 type PortableTextBlock = Record<string, unknown>;
@@ -44,6 +48,11 @@ type PublishedInsightRecord = {
 	body?: PortableTextBlock[];
 	publishDate?: string;
 	themeTitle?: string;
+	publishedAt?: string;
+	category?: string;
+	mainImage?: string;
+	readingTime?: string;
+	sourceUrl?: string;
 	relatedServices?: PublishedRelatedServiceRecord[];
 };
 
@@ -73,7 +82,7 @@ export const getAllInsights = async (): Promise<InsightListItem[]> => {
 	// sanityClient is always defined
 
 	try {
-		const result = await sanityFetch<PublishedInsightRecord[]>(ALL_PUBLISHED_INSIGHTS_QUERY, {}, {});
+		const result = await sanityFetch<PublishedInsightRecord[]>(INSIGHTS_LISTING_QUERY, {}, {});
 
 		return Array.isArray(result)
 			? result
@@ -82,8 +91,13 @@ export const getAllInsights = async (): Promise<InsightListItem[]> => {
 						title: item.title ?? "",
 						slug: item.slug ?? "",
 						summary: item.excerpt ?? "",
-						category: item.themeTitle ?? "",
-						date: item.publishDate ?? "",
+						excerpt: item.excerpt ?? "",
+						category: item.category ?? "",
+						date: item.publishedAt ?? "",
+						publishedAt: item.publishedAt ?? "",
+						mainImage: item.mainImage ?? "",
+						readingTime: item.readingTime ?? "",
+						sourceUrl: item.sourceUrl ?? "",
 					}))
 			: [];
 	} catch (error) {
@@ -113,8 +127,8 @@ export const getLatestInsights = async (limit: number): Promise<InsightListItem[
 						title: item.title ?? "",
 						slug: item.slug ?? "",
 						summary: item.excerpt ?? "",
-						category: item.themeTitle ?? "",
-						date: item.publishDate ?? "",
+						category: item.category ?? item.themeTitle ?? "",
+						date: item.publishedAt ?? item.publishDate ?? "",
 					}))
 			: [];
 	} catch (error) {

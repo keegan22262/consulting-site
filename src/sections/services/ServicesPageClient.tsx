@@ -6,10 +6,37 @@ import CinematicHero from "@/src/sections/services/CinematicHero";
 import CreativeDeliverySection from "@/src/sections/services/CreativeDeliverySection";
 import ServiceGridSection from "@/src/sections/services/ServiceGridSection";
 import ServicesNavStrip from "@/src/sections/services/ServicesNavStrip";
+import { useServices } from "@/lib/hooks/useServices";
 import { SERVICES, type ServiceItem } from "@/src/sections/services/data";
 
+type ServiceListingItem = {
+  slug?: string;
+  title?: string;
+  summary?: string;
+  description?: string;
+  category?: string;
+  icon?: unknown;
+  image?: string;
+};
+
 export default function ServicesPageClient() {
-  const services = SERVICES;
+  const { data: cmsServices } = useServices<ServiceListingItem>();
+
+  const mappedServices = (cmsServices ?? [])
+    .filter((item): item is ServiceListingItem & { slug: string; title: string } =>
+      Boolean(item?.slug && item?.title)
+    )
+    .map((item): ServiceItem => {
+      const description = item.description ?? item.summary ?? "";
+      return {
+        slug: item.slug,
+        title: item.title,
+        focusAreas: description,
+        approach: description,
+      };
+    });
+
+  const services = mappedServices.length > 0 ? mappedServices : SERVICES;
 
   return (
     <>

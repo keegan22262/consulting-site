@@ -137,7 +137,8 @@ export default function EditorialIndustryCard({
           <p
             style={{
               fontFamily: "var(--font-primary)",
-              fontSize: "0.9375rem",
+              fontSize: "var(--text-body)",
+              // TODO: verify if 1.6 vs body's 1.7 is intentional
               lineHeight: "1.6",
               fontWeight: 400,
               color: "rgba(255,255,255,0.85)",
@@ -154,7 +155,7 @@ export default function EditorialIndustryCard({
             <span
               style={{
                 fontFamily: "var(--font-primary)",
-                fontSize: "0.8125rem",
+                fontSize: "var(--text-caption)",
                 fontWeight: 600,
                 color: "#FFFFFF",
                 backgroundColor: "rgba(255,255,255,0.15)",

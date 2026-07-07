@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import SectionWrapper from "@/components-v2/sections/SectionWrapper";
 import SectionHeader from "@/components-v2/sections/SectionHeader";
@@ -98,16 +99,12 @@ export default function TransformationJourneySection() {
                 }}
               >
                 <div style={{ position: "relative", width: "100%", height: imageHeight }}>
-                  <img
+                  <Image
                     src={stage.image}
                     alt={stage.imageAlt}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      objectPosition: "center",
-                      display: "block",
-                    }}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover object-center"
                   />
                   <div
                     style={{
@@ -134,8 +131,9 @@ export default function TransformationJourneySection() {
                   <h3
                     style={{
                       fontFamily: "var(--font-primary)",
-                      fontSize: "1.0625rem",
+                      fontSize: "var(--text-lead)",
                       fontWeight: 600,
+                      // TODO: line-height 1.3 differs notably from lead's 1.7 (larger gap than typical near-misses) — confirm if intentional.
                       lineHeight: "1.3",
                       color: isHovered ? "#1B3A5C" : "#0F172A",
                       transition: "color 200ms ease",
@@ -147,7 +145,8 @@ export default function TransformationJourneySection() {
                     style={{
                       marginTop: "8px",
                       fontFamily: "var(--font-primary)",
-                      fontSize: "0.8125rem",
+                      fontSize: "var(--text-caption)",
+                      // TODO: verify if 1.6 vs caption's 1.5 is intentional
                       lineHeight: "1.6",
                       color: "#475569",
                     }}

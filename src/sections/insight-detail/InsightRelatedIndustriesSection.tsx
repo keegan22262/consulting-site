@@ -102,8 +102,9 @@ function CinematicIndustryCard({ id, label, image }: { id: string; label: string
         <h3
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "1.0625rem",
+            fontSize: "var(--text-lead)",
             fontWeight: 600,
+            // TODO: line-height 1.3 differs notably from lead's 1.7 (larger gap than typical near-misses) — confirm if intentional.
             lineHeight: "1.3",
             color: "#FFFFFF",
             marginBottom: "12px",
@@ -114,7 +115,7 @@ function CinematicIndustryCard({ id, label, image }: { id: string; label: string
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.8125rem",
+            fontSize: "var(--text-caption)",
             fontWeight: 600,
             color: "#FFFFFF",
             opacity: hovered ? 1 : 0,

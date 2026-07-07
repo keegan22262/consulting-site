@@ -57,6 +57,7 @@ export default function ResearchAndAnalysisSection({
             style={{
               fontFamily: "var(--font-primary)",
               fontSize: "var(--text-body)",
+              // TODO: verify if 1.6 vs body's 1.7 is intentional
               lineHeight: "1.6",
               color: "var(--n500)",
               marginTop: "8px",

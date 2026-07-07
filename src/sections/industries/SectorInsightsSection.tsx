@@ -165,8 +165,8 @@ export default function SectorInsightsSection({ insights }: { insights: SectorIn
           <p
             style={{
               fontFamily: F,
-              fontSize: "1.0625rem",
-              lineHeight: "1.7",
+              fontSize: "var(--text-lead)",
+              lineHeight: "var(--line-height-lead)",
               color: "rgba(255,255,255,0.9)",
               maxWidth: "680px",
             }}
@@ -278,7 +278,7 @@ export default function SectorInsightsSection({ insights }: { insights: SectorIn
             onMouseLeave={() => setExploreHovered(false)}
             style={{
               fontFamily: F,
-              fontSize: "15px",
+              fontSize: "var(--text-body)",
               fontWeight: 500,
               color: "rgba(255,255,255,0.85)",
               textDecoration: "none",
@@ -431,8 +431,8 @@ function InsightCarouselCard({
           <p
             style={{
               fontFamily: F,
-              fontSize: "0.9375rem",
-              lineHeight: "1.7",
+              fontSize: "var(--text-body)",
+              lineHeight: "var(--line-height-body)",
               color: "rgba(255,255,255,0.82)",
               marginTop: "14px",
               maxWidth: "60ch",
@@ -443,7 +443,8 @@ function InsightCarouselCard({
           <p
             style={{
               fontFamily: F,
-              fontSize: "0.8125rem",
+              fontSize: "var(--text-caption)",
+              // TODO: verify if 1.4 vs caption's 1.5 is intentional
               lineHeight: "1.4",
               color: "rgba(255,255,255,0.60)",
               marginTop: "16px",

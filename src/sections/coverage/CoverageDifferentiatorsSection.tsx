@@ -58,6 +58,7 @@ export default function CoverageDifferentiatorsSection() {
             <h3 style={{ fontSize: "var(--text-body)", fontWeight: 600, lineHeight: "var(--line-height-body)", color: "var(--n900)", marginBottom: "8px" }}>
               {item.title}
             </h3>
+            {/* TODO: verify if 1.55 vs caption's 1.5 is intentional */}
             <p style={{ fontSize: "var(--text-caption)", lineHeight: "1.55", color: "var(--n600)", maxWidth: "55ch" }}>
               {item.body}
             </p>

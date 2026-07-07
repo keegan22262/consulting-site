@@ -1,6 +1,7 @@
 "use client";
 
-import { useScrollReveal } from "@/src/hooks/useScrollReveal";
+import Image from "next/image";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 export default function InstitutionalContextSection() {
   const imageReveal = useScrollReveal({ direction: "left", delay: 100, distance: 50, duration: 900 });
@@ -27,10 +28,12 @@ export default function InstitutionalContextSection() {
                 style={{ borderColor: "#C1E8FF" }}
               />
               <div className="relative w-full h-[320px] md:h-[480px] lg:h-[520px] rounded-xl overflow-hidden shadow-2xl">
-                <img
+                <Image
                   src="/images/about/firm-main.jpg"
                   alt="RSL advisory and boardroom setting"
-                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  fill
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  className="object-cover transition-transform duration-700 hover:scale-105"
                 />
               </div>
               <div

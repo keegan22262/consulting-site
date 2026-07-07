@@ -84,9 +84,9 @@ export default function FeaturedServicesSection() {
           className="mt-3"
           style={{
             fontFamily: "var(--font-heading)",
-            fontSize: "32px",
+            fontSize: "var(--text-h2)",
             fontWeight: 400,
-            lineHeight: 1.2,
+            lineHeight: "var(--line-height-h2)",
             color: "#021024",
           }}
         >

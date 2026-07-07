@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useInsights } from "@/lib/hooks/useInsights";
 import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
 import InsightsHeroSection from "@/src/sections/insights/InsightsHeroSection";
 import FeaturedInsightsSection from "@/src/sections/insights/FeaturedInsightsSection";
@@ -15,7 +16,14 @@ import { INSIGHTS_DATA, TOPIC_FILTERS } from "@/src/sections/insights/data";
 
 const ITEMS_PER_PAGE = 6;
 
+const estimateReadTime = (text: string) => {
+  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(3, Math.round(wordCount / 200));
+  return `${minutes} min`;
+};
+
 export default function InsightsPageClient() {
+  const { data: cmsInsights } = useInsights();
   const [activeFilter, setActiveFilter] = useState("All Insights");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const loadMoreMargin = useResponsiveValue({ desktop: "56px", tablet: "48px", mobile: "40px" });
@@ -25,15 +33,34 @@ export default function InsightsPageClient() {
     setVisibleCount(ITEMS_PER_PAGE);
   };
 
+  const insightsSource = useMemo(() => {
+    if (!cmsInsights || cmsInsights.length === 0) return INSIGHTS_DATA;
+
+    const mapped = cmsInsights
+      .filter((item) => Boolean(item?.slug && item?.title && item?.excerpt && item?.publishedAt))
+      .map((item) => ({
+        slug: item.slug,
+        headline: item.title,
+        whatItMeans: item.excerpt,
+        source: item.sourceUrl || "https://rillsingh.com",
+        category: item.category ?? "Insight",
+        date: item.publishedAt.split("T")[0],
+        readTime: item.readingTime || estimateReadTime(item.excerpt ?? ""),
+        image: item.mainImage ?? "",
+      }));
+
+    return mapped.length > 0 ? mapped : INSIGHTS_DATA;
+  }, [cmsInsights]);
+
   const filtered = useMemo(() => {
     const topic = TOPIC_FILTERS.find((item) => item.label === activeFilter);
-    if (!topic || topic.categories.length === 0) return INSIGHTS_DATA;
-    return INSIGHTS_DATA.filter((insight) => topic.categories.includes(insight.category));
-  }, [activeFilter]);
+    if (!topic || topic.categories.length === 0) return insightsSource;
+    return insightsSource.filter((insight) => topic.categories.includes(insight.category));
+  }, [activeFilter, insightsSource]);
 
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
-  const featured = INSIGHTS_DATA[0];
+  const featured = insightsSource[0];
 
   return (
     <>
@@ -64,7 +91,7 @@ export default function InsightsPageClient() {
 
       <SpecialAnalysisSection />
 
-      <MorePerspectivesSection insights={INSIGHTS_DATA} />
+      <MorePerspectivesSection insights={insightsSource} />
 
       <StayInformedSection />
     </>

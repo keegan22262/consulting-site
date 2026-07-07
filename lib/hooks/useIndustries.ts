@@ -89,7 +89,7 @@ export function useIndustries<T extends IndustryLike = IndustryItem>(fallback?: 
     })();
 
     return () => controller.abort();
-  }, []);
+  }, [fallback]);
 
   return { data, isLoading, error };
 }

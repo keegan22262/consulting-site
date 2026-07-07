@@ -6,7 +6,30 @@ export const howWeWork = defineType({
 	type: "document",
 	fields: [
 		defineField({ name: 'intro', title: 'Intro', type: 'text' }),
-		defineField({ name: 'steps', title: 'Steps', type: 'array', of: [{ type: 'string' }] }),
+		defineField({
+			name: "steps",
+			title: "Steps",
+			type: "array",
+			of: [
+				{
+					type: "object",
+					fields: [
+						defineField({
+							name: "title",
+							title: "Title",
+							type: "string",
+							validation: (Rule) => Rule.required(),
+						}),
+						defineField({
+							name: "description",
+							title: "Description",
+							type: "text",
+							validation: (Rule) => Rule.required(),
+						}),
+					],
+				},
+			],
+		}),
 		defineField({ name: 'deliveryModel', title: 'Delivery Model', type: 'reference', to: [{ type: 'deliveryModel' }] }),
 		defineField({ name: 'partnerships', title: 'Partnerships', type: 'array', of: [{ type: 'string' }] }),
 		defineField({ name: 'headline', title: 'Headline', type: 'string' }),

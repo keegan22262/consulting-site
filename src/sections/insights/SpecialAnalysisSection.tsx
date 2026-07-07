@@ -31,7 +31,7 @@ export default function SpecialAnalysisSection() {
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--text-overline)",
             fontWeight: 600,
             textTransform: "uppercase",
             letterSpacing: "0.06em",
@@ -118,7 +118,8 @@ export default function SpecialAnalysisSection() {
             <p
               style={{
                 fontFamily: "var(--font-primary)",
-                fontSize: "0.9375rem",
+                fontSize: "var(--text-body)",
+                // TODO: verify if 1.65 vs body's 1.7 is intentional
                 lineHeight: "1.65",
                 color: "rgba(255,255,255,0.72)",
                 marginBottom: "24px",

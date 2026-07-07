@@ -180,7 +180,7 @@ export default async function SearchPage({
 									   <IndustryCard
 										   key={insight.slug}
 										   title={insight.title}
-										   description={insight.summary}
+										   description={insight.summary ?? ""}
 								   		   variant="compact"
 										   href={`/insights/${insight.slug}`}
 									   />

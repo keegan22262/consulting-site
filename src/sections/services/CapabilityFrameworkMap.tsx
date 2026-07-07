@@ -194,7 +194,8 @@ function FrameworkCard({
     >
       <h3
         style={{
-          fontSize: "1.0625rem",
+          fontSize: "var(--text-lead)",
+          // TODO: line-height 1.3 differs notably from lead's 1.7 (larger gap than typical near-misses) — confirm if intentional.
           lineHeight: "1.3",
           color: titleColor,
           fontWeight: 600,
@@ -205,7 +206,8 @@ function FrameworkCard({
       <p
         style={{
           marginTop: "8px",
-          fontSize: "0.8125rem",
+          fontSize: "var(--text-caption)",
+          // TODO: verify if 1.55 vs caption's 1.5 is intentional
           lineHeight: "1.55",
           color: descColor,
           maxHeight: hovered ? "100px" : "40px",

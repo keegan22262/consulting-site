@@ -24,7 +24,7 @@ export default function SummaryBlock({ title = "Key Takeaways", points }: Summar
       <span
         style={{
           fontFamily: "var(--font-primary)",
-          fontSize: "0.6875rem",
+          fontSize: "var(--text-overline)",
           fontWeight: 600,
           color: "var(--a700)",
           textTransform: "uppercase",
@@ -72,6 +72,7 @@ export default function SummaryBlock({ title = "Key Takeaways", points }: Summar
               style={{
                 fontFamily: "var(--font-primary)",
                 fontSize: "var(--text-caption)",
+                // TODO: verify if 1.6 vs caption's 1.5 is intentional
                 lineHeight: "1.6",
                 color: "var(--n700)",
                 margin: 0,

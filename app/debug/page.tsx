@@ -1,3 +1,4 @@
+// PROTECTED ROUTE - requires ADMIN_SECRET header.
 import { createClient } from "@sanity/client";
 
 export const dynamic = "force-dynamic";

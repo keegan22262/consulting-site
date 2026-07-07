@@ -60,7 +60,7 @@ export function ExploreRelatedKnowledge({
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--text-overline)",
             fontWeight: 600,
             color: "var(--a700)",
             letterSpacing: "0.08em",
@@ -88,6 +88,7 @@ export function ExploreRelatedKnowledge({
           style={{
             fontFamily: "var(--font-primary)",
             fontSize: "var(--text-caption)",
+            // TODO: verify if 1.55 vs caption's 1.5 is intentional
             lineHeight: "1.55",
             color: "var(--n500)",
             maxWidth: "52ch",
@@ -252,6 +253,7 @@ export function CaseStudyCard({ cs }: { cs: CaseStudyCardData }) {
             fontFamily: "var(--font-primary)",
             fontSize: "var(--text-body)",
             fontWeight: 600,
+            // TODO: line-height 1.4 differs notably from body's 1.7 (larger gap than typical near-misses) — confirm if intentional.
             lineHeight: "1.4",
             color: hovered ? "var(--a700)" : "var(--n900)",
             marginTop: "10px",
@@ -265,6 +267,7 @@ export function CaseStudyCard({ cs }: { cs: CaseStudyCardData }) {
             style={{
               fontFamily: "var(--font-primary)",
               fontSize: "var(--text-caption)",
+              // TODO: verify if 1.55 vs caption's 1.5 is intentional
               lineHeight: "1.55",
               color: "var(--n500)",
               marginTop: "8px",

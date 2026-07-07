@@ -110,7 +110,7 @@ function ExploreCard({
         <h3
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: "17px",
+            fontSize: "var(--text-lead)",
             fontWeight: 600,
             color: "#FFFFFF",
             lineHeight: 1.3,
@@ -122,9 +122,9 @@ function ExploreCard({
           className="mt-1 line-clamp-2"
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: "13px",
+            fontSize: "var(--text-caption)",
             color: "rgba(255,255,255,0.7)",
-            lineHeight: 1.5,
+            lineHeight: "var(--line-height-caption)",
           }}
         >
           {description}

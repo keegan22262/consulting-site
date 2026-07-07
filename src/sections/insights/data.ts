@@ -1,3 +1,6 @@
+// FALLBACK DATA — used only when Sanity CMS returns empty. Do not edit for live content.
+// Sanity type: insight
+
 export type InsightEntry = {
   slug: string;
   headline: string;

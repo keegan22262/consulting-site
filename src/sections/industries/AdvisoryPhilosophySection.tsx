@@ -171,7 +171,7 @@ function PhilosophyMosaicCard({
           style={{
             fontFamily: F,
             fontSize: "var(--text-caption)",
-            lineHeight: "1.5",
+            lineHeight: "var(--line-height-caption)",
             color: C.a200,
             maxWidth: "42ch",
             opacity: hovered ? 1 : 0.85,

@@ -33,7 +33,7 @@ export default function StayInformedSection() {
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--text-overline)",
             fontWeight: 600,
             color: "rgba(255,255,255,0.45)",
             textTransform: "uppercase",

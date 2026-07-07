@@ -70,7 +70,7 @@ export default function InsightGridCard({ insight }: InsightGridCardProps) {
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--text-overline)",
             fontWeight: 600,
             textTransform: "uppercase",
             letterSpacing: "0.06em",
@@ -111,7 +111,8 @@ export default function InsightGridCard({ insight }: InsightGridCardProps) {
         <p
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.8125rem",
+            fontSize: "var(--text-caption)",
+            // TODO: verify if 1.55 vs caption's 1.5 is intentional
             lineHeight: "1.55",
             color: "rgba(255,255,255,0.68)",
             marginBottom: "12px",
@@ -139,7 +140,7 @@ export default function InsightGridCard({ insight }: InsightGridCardProps) {
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.8125rem",
+            fontSize: "var(--text-caption)",
             fontWeight: 600,
             color: "#FFFFFF",
             opacity: hovered ? 1 : 0,

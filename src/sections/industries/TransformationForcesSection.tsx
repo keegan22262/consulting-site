@@ -95,6 +95,7 @@ export default function TransformationForcesSection() {
                 style={{
                   fontFamily: F,
                   fontSize: "var(--text-caption)",
+                  // TODO: verify if 1.55 vs caption's 1.5 is intentional
                   lineHeight: "1.55",
                   color: C.n600,
                   marginTop: "8px",

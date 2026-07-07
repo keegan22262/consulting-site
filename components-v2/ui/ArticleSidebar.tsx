@@ -92,6 +92,7 @@ export function ArticleSidebar({
             style={{
               fontFamily: "var(--font-primary)",
               fontSize: "var(--text-caption)",
+              // TODO: verify if 1.4 vs caption's 1.5 is intentional
               lineHeight: "1.4",
               color: "var(--a700)",
               textDecoration: "underline",
@@ -141,7 +142,7 @@ export function CollapsibleTOC({ toc }: { toc: TOCEntry[] }) {
         <span
           style={{
             fontFamily: "var(--font-primary)",
-            fontSize: "0.6875rem",
+            fontSize: "var(--text-overline)",
             fontWeight: 600,
             color: "var(--a700)",
             textTransform: "uppercase",
@@ -185,7 +186,7 @@ function SidebarSection({ title, children }: { title: string; children: React.Re
       <span
         style={{
           fontFamily: "var(--font-primary)",
-          fontSize: "0.6875rem",
+          fontSize: "var(--text-overline)",
           fontWeight: 600,
           color: "var(--a700)",
           textTransform: "uppercase",
@@ -212,6 +213,7 @@ function TOCLink({ entry }: { entry: TOCEntry }) {
       style={{
         fontFamily: "var(--font-primary)",
         fontSize: "var(--text-caption)",
+        // TODO: verify if 1.4 vs caption's 1.5 is intentional
         lineHeight: "1.4",
         color: hovered ? "var(--a700)" : "var(--n600)",
         textDecoration: hovered ? "underline" : "none",
@@ -277,6 +279,7 @@ function SidebarLink({ to, label }: { to: string; label: string }) {
       style={{
         fontFamily: "var(--font-primary)",
         fontSize: "var(--text-caption)",
+        // TODO: verify if 1.4 vs caption's 1.5 is intentional
         lineHeight: "1.4",
         color: hovered ? "var(--a700)" : "var(--n700)",
         textDecoration: hovered ? "underline" : "none",

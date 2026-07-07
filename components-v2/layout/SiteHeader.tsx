@@ -123,7 +123,8 @@ export default function SiteHeader() {
   });
 
   useEffect(() => {
-    setHasMounted(true);
+    const raf = requestAnimationFrame(() => setHasMounted(true));
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   useEffect(() => {

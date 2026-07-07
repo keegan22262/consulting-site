@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# Windows-path artifact dir created when dev server runs from PowerShell
+/C\:*
+
 # production
 /build
 

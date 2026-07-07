@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function InsightInDevelopmentPlaceholder() {
   return (
     <section className="max-w-4xl mx-auto py-24 px-4">
@@ -8,7 +10,9 @@ export default function InsightInDevelopmentPlaceholder() {
         <p className="text-2xl text-neutral-700 mb-8">
           This insight article is currently in development. Full analysis, source attribution, and RSL advisory implications will be published here.
         </p>
-        <a href="/insights" className="text-base font-semibold text-[#0B2239] hover:underline">&larr; Back to Insights</a>
+        <Link href="/insights" className="text-base font-semibold text-[#0B2239] hover:underline">
+          &larr; Back to Insights
+        </Link>
       </div>
     </section>
   );

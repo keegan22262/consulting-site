@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import ScrollReveal from "@/src/components/ScrollReveal";
-import { useScrollReveal } from "@/src/hooks/useScrollReveal";
+import ScrollReveal from "@/components-v2/ui/ScrollReveal";
+import { useScrollReveal } from "@/components-v2/foundation/useScrollReveal";
 
 const LEADERS = [
   {

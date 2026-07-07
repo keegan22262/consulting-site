@@ -64,7 +64,7 @@ function TopicPill({
       onMouseLeave={() => setHovered(false)}
       style={{
         fontFamily: "var(--font-primary)",
-        fontSize: "0.8125rem",
+        fontSize: "var(--text-caption)",
         fontWeight: isActive ? 600 : 400,
         color: textColor,
         backgroundColor: bgColor,

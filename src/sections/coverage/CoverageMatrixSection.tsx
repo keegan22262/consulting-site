@@ -462,7 +462,7 @@ function FilterDropdown({
     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
       <span
         style={{
-          fontSize: "0.6875rem",
+          fontSize: "var(--text-overline)",
           fontWeight: 600,
           color: "var(--n400)",
           letterSpacing: "0.04em",
@@ -548,7 +548,7 @@ function DesktopMatrix({
                 borderBottom: "1px solid var(--n200)",
                 borderRight: "1px solid var(--n200)",
                 padding: "16px 12px",
-                fontSize: "0.6875rem",
+                fontSize: "var(--text-overline)",
                 fontWeight: 600,
                 color: "var(--n400)",
                 letterSpacing: "0.04em",
