@@ -89,8 +89,8 @@ const FALLBACK_SUPPORTING = [
 
 /* ── Shared style tokens ───────────────────────────────────────────── */
 const f = {
-  heading: "var(--font-playfair), Georgia, serif",
-  body: "var(--font-dm-sans), system-ui, sans-serif",
+  heading: "var(--font-heading)",
+  body: "var(--font-body)",
 };
 
 const overline = (color = "rgba(125,160,202,0.6)"): React.CSSProperties => ({
