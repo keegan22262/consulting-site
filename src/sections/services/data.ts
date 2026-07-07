@@ -7,11 +7,26 @@ export interface ServiceItem {
   title: string;
   focusAreas: string;
   approach: string;
+  cluster: string;
 }
+
+export interface Cluster {
+  id: string;
+  label: string;
+}
+
+// The 10 disciplines grouped into 4 clusters. Order is authoritative.
+export const CLUSTERS: Cluster[] = [
+  { id: "strategy-transformation", label: "Strategy & transformation" },
+  { id: "finance-risk-regulation", label: "Finance, risk & regulation" },
+  { id: "sustainability-public", label: "Sustainability & public impact" },
+  { id: "growth-communications", label: "Growth & communications" },
+];
 
 export const SERVICES: ServiceItem[] = [
   {
     slug: "strategy",
+    cluster: "strategy-transformation",
     title: "Strategy & Corporate Transformation",
     focusAreas: "Corporate strategy, M&A advisory, organizational transformation, and growth strategy.",
     approach:
@@ -19,6 +34,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "digital",
+    cluster: "strategy-transformation",
     title: "Digital & AI Transformation",
     focusAreas: "Digital strategy, AI implementation, automation, cloud migration, and cybersecurity.",
     approach:
@@ -26,6 +42,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "finance",
+    cluster: "finance-risk-regulation",
     title: "Financial Advisory, Audit & Risk Management",
     focusAreas: "Regulatory compliance, risk assessment, financial restructuring, and forensic accounting.",
     approach:
@@ -33,6 +50,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "people",
+    cluster: "strategy-transformation",
     title: "People & Organization Consulting",
     focusAreas:
       "Talent management, leadership development, organizational design, and change management.",
@@ -41,6 +59,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "esg",
+    cluster: "sustainability-public",
     title: "Sustainability & ESG Consulting",
     focusAreas:
       "Sustainable business practices, ESG reporting, climate risk assessment, and circular economy strategies.",
@@ -49,6 +68,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "public",
+    cluster: "sustainability-public",
     title: "Public Sector & Government Advisory",
     focusAreas:
       "Policy analysis, public sector reform, digital government transformation, and public-private partnerships.",
@@ -57,6 +77,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "comms",
+    cluster: "growth-communications",
     title: "Digital Communication & Social Media Consulting",
     focusAreas:
       "Social media strategy, digital brand management, content marketing, and influencer marketing.",
@@ -65,6 +86,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "tax",
+    cluster: "finance-risk-regulation",
     title: "Tax Advisory & Asset Management",
     focusAreas:
       "Tax compliance, international tax planning, wealth management, estate planning, and investment strategies.",
@@ -73,6 +95,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "legal",
+    cluster: "finance-risk-regulation",
     title: "Legal & Regulatory Compliance Consulting",
     focusAreas:
       "Corporate governance, local regulatory compliance, international trade law, intellectual property, and labor law advisory.",
@@ -80,6 +103,7 @@ export const SERVICES: ServiceItem[] = [
   },
   {
     slug: "sme",
+    cluster: "growth-communications",
     title: "SME Development & Growth Consulting",
     focusAreas:
       "Business incubation, financing for SMEs, market entry strategies, operational efficiency, and export facilitation.",
