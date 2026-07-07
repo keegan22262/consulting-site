@@ -17,6 +17,7 @@
 :root {
   --background: #FFFFFF;
   --foreground: #1A1A2E;
+  --color-paper: #F7F6F2;
 
   /* Fonts */
   --font-heading: var(--font-playfair), Georgia, "Times New Roman", serif;
