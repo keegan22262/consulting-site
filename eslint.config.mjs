@@ -11,7 +11,6 @@ const config = [
       "scripts/**",
       "tokens/**",
       "design-tokens/**",
-      "figma-reference/**",
     ],
   },
   ...nextConfig,
