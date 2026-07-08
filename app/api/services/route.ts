@@ -1,5 +1,5 @@
 import { error, success } from "@/lib/server/apiResponse";
-import { getAllServices } from "@/lib/sanityServices";
+import { getAllServices } from "@/lib/sanity/services";
 
 export const runtime = "nodejs";
 
