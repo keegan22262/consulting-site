@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import InsightInDevelopmentPlaceholder from "@/components-v2/sections/InsightInDevelopmentPlaceholder";
-import InsightsDetailHeroSection from "@/components-v2/sections/InsightsDetailHeroSection";
+import InsightInDevelopmentPlaceholder from "@/src/sections/insight-detail/InsightInDevelopmentPlaceholder";
+import InsightsDetailHeroSection from "@/src/sections/insight-detail/InsightsDetailHeroSection";
 import InsightsRelatedSection from "@/src/sections/insight-detail/InsightsRelatedSection";
 import CTABlock from "@/components-v2/sections/CTABlock";
 import { sanityClient } from "@/lib/sanity/client";
