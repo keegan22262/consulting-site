@@ -15,17 +15,21 @@ is the shared **library** (hooks, site chrome, UI, section primitives);
 `src/sections/` is the **page-body** layer built on top of it, and it is what the
 routes and the approved homepage spec actually use.
 
-The real problem is narrower and cheaper than a migration: **37 of ~56 files in
+The real problem is narrower and cheaper than a migration: **35 of 47 files in
 `components-v2/sections/` are abandoned first-draft page bodies with ZERO
 importers** — dead code that `src/sections/` superseded. That dead half is what
-*looks* like a second parallel system.
+*looks* like a second parallel system. (Two files this analysis originally
+flagged as dead — `AtmosphericLayer`, `SectionDivider` — turned out to be live
+internal dependencies of `SectionWrapper`; corrected during PR A4 execution,
+see Step 3. The original "~56 files" total was also a miscount — confirmed
+during A4 execution to be 47.)
 
 **Canonical target:** Keep **both**, with a hard role boundary —
 **`components-v2/` = shared library, `src/sections/` = pages.** For the
 overlapping concern (page composition) the winner is **`src/sections/`** (routes
 point there, `docs/cycle2.md` sources its data from there, and 99/100 cross-tree
 edges already flow the correct page→library direction). Consolidation = (1)
-delete 37 dead files, (2) cut the 1 back-edge, (3) unify the one split route
+delete 35 dead files, (2) cut the 1 back-edge, (3) unify the one split route
 (`insights/[slug]`).
 
 **Increment count:** **7 PRs** (~1–1.5 days), +1 optional rename.
@@ -179,7 +183,17 @@ barrel re-export hides usage — `components-v2/sections/index.ts` and `ui/index
 are imported by **nothing**; and there are **no dynamic imports** anywhere in the
 codebase, so static counts are authoritative):
 
-**LIVE `components-v2/sections/` (9 files):**
+> ⚠ **Correction (found during PR A4 execution, not by the original grep pass):**
+> `AtmosphericLayer` and `SectionDivider` are each imported internally by
+> `components-v2/sections/SectionWrapper.tsx` (`import AtmosphericLayer from
+> "./AtmosphericLayer"`, `import SectionDivider from "./SectionDivider"`).
+> The original file-level import grep matched on the standalone-page-body import
+> pattern (`sections/Name"`) and missed this same-directory relative import.
+> Since `SectionWrapper` itself has 42 live importers, both are transitively
+> live and were **skipped**, not deleted, in PR A4. The tables below reflect the
+> corrected counts (11 live / 35 dead, not 9 live / 37 dead).
+
+**LIVE `components-v2/sections/` (11 files):**
 
 | Component | importers | role |
 |---|---|---|
@@ -192,17 +206,19 @@ codebase, so static counts are authoritative):
 | `InsightInDevelopmentPlaceholder` | 1 | insight `[slug]` |
 | `InsightsDetailHeroSection` | 1 | insight `[slug]` |
 | `InsightsRelatedSection` | 1 | insight `[slug]` (holds the back-edge) |
+| `AtmosphericLayer` | 1 (`SectionWrapper`, internal) | decorative layer used by `SectionWrapper` |
+| `SectionDivider` | 1 (`SectionWrapper`, internal) | divider used by `SectionWrapper` |
 
-**DEAD `components-v2/sections/` — 37 files with ZERO importers** (superseded by
+**DEAD `components-v2/sections/` — 35 files with ZERO importers** (superseded by
 `src/sections/` page bodies):
-`AtmosphericLayer, CapabilityNavigator, CapabilityPanelsSection, ContentSkeleton,
+`CapabilityNavigator, CapabilityPanelsSection, ContentSkeleton,
 DecisionGateway, EngagementFrameworkSection, FeaturedIndustriesSection,
 FeaturedServicesSection, HeroSection, IndustriesHeroSection, IndustriesOverview,
 IndustryContextSection, IndustryDetailHeroSection, IndustryRelatedInsightsSection,
 IndustryRelatedServicesSection, IndustrySummarySection, InsightsContentSection,
 InsightsGridSection, InsightsHeroSection, InsightsIntroSection,
 InstitutionalMetricsSection, MidPageImageBand, PhaseBlock, PridePhilosophySection,
-SectionDivider, ServicesChallengeSection, ServicesDeliverablesSection,
+ServicesChallengeSection, ServicesDeliverablesSection,
 ServicesDeliveryModelSection, ServicesDetailHeroSection, ServicesGridSection,
 ServicesHeroSection, ServicesIntegrationSection, ServicesIntroSection,
 ServicesRelatedIndustriesSection, ServicesRelatedInsightsSection, SummaryBlock,
@@ -287,7 +303,7 @@ the homepage rebuild is told to "reuse existing data wiring," pulls its data fro
 
 > **`components-v2/` = the shared primitive/UI library; `src/sections/` = the
 > data-wired page bodies that consume it.** The abandoned draft page-bodies in
-> `components-v2/sections/` (Step 3's 37 dead files) are the ONLY part that is
+> `components-v2/sections/` (Step 3's 35 dead files) are the ONLY part that is
 > genuinely off the intended path.
 
 ---
@@ -324,7 +340,7 @@ composition), it is **`src/sections/`**, because:
 
 Not a migration between two rival systems. Three concrete moves:
 
-1. **DELETE** the 37 dead `components-v2/sections/*` page-draft files (Step 3).
+1. **DELETE** the 35 dead `components-v2/sections/*` page-draft files (Step 3).
    This removes the *appearance* of a second parallel system. ~Half of
    `components-v2/sections/` disappears with zero route impact.
 2. **CUT the one back-edge:** relocate `INSIGHTS_DATA` so
@@ -350,9 +366,11 @@ is unambiguously "the pages," with a single legal dependency direction.
 ## Step 6 — Migration Order (lowest → highest risk)
 
 Barrels (`sections/index.ts`, `ui/index.ts`, `foundation/index.ts`) re-export
-**only live** components, so deleting dead files won't break them. The 37 dead
+**only live** components, so deleting dead files won't break them. The 35 dead
 files have no references anywhere in code repo-wide (the sole hit,
 `exports/homepage-for-claude.md`, is a markdown export, not a build input).
+`AtmosphericLayer` and `SectionDivider` are excluded from this count — see the
+Step 3 correction; they are live internal dependencies of `SectionWrapper`.
 
 > **On granularity:** the "1–3 components per increment" rule is for *risky*
 > migrations. Phase A is provably-dead deletion (0 importers each, verified), so
@@ -368,13 +386,20 @@ imports these, so the build stays green by construction.
 | **A1 — services drafts** | ServicesChallengeSection, ServicesDeliverablesSection, ServicesDeliveryModelSection, ServicesDetailHeroSection, ServicesGridSection, ServicesHeroSection, ServicesIntegrationSection, ServicesIntroSection, ServicesRelatedIndustriesSection, ServicesRelatedInsightsSection, FeaturedServicesSection, CapabilityNavigator, CapabilityPanelsSection | 13 |
 | **A2 — industries drafts** | IndustriesHeroSection, IndustriesOverview, IndustryContextSection, IndustryDetailHeroSection, IndustryRelatedInsightsSection, IndustryRelatedServicesSection, IndustrySummarySection, FeaturedIndustriesSection | 8 |
 | **A3 — insights index drafts** | InsightsContentSection, InsightsGridSection, InsightsHeroSection, InsightsIntroSection | 4 |
-| **A4 — generic/misc drafts** | AtmosphericLayer, ContentSkeleton, DecisionGateway, EngagementFrameworkSection, HeroSection, InstitutionalMetricsSection, MidPageImageBand, PhaseBlock, PridePhilosophySection, SectionDivider, SummaryBlock, TrustSignalsSection | 12 |
+| **A4 — generic/misc drafts** | ContentSkeleton, DecisionGateway, EngagementFrameworkSection, HeroSection, InstitutionalMetricsSection, MidPageImageBand, PhaseBlock, PridePhilosophySection, SummaryBlock, TrustSignalsSection | 10 |
+
+> **A4 correction (found during execution):** `AtmosphericLayer` and
+> `SectionDivider` were originally listed here but are live — both are imported
+> internally by `SectionWrapper.tsx`. They were **skipped**, not deleted, during
+> A4. Removed from this list; see Step 3 for detail.
 
 (Also update `exports/homepage-for-claude.md`'s stale `FeaturedServicesSection`
 mention in A1 — doc-only, no build effect.)
 
-After Phase A, `components-v2/sections/` drops from 56 → 19 files and the
-"parallel system" illusion is gone.
+After Phase A, `components-v2/sections/` drops from 47 → 12 files (11 live
+components + `index.ts` barrel) and the "parallel system" illusion is gone.
+(The original plan's "56 → 19" figures were a miscount, corrected during A4
+execution — confirmed by direct file count against actual deletions.)
 
 ### Phase B — Cut the one cross-tree back-edge (low risk, 1 PR)
 
@@ -453,7 +478,7 @@ in Step 3 are authoritative. Low residual risk.
 
 ### R4 — Barrel/index re-exports — CLEARED
 `components-v2/{sections,ui,foundation}/index.ts` re-export only LIVE components;
-none of the 37 dead files appear in a barrel, and the `sections`/`ui` barrels are
+none of the 35 dead files appear in a barrel, and the `sections`/`ui` barrels are
 imported by nothing. Deletion cannot break a barrel build.
 
 ### R5 — Name collisions during Phase C
