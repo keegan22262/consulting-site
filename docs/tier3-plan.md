@@ -1,7 +1,24 @@
 # Cycle 3 — Component System Consolidation Plan
 
-> **Status:** ANALYSIS ONLY. No code changed. This document is the sole deliverable.
-> Executive summary is at the top; supporting analysis (Steps 1–7) follows.
+> **Status:** Phases A, B, and C are EXECUTED (uncommitted, awaiting visual
+> verification of `/insights/[slug]`). Phase D remains optional/deferred.
+> Executive summary is at the top; supporting analysis (Steps 1–7) follows;
+> execution status is tracked per-PR in Step 6.
+
+**Execution status (updated live as PRs land):**
+
+| PR | Status |
+|---|---|
+| A1 — services drafts | ✅ done |
+| A2 — industries drafts | ✅ done |
+| A3 — insights index drafts | ✅ done |
+| A4 — generic/misc drafts | ✅ done (2 files skipped — see Step 3 correction) |
+| B1 — cut the back-edge | ✅ done |
+| C1 — move hero + placeholder | ✅ done |
+| C2 — reconcile Related* naming/overlap | ✅ done (no file changes needed; found a separate content-duplication issue, not naming — see Step 7, R8) |
+| D1 — optional rename | not started |
+
+All PRs above are uncommitted working-tree changes, pending your review/commit.
 
 ---
 
@@ -376,7 +393,7 @@ Step 3 correction; they are live internal dependencies of `SectionWrapper`.
 > migrations. Phase A is provably-dead deletion (0 importers each, verified), so
 > batching by domain is safe and reviewable — each batch still ends green.
 
-### Phase A — Dead-code deletion (near-zero risk, do first)
+### Phase A — Dead-code deletion (near-zero risk, do first) — ✅ EXECUTED
 
 Each PR: delete files + run typecheck/targeted build of affected routes. No route
 imports these, so the build stays green by construction.
@@ -401,26 +418,44 @@ components + `index.ts` barrel) and the "parallel system" illusion is gone.
 (The original plan's "56 → 19" figures were a miscount, corrected during A4
 execution — confirmed by direct file count against actual deletions.)
 
-### Phase B — Cut the one cross-tree back-edge (low risk, 1 PR)
+### Phase B — Cut the one cross-tree back-edge (low risk, 1 PR) — ✅ EXECUTED
 
-- **B1:** Remove `components-v2/sections/InsightsRelatedSection.tsx`'s import of
-  `@/src/sections/insights/data`. Simplest: **move `InsightsRelatedSection` into
-  `src/sections/insight-detail/`** (it's insight-specific, single consumer =
-  `insights/[slug]`). Update that route's import. Result: 0 wrong-way edges.
-  Verify: build + visual check of `/insights/[slug]`.
+- **B1 ✅:** Removed `components-v2/sections/InsightsRelatedSection.tsx`'s import
+  of `@/src/sections/insights/data` by **moving `InsightsRelatedSection` into
+  `src/sections/insight-detail/`** (`git mv`, zero content diff — the
+  `INSIGHTS_DATA` import uses an absolute `@/` alias so it resolved unchanged
+  from the new location). Updated `app/insights/[slug]/page.tsx`'s import.
+  Result: 0 wrong-way cross-tree edges. `tsc --noEmit` delta: zero (76 → 76).
+  Visual check of `/insights/[slug]` pending your confirmation.
 
-### Phase C — Unify the split Insight-detail route (medium risk, 2 PRs)
+### Phase C — Unify the split Insight-detail route (medium risk, 2 PRs) — ✅ EXECUTED
 
-`app/insights/[slug]/page.tsx` is the only both-trees route left after B. Move
-its remaining v2 pieces into `src/sections/insight-detail/` so the route imports
-page-body from ONE tree (shared-library imports like `CTABlock` stay as-is).
+`app/insights/[slug]/page.tsx` was the only both-trees route left after B. Its
+remaining v2 pieces were moved into `src/sections/insight-detail/` so the route
+now imports page-body from ONE tree (`CTABlock` stays as a shared-library
+import, as planned).
 
-- **C1:** Move `InsightsDetailHeroSection` + `InsightInDevelopmentPlaceholder`
-  into `src/sections/insight-detail/`; update route. Build + visual verify.
-- **C2:** Reconcile any naming/overlap between v2 `InsightsRelatedSection`
-  (moved in B) and existing `src/sections/insight-detail/InsightRelated*`
-  sections; ensure no dead duplicate remains. Build + visual verify.
-  *(`CTABlock` in `case-studies/[slug]` stays a shared-library import — leave it.)*
+- **C1 ✅:** Moved `InsightsDetailHeroSection` + `InsightInDevelopmentPlaceholder`
+  into `src/sections/insight-detail/` via `git mv` (zero content diff — neither
+  file had a cross-tree back-edge to begin with). Updated the route's 2 import
+  lines. `tsc --noEmit`: 76 → 75, delta explained and confirmed benign (a stale
+  `.next/dev/types/validator.ts` cache artifact referencing the long-removed
+  `app/debug` route disappeared between runs — unrelated to this move, verified
+  by diffing full tsc output). `app/insights/[slug]/page.tsx` now imports zero
+  page-body sections from `components-v2/sections/` — `CTABlock` is the only
+  surviving v2 import, correctly so.
+- **C2 ✅:** Reconciled naming/overlap between the moved `InsightsRelatedSection`
+  and the existing `InsightRelatedServicesSection` / `InsightRelatedIndustriesSection`
+  / `InsightRelatedEngagementsSection` siblings in `src/sections/insight-detail/`.
+  **Result: no dead duplicate, no file changes needed.** All four are genuinely
+  distinct components (different content type, data source, and card component
+  each — insights vs. services vs. industries vs. case studies). No filename
+  collision. **However, this pass surfaced a separate, pre-existing issue** — a
+  content-level (not file-level) duplication in the rendered page. See **R8** in
+  Step 7.
+
+Visual verification of `/insights/[slug]` (both B1's and C1/C2's changes) is
+still pending — the user will do this render check directly.
 
 ### Phase D — Optional cosmetic (defer)
 
@@ -430,16 +465,17 @@ page-body from ONE tree (shared-library imports like `CTABlock` stay as-is).
 
 ### Increment count & effort
 
-| Phase | PRs | Risk | Effort |
-|---|---|---|---|
-| A (dead deletion) | 4 | near-zero | ~2–3 h total (mechanical) |
-| B (back-edge) | 1 | low | ~1 h |
-| C (insight-detail unify) | 2 | medium | ~2–4 h (needs visual verify) |
-| D (rename, optional) | 1 | low-mechanical | ~1 h |
-| **Total** | **7 (8 with optional D)** | — | **~1–1.5 days** |
+| Phase | PRs | Risk | Effort | Status |
+|---|---|---|---|---|
+| A (dead deletion) | 4 | near-zero | ~2–3 h total (mechanical) | ✅ done |
+| B (back-edge) | 1 | low | ~1 h | ✅ done |
+| C (insight-detail unify) | 2 | medium | ~2–4 h (needs visual verify) | ✅ done, visual verify pending |
+| D (rename, optional) | 1 | low-mechanical | ~1 h | not started |
+| **Total** | **7 (8 with optional D)** | — | **~1–1.5 days** | 7/7 core PRs done |
 
-Every PR ends in a green build; Phases A–B need only a build pass, C needs build
-+ visual confirmation of `/insights/[slug]`.
+Every PR ended in a stable `tsc --noEmit` delta (documented per-PR above);
+Phases A–B needed only a typecheck pass, C needs typecheck + the still-pending
+visual confirmation of `/insights/[slug]`. Nothing has been committed yet.
 
 ---
 
@@ -502,8 +538,40 @@ does **not** violate the library/page boundary. Flag only so a future
 `ConstellationHero` or `HomepageClient`, so the two efforts don't collide — but
 sequencing matters (see Executive Summary).
 
+### R8 — Content-level duplication on `/insights/[slug]` (found during C2, NOT fixed — out of Cycle 3's scope)
+`app/insights/[slug]/page.tsx` renders the same four related-content categories
+**twice**, in two different visual treatments:
+
+1. Four full-width `Related*` sections in sequence — `InsightsRelatedSection`
+   (other insights), `InsightRelatedServicesSection`, `InsightRelatedIndustriesSection`,
+   `InsightRelatedEngagementsSection` (case studies).
+2. Immediately after, a single `ExploreRelatedKnowledge` widget
+   (`components-v2/ui/RelatedKnowledge`) that shows the *same four categories*
+   — industries, services, insights, case studies — combined into one compact
+   block.
+
+**This predates Cycle 3 entirely** — Step 1's original route map (captured
+before any Phase A/B/C work) already listed both `ExploreRelatedKnowledge` and
+the four `Related*` sections as co-existing imports in this route. It is a
+content/UX redundancy on the rendered page, not a dead-code or cross-tree
+architecture issue, so it was correctly out of scope for C2's file-level
+"reconcile naming/overlap" task — C2 confirmed the four `Related*` files
+themselves are non-duplicative (different content types, data, and card
+components each). **This is a live rendering duplication, not a resolved one.**
+
+**Risk:** if untouched, users see related industries/services/insights/case
+studies rendered twice on every insight detail page. **Mitigation:** this is a
+product/content decision (which treatment to keep, or whether both are
+intentional — e.g. one as primary content, one as a compact "see also" footer)
+that the user should make explicitly; it should not be silently "fixed" as
+part of a tree-consolidation cycle. Recommend scoping it as its own follow-up
+PR outside Cycle 3, with a design decision made first.
+
 ### Residual unknowns
 - Visual regressions on `/insights/[slug]` after Phase C are the only place a
-  green build might still look wrong — hence the mandated visual verify there.
+  green build might still look wrong — hence the mandated visual verify there,
+  **still pending** as of Phase C's execution.
 - Whether the team wants the `components-v2` → `components` rename (D1) is a
   naming preference, not a technical blocker.
+- **New:** whether/how to resolve the R8 content duplication is a product
+  decision, not a technical unknown — flagged for the user, not yet decided.
