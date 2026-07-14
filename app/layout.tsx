@@ -58,7 +58,7 @@ export default function RootLayout({
     "@type": "Organization",
     name: "Rill Singh Limited",
     url: "https://rillsingh.com",
-    logo: "https://rillsingh.com/images/logo.png",
+    logo: "https://rillsingh.com/images/logo/Lockup_Icon_White.png",
     description:
       "Rill Singh Limited is a pan-African advisory firm delivering integrated consulting across strategy, digital transformation, financial advisory, and governance.",
     sameAs: [

@@ -33,6 +33,11 @@ const config: Config = {
           light: "#7DA0CA",
           ice: "#C1E8FF",
         },
+        terracotta: {
+          DEFAULT: "#C17A46",
+          hover: "#CB8752",
+        },
+        eyebrow: "#3D6690",
         rsl: {
           offwhite: "#F8FBFF",
           textDark: "#1A1A2E",

@@ -181,7 +181,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       name: "Rill Singh Limited",
       logo: {
         "@type": "ImageObject",
-        url: "https://rillsingh.com/logo.png",
+        url: "https://rillsingh.com/images/logo/Lockup_Icon_White.png",
       },
     },
     image: [heroImageUrl],

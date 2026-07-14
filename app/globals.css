@@ -11,6 +11,21 @@
   .cap-grid-mobile { padding: 0 20px !important; }
 }
 
+@keyframes diamond-drift {
+  0% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(44deg) scale(1.035); }
+  100% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+}
+.animate-diamond-drift {
+  animation: diamond-drift 48s ease-in-out infinite;
+}
+.animate-diamond-drift[data-playing="false"] {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-diamond-drift { animation: none; }
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
    Design Tokens — RSL Premium Palette
    ══════════════════════════════════════════════════════════════════════════ */
@@ -99,11 +114,14 @@
   --color-navy-dark: #052659;
   --color-blue-mid: #5483B3;
   --color-blue-light: #7DA0CA;
+  --color-eyebrow: #3D6690;
   --color-blue-ice: #C1E8FF;
   --color-white: #FFFFFF;
   --color-off-white: #F8FBFF;
   --color-text-dark: #1A1A2E;
   --color-text-muted: #6B7280;
+  --color-terracotta: #C17A46;
+  --color-terracotta-hover: #CB8752;
 
   /* Section tokens */
   --SECTION_OVERLINE_COLOR: rgba(27,58,92,0.88);
