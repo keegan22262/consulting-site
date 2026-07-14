@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import DiamondMotif from "@/components-v2/ui/DiamondMotif";
 import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPreference";
@@ -603,17 +602,6 @@ function CtaBandSection() {
 
         <div className="relative flex min-h-[320px] flex-none items-center justify-center overflow-hidden bg-[linear-gradient(155deg,#0B355E_0%,#021024_78%)] p-[clamp(28px,5vw,56px)] md:w-[56%]">
           <DiamondMotif left="38%" top="44%" size="150%" />
-          <div className="relative z-[2] aspect-[4/5] w-[min(360px,84%)] bg-[--color-paper] p-2.5 shadow-[0_24px_64px_-20px_rgba(2,16,36,.5)]">
-            <div className="relative h-full w-full overflow-hidden">
-              <Image
-                src="/images/team/vankeno.jpg"
-                alt="Rill Singh Limited advisory team"
-                fill
-                className="object-cover"
-                sizes="360px"
-              />
-            </div>
-          </div>
         </div>
       </div>
     </section>
