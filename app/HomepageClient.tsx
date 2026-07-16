@@ -36,14 +36,20 @@ const DIFFERENTIATORS = [
   {
     title: "Institutional rigor",
     body: "Analysis and governance built to withstand board, investor, and regulator scrutiny.",
+    bg: "#19507A",
+    text: "#FFFFFF",
   },
   {
     title: "Ground truth",
     body: "Judgment formed inside the markets where you operate — not observed from a distance.",
+    bg: "#19507A",
+    text: "#FFFFFF",
   },
   {
     title: "Execution focus",
     body: "Engagements measured by what actually changes — not by the weight of the deck.",
+    bg: "#19507A",
+    text: "#FFFFFF",
   },
 ] as const;
 
@@ -300,16 +306,51 @@ function HeroSection() {
 /* ════════════════════════════════════════════════════════════════════
    SECTION 2 — DIFFERENTIATORS
 ════════════════════════════════════════════════════════════════════ */
+function DifferentiatorCard({
+  title,
+  body,
+  bg,
+  text,
+}: {
+  title: string;
+  body: string;
+  bg: string;
+  text: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={() => setIsOpen((open) => !open)}
+      aria-expanded={isOpen}
+      className="rounded-3xl p-[clamp(20px,3vw,28px)] text-left transition-[height,opacity] duration-normal"
+      style={{ background: bg, color: text }}
+    >
+      <span className="block font-[var(--font-heading)] text-[17px] font-semibold leading-[1.3]">
+        {title}
+      </span>
+      <span
+        className={`block overflow-hidden text-[14px] leading-[1.6] transition-[max-height,opacity] duration-normal ${
+          isOpen ? "mt-2 max-h-40 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        {body}
+      </span>
+    </button>
+  );
+}
+
 function DifferentiatorsSection() {
   const reducedMotion = useReducedMotionPreference();
   const [playing, setPlaying] = useState(true);
   const isPlaying = playing && !reducedMotion;
 
   return (
-    <section className="relative bg-[--color-paper]">
+    <section className="relative bg-[var(--color-paper)]">
       <div className="mx-auto flex w-full max-w-[72rem] flex-wrap items-center gap-10 px-6 py-[clamp(64px,8vw,96px)] sm:gap-20 sm:px-16">
         <div className="flex min-w-[340px] flex-[48_1_0%] flex-col gap-6">
-          <div className="text-[13px] font-bold uppercase tracking-[.14em] text-eyebrow">Why Rill Singh</div>
+        <div className="text-[13px] font-bold uppercase tracking-[.14em] text-eyebrow">Why Rill Singh</div>
           <h2 className="font-[var(--font-heading)] text-[clamp(2.25rem,1.5rem+3vw,4rem)] font-semibold leading-[1.08] tracking-[-0.01em] text-navy-darkest">
             Built to advise. Structured to deliver.
           </h2>
@@ -321,7 +362,7 @@ function DifferentiatorsSection() {
           <div className="mt-2">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2.5 rounded-full bg-terracotta px-8 py-[18px] text-[14px] font-bold uppercase tracking-[.04em] text-navy-darkest transition-colors hover:bg-terracotta-hover"
+              className="inline-flex items-center gap-2.5 rounded-full bg-[#84A822] px-8 py-[18px] text-[14px] font-bold uppercase tracking-[.04em] text-navy-darkest transition-colors hover:bg-[#6F8B1E]"
             >
               Start a conversation <span aria-hidden="true">→</span>
             </Link>
@@ -350,6 +391,11 @@ function DifferentiatorsSection() {
               }}
             />
             <DiamondMotif left="50%" top="52%" size="80%" animate playing={isPlaying} />
+            <div className="absolute inset-0 z-[4] flex flex-col justify-center gap-4 p-[clamp(16px,3vw,28px)]">
+              {DIFFERENTIATORS.map((d) => (
+                <DifferentiatorCard key={d.title} title={d.title} body={d.body} bg={d.bg} text={d.text} />
+              ))}
+            </div>
             <button
               type="button"
               onClick={() => setPlaying((p) => !p)}
@@ -358,27 +404,14 @@ function DifferentiatorsSection() {
             >
               {isPlaying ? (
                 <span className="flex gap-1">
-                  <span className="h-3 w-[3px] rounded-[1px] bg-[--color-paper]" />
-                  <span className="h-3 w-[3px] rounded-[1px] bg-[--color-paper]" />
+                  <span className="h-3 w-[3px] rounded-[1px] bg-[var(--color-paper)]" />
+                  <span className="h-3 w-[3px] rounded-[1px] bg-[var(--color-paper)]" />
                 </span>
               ) : (
-                <span className="ml-0.5 h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-[--color-paper]" />
+                <span className="ml-0.5 h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent border-l-[var(--color-paper)]" />
               )}
             </button>
           </div>
-        </div>
-      </div>
-
-      <div className="mx-auto w-full max-w-[72rem] px-6 pb-[clamp(64px,8vw,96px)] sm:px-16">
-        <div className="flex flex-col gap-9 sm:flex-row">
-          {DIFFERENTIATORS.map((d) => (
-            <div key={d.title} className="flex flex-1 flex-col gap-2.5 border-t border-navy-darkest/16 pr-2 pt-5">
-              <h3 className="font-[var(--font-heading)] text-[19px] font-semibold leading-[1.3] text-navy-darkest">
-                {d.title}
-              </h3>
-              <p className="text-[15px] leading-[1.6] text-[#5B6472]">{d.body}</p>
-            </div>
-          ))}
         </div>
       </div>
     </section>
@@ -554,7 +587,7 @@ function ClusterCardSmall({
 ════════════════════════════════════════════════════════════════════ */
 function PointOfViewSection() {
   return (
-    <section className="relative bg-[--color-paper]">
+    <section className="relative bg-[var(--color-paper)]">
       <div className="mx-auto flex w-full max-w-[44rem] flex-col items-center px-6 py-[clamp(80px,9vw,128px)] text-center sm:px-16">
         <p className="font-[var(--font-heading)] text-[clamp(1.75rem,1.2rem+3.2vw,3.25rem)] font-normal leading-[1.2] tracking-[-0.01em] text-navy-darkest">
           Africa&apos;s next decade belongs to institutions that can execute.
@@ -597,7 +630,7 @@ function IndustriesSection() {
         <div className="flex gap-3 overflow-x-auto pb-4 [scrollbar-width:thin] lg:gap-1.5">
           <div className="relative h-[clamp(360px,52vw,520px)] w-[88%] flex-none overflow-hidden rounded-2xl bg-[linear-gradient(165deg,#0B355E_0%,#021024_82%)] sm:w-[58%]">
             <DiamondMotif left="16%" top="50%" size="110%" />
-            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 rounded-t-2xl bg-[--color-paper] p-[22px]">
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 rounded-t-2xl bg-[var(--color-paper)] p-[22px]">
               <div className="text-[0.65rem] font-bold uppercase tracking-[.12em] text-blue-mid">Featured sector</div>
               <h3 className="font-[var(--font-heading)] text-[1.4rem] font-semibold leading-[1.2] text-navy-darkest">
                 {featured.title}
@@ -618,7 +651,7 @@ function IndustriesSection() {
               className="group relative h-[clamp(360px,52vw,520px)] w-[88%] flex-none overflow-hidden rounded-2xl bg-[linear-gradient(165deg,#0F3E6B_0%,#052659_85%)] sm:w-[46%] lg:w-[34%]"
             >
               <DiamondMotif left={`${20 + i * 30}%`} top={i % 2 === 0 ? "16%" : "88%"} size="120%" />
-              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 overflow-hidden rounded-t-2xl bg-[--color-paper] p-[18px] lg:h-[34%] lg:transition-[height] lg:duration-500 lg:ease-[cubic-bezier(0.25,0.46,0.45,0.94)] lg:group-hover:h-full lg:group-focus-within:h-full">
+              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 overflow-hidden rounded-t-2xl bg-[var(--color-paper)] p-[18px] lg:h-[34%] lg:transition-[height] lg:duration-500 lg:ease-[cubic-bezier(0.25,0.46,0.45,0.94)] lg:group-hover:h-full lg:group-focus-within:h-full">
                 <div className="text-[0.65rem] font-bold uppercase tracking-[.12em] text-blue-mid">Sector</div>
                 <h3 className="max-w-[20ch] font-[var(--font-heading)] text-[1.15rem] font-semibold leading-[1.25] text-navy-darkest">
                   {industry.title}
@@ -753,7 +786,7 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
 ════════════════════════════════════════════════════════════════════ */
 function CtaBandSection() {
   return (
-    <section className="relative overflow-hidden bg-[--color-paper]">
+    <section className="relative overflow-hidden bg-[var(--color-paper)]">
       <div className="flex w-full flex-col md:flex-row md:items-stretch">
         <div className="flex flex-none flex-col gap-[22px] px-6 py-[clamp(56px,7vw,88px)] sm:px-16 md:w-[44%] md:justify-center md:px-16">
           <div className="text-[13px] font-bold uppercase tracking-[.14em] text-blue-mid">Get in touch</div>

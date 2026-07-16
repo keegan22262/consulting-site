@@ -146,57 +146,59 @@
   --shadow-card-hover: 0 1px 4px rgba(0,0,0,0.06);
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   Global Base
-   ══════════════════════════════════════════════════════════════════════════ */
-html {
-  scroll-behavior: smooth;
-  overflow-anchor: none;
-  font-family: var(--font-body);
-}
-
-@media (prefers-reduced-motion: reduce) {
+@layer base {
+  /* ══════════════════════════════════════════════════════════════════════════
+     Global Base
+     ══════════════════════════════════════════════════════════════════════════ */
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
+    overflow-anchor: none;
+    font-family: var(--font-body);
   }
-}
 
-body {
-  font-family: var(--font-body) !important;
-  font-size: var(--text-body);
-  line-height: var(--line-height-body);
-  color: var(--color-text-dark);
-  background: var(--background);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   Typography — Playfair Display headings
-   ══════════════════════════════════════════════════════════════════════════ */
-h1, h2, h3, h4 {
-  font-family: var(--font-heading);
-  font-weight: 400;
-}
+  body {
+    font-family: var(--font-body) !important;
+    font-size: var(--text-body);
+    line-height: var(--line-height-body);
+    color: var(--color-text-dark);
+    background: var(--background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-h1 {
-  font-size: var(--text-h1);
-  line-height: var(--line-height-h1);
-}
+  /* ══════════════════════════════════════════════════════════════════════════
+     Typography — Playfair Display headings
+     ══════════════════════════════════════════════════════════════════════════ */
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+  }
 
-h2 {
-  font-size: var(--text-h2);
-  line-height: var(--line-height-h2);
-}
+  h1 {
+    font-size: var(--text-h1);
+    line-height: var(--line-height-h1);
+  }
 
-h3 {
-  font-size: var(--text-h3);
-  line-height: var(--line-height-h3);
-}
+  h2 {
+    font-size: var(--text-h2);
+    line-height: var(--line-height-h2);
+  }
 
-p {
-  font-size: var(--text-body);
-  line-height: var(--line-height-body);
+  h3 {
+    font-size: var(--text-h3);
+    line-height: var(--line-height-h3);
+  }
+
+  p {
+    font-size: var(--text-body);
+    line-height: var(--line-height-body);
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
