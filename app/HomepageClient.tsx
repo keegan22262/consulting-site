@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import DiamondMotif from "@/components-v2/ui/DiamondMotif";
 import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPreference";
@@ -47,6 +47,13 @@ const DIFFERENTIATORS = [
   },
 ] as const;
 
+/* ── Hero copy ── */
+const HERO_HEADLINE = "Institutional advisory, built for Execution.";
+const HERO_ANSWER_WORDS = [
+  "We", "advise", "across", "ten", "disciplines", "and", "eleven", "sectors", "pairing",
+  "institutional", "rigor", "with", "judgment", "that", "holds", "up", "on", "the", "ground.",
+];
+
 const FEATURED_INDUSTRY_ID = "financial-services";
 const SUPPORTING_INDUSTRY_IDS = ["public-sector-government", "energy-resources", "industrials-manufacturing"];
 
@@ -67,51 +74,225 @@ export default function HomepageClient({ insights }: HomepageClientProps) {
 /* ════════════════════════════════════════════════════════════════════
    SECTION 1 — HERO
 ════════════════════════════════════════════════════════════════════ */
-function HeroSection() {
+function AnimatedWords({
+  words,
+  reducedMotion,
+  baseDelay,
+  step,
+  duration = 500,
+  gapEm = 0.28,
+}: {
+  words: string[];
+  reducedMotion: boolean;
+  baseDelay: number;
+  step: number;
+  duration?: number;
+  gapEm?: number;
+}) {
+  if (reducedMotion) return <>{words.join(" ")}</>;
   return (
-    <section data-homepage-hero className="relative bg-white">
-      <div className="mx-auto w-full max-w-[72rem] px-6 pt-[clamp(96px,16vh,152px)] sm:px-16">
-        <div className="flex flex-col items-center gap-[clamp(18px,2.4vw,26px)] text-center">
-          <div className="text-[13px] font-semibold uppercase tracking-[.14em] text-eyebrow">
-            Pan-African institutional advisory
-          </div>
-          <h1 className="max-w-[38rem] font-[var(--font-heading)] text-[clamp(2.25rem,1.55rem+3vw,4.625rem)] font-semibold leading-[1.08] tracking-[-0.01em] text-navy-darkest">
-            Institutional advisory, built for African markets.
-          </h1>
+    <>
+      {words.map((word, i) => (
+        <span
+          key={i}
+          className="inline-block"
+          style={{
+            marginRight: i < words.length - 1 ? `${gapEm}em` : undefined,
+            opacity: 0,
+            animation: `rs-fade-up ${duration}ms ease forwards`,
+            animationDelay: `${baseDelay + i * step}ms`,
+          }}
+        >
+          {word}
+        </span>
+      ))}
+    </>
+  );
+}
+
+const HERO_CURSOR_BLINK_KEYFRAMES = "@keyframes rs-hero-cursor-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }";
+
+function HeroPauseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+      <path d="M9 5v14" />
+      <path d="M15 5v14" />
+    </svg>
+  );
+}
+
+function HeroPlayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" stroke="none" aria-hidden>
+      <path d="M8 5l11 7-11 7V5z" />
+    </svg>
+  );
+}
+
+function HeroHeadline({ text }: { text: string }) {
+  const [revealedText, setRevealedText] = useState("");
+
+  useEffect(() => {
+    let i = 0;
+    const id = setInterval(() => {
+      i += 1;
+      setRevealedText(text.slice(0, i));
+      if (i >= text.length) clearInterval(id);
+    }, 70);
+    return () => clearInterval(id);
+  }, [text]);
+
+  const complete = revealedText.length === text.length;
+
+  return (
+    <>
+      <style>{HERO_CURSOR_BLINK_KEYFRAMES}</style>
+      <span className="sr-only">{text}</span>
+      <span aria-hidden="true">
+        {revealedText}
+        {!complete && (
+          <span aria-hidden="true" style={{ animation: "rs-hero-cursor-blink 1s step-end infinite" }}>
+            |
+          </span>
+        )}
+      </span>
+    </>
+  );
+}
+
+function HeroSection() {
+  const reducedMotion = useReducedMotionPreference();
+  const [videoPlaying, setVideoPlaying] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleVideo = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play();
+      setVideoPlaying(true);
+    } else {
+      video.pause();
+      setVideoPlaying(false);
+    }
+  };
+
+  return (
+    <section data-homepage-hero className="relative overflow-hidden bg-white">
+      <div className="mx-auto w-full max-w-[72rem] px-6 pb-4 pt-[clamp(80px,10vw,140px)] text-center sm:px-16">
+        <div
+          className="text-[clamp(1.9rem,1.3rem+2vw,3.25rem)] font-bold leading-[1.15] tracking-[0.02em] text-[#477256]"
+          style={reducedMotion ? undefined : { opacity: 0, animation: "rs-fade-up 700ms ease forwards", animationDelay: "120ms" }}
+        >
+          Pan-African
+          <br />
+          Institutional Advisory
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-[72rem] px-6 pt-[clamp(36px,5vw,56px)] sm:px-16">
-        <div className="relative min-h-[clamp(420px,50vw,640px)] overflow-hidden rounded-3xl bg-[linear-gradient(155deg,#0B355E_0%,#021024_78%)]">
-          <DiamondMotif left="78%" top="26%" size="100%" />
-          <div className="absolute right-[clamp(24px,3vw,40px)] top-[clamp(24px,3vw,40px)] flex w-[min(28rem,80%)] flex-col gap-5 rounded-2xl bg-[--color-paper] p-[clamp(24px,3.2vw,36px)]">
-            <p className="max-w-[30ch] text-[clamp(15px,0.3vw+14px,17px)] leading-[1.6] text-[#37424F]">
+      <div
+        className="relative aspect-[16/9] max-h-[90vh] overflow-hidden rounded-3xl bg-[linear-gradient(155deg,#0B355E_0%,#021024_78%)]"
+        style={{ width: "calc(100vw - 40px)", maxWidth: "calc(100vw - 40px)", margin: "0 auto" }}
+      >
+          {reducedMotion ? (
+            <img
+              src="/videos/earth-poster.jpg"
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              poster="/videos/earth-poster.jpg"
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            >
+              <source src="/videos/earth-loop.mp4" type="video/mp4" />
+            </video>
+          )}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(155deg, rgba(11,53,94,.68) 0%, rgba(2,16,36,.68) 78%)" }}
+          />
+
+          <DiamondMotif left="78%" top="26%" size="100%" tone="paper" />
+
+          <h1 className="absolute left-[5%] top-[8%] z-[4] max-w-[38%] pt-[clamp(16px,2vw,24px)] font-[var(--font-heading)] text-[clamp(1.7rem,1.1rem+1.6vw,2.6rem)] font-semibold leading-[1.1] tracking-[-0.01em] text-white">
+            <HeroHeadline text={HERO_HEADLINE} />
+          </h1>
+
+          <div className="absolute right-[5%] top-[8%] z-[4] flex w-[38%] flex-col gap-3 rounded-3xl bg-[#F7F6F2] p-[clamp(16px,1.6vw,22px)]">
+            <p className="text-[clamp(13px,0.4vw+11px,15px)] leading-[1.5] text-[#052659]">
               We advise governments, investors, and enterprises across ten disciplines and eleven
-              sectors — with the rigor boards expect and the ground truth execution demands.
+              sectors with rigor board expectations and ground truth execution demands.
             </p>
-            <div className="flex flex-wrap items-center gap-4 sm:gap-7">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
               <Link
                 href="/contact"
-                className="rounded-[2px] bg-terracotta px-7 py-4 text-[15px] font-semibold leading-none text-navy-darkest transition-colors hover:bg-terracotta-hover"
+                className="whitespace-nowrap rounded-full bg-[#84A822] px-5 py-3 text-[13px] font-semibold leading-none text-navy-darkest transition-colors hover:bg-[#6F8B1E]"
               >
                 Start a conversation
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-eyebrow transition-transform hover:translate-x-0.5 hover:underline"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap text-[12px] font-semibold text-navy-darkest transition-transform hover:translate-x-0.5 hover:underline"
               >
                 Explore our services <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="mx-auto w-full max-w-[72rem] px-6 pb-[clamp(64px,8vw,96px)] pt-[clamp(24px,3vw,32px)] sm:px-16">
-        <div className="text-[12px] font-medium uppercase tracking-[.08em] text-navy-darkest/55">
-          10 disciplines · 11 sectors · Nairobi
+          <div className="absolute bottom-[5%] left-[5%] z-[5] flex w-[42%] flex-col gap-2 rounded-3xl bg-[#F7F6F2] p-[clamp(14px,1.6vw,18px)]">
+            <div className="text-[13px] font-semibold uppercase leading-[1.4] tracking-[.06em] text-[#477256]">
+              Ask Jibu
+            </div>
+            <div className="flex items-center gap-2.5 rounded-full border border-navy-darkest/12 bg-white py-1.5 pr-1.5 pl-[18px]">
+              <input
+                type="text"
+                placeholder="Ask me anything?"
+                disabled
+                className="min-w-0 flex-1 border-none bg-transparent py-2 text-[14px] text-[#37424F] outline-none"
+              />
+              <span
+                aria-hidden="true"
+                className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-navy-darkest text-[14px] text-white"
+              >
+                →
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="text-[13px] font-bold text-navy-darkest">Rill Singh Answer</div>
+              <p className="max-w-[36ch] text-[14px] leading-[1.6] text-[#052659]">
+                <AnimatedWords
+                  words={HERO_ANSWER_WORDS}
+                  reducedMotion={reducedMotion}
+                  baseDelay={1500}
+                  step={45}
+                  duration={400}
+                  gapEm={0.22}
+                />
+              </p>
+            </div>
+          </div>
+
+          {!reducedMotion && (
+            <button
+              type="button"
+              onClick={toggleVideo}
+              aria-label={videoPlaying ? "Pause background video" : "Play background video"}
+              className="absolute bottom-[clamp(24px,3vw,40px)] right-[clamp(24px,3vw,40px)] z-[6] flex h-10 w-10 items-center justify-center rounded-[10px] border border-[rgba(247,246,242,.24)] bg-[rgba(247,246,242,.14)] text-white transition-colors hover:bg-[rgba(247,246,242,.24)]"
+            >
+              {videoPlaying ? <HeroPauseIcon /> : <HeroPlayIcon />}
+            </button>
+          )}
         </div>
-      </div>
     </section>
   );
 }
