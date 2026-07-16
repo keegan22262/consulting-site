@@ -20,7 +20,7 @@ const LATEST_INSIGHTS_QUERY = groq`*[_type == "insight" && (status == "published
     title,
     "slug": coalesce(slug.current, slug),
     "dek": coalesce(excerpt, summary, pt::text(coalesce(body, content))),
-    "category": coalesce(theme->title, category),
+    "category": category,
     "date": coalesce(publishedAt, _createdAt)
   }`;
 

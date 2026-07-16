@@ -191,7 +191,7 @@ function HeroSection() {
       </div>
 
       <div
-        className="relative aspect-[16/9] max-h-[90vh] overflow-hidden rounded-3xl bg-[linear-gradient(155deg,#0B355E_0%,#021024_78%)]"
+        className="relative overflow-hidden rounded-3xl bg-[linear-gradient(155deg,#0B355E_0%,#021024_78%)] p-6 md:aspect-[16/9] md:max-h-[90vh] md:p-0"
         style={{ width: "calc(100vw - 40px)", maxWidth: "calc(100vw - 40px)", margin: "0 auto" }}
       >
           {reducedMotion ? (
@@ -224,11 +224,11 @@ function HeroSection() {
 
           <DiamondMotif left="78%" top="26%" size="100%" tone="paper" />
 
-          <h1 className="absolute left-[5%] top-[8%] z-[4] max-w-[38%] pt-[clamp(16px,2vw,24px)] font-[var(--font-heading)] text-[clamp(1.7rem,1.1rem+1.6vw,2.6rem)] font-semibold leading-[1.1] tracking-[-0.01em] text-white">
+          <h1 className="relative z-[4] pt-[clamp(16px,2vw,24px)] font-[var(--font-heading)] text-[clamp(1.7rem,1.1rem+1.6vw,2.6rem)] font-semibold leading-[1.1] tracking-[-0.01em] text-white md:absolute md:left-[5%] md:top-[8%] md:max-w-[38%]">
             <HeroHeadline text={HERO_HEADLINE} />
           </h1>
 
-          <div className="absolute right-[5%] top-[8%] z-[4] flex w-[38%] flex-col gap-3 rounded-3xl bg-[#F7F6F2] p-[clamp(16px,1.6vw,22px)]">
+          <div className="relative z-[4] mt-8 flex w-full flex-col gap-3 rounded-3xl bg-[#F7F6F2] p-[clamp(16px,1.6vw,22px)] md:absolute md:right-[5%] md:top-[8%] md:mt-0 md:w-[38%]">
             <p className="text-[clamp(13px,0.4vw+11px,15px)] leading-[1.5] text-[#052659]">
               We advise governments, investors, and enterprises across ten disciplines and eleven
               sectors with rigor board expectations and ground truth execution demands.
@@ -249,7 +249,7 @@ function HeroSection() {
             </div>
           </div>
 
-          <div className="absolute bottom-[5%] left-[5%] z-[5] flex w-[42%] flex-col gap-2 rounded-3xl bg-[#F7F6F2] p-[clamp(14px,1.6vw,18px)]">
+          <div className="relative z-[5] mt-8 flex w-full flex-col gap-2 rounded-3xl bg-[#F7F6F2] p-[clamp(14px,1.6vw,18px)] md:absolute md:bottom-[5%] md:left-[5%] md:mt-0 md:w-[42%]">
             <div className="text-[13px] font-semibold uppercase leading-[1.4] tracking-[.06em] text-[#477256]">
               Ask Jibu
             </div>
@@ -287,7 +287,7 @@ function HeroSection() {
               type="button"
               onClick={toggleVideo}
               aria-label={videoPlaying ? "Pause background video" : "Play background video"}
-              className="absolute bottom-[clamp(24px,3vw,40px)] right-[clamp(24px,3vw,40px)] z-[6] flex h-10 w-10 items-center justify-center rounded-[10px] border border-[rgba(247,246,242,.24)] bg-[rgba(247,246,242,.14)] text-white transition-colors hover:bg-[rgba(247,246,242,.24)]"
+              className="absolute bottom-[clamp(24px,3vw,40px)] right-[clamp(24px,3vw,40px)] z-[6] hidden h-10 w-10 items-center justify-center rounded-[10px] border border-[rgba(247,246,242,.24)] bg-[rgba(247,246,242,.14)] text-white transition-colors hover:bg-[rgba(247,246,242,.24)] md:flex"
             >
               {videoPlaying ? <HeroPauseIcon /> : <HeroPlayIcon />}
             </button>
