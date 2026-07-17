@@ -16,6 +16,16 @@ import { INSIGHTS_DATA, TOPIC_FILTERS } from "@/src/sections/insights/data";
 
 const ITEMS_PER_PAGE = 6;
 
+const SECTOR_IMAGE_BY_CATEGORY: Record<string, string> = {
+  Technology: "/images/insights/sectors/technology.jpg",
+  Finance: "/images/insights/sectors/finance.jpg",
+  "Public Sector": "/images/insights/sectors/public-policy.jpg",
+  Strategy: "/images/insights/sectors/strategy.jpg",
+  Sustainability: "/images/insights/sectors/infrastructure.jpg",
+};
+
+const FALLBACK_SECTOR_IMAGE = "/images/insights/sectors/strategy.jpg";
+
 const estimateReadTime = (text: string) => {
   const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(3, Math.round(wordCount / 200));
@@ -46,7 +56,10 @@ export default function InsightsPageClient() {
         category: item.category ?? "Insight",
         date: item.publishedAt.split("T")[0],
         readTime: item.readingTime || estimateReadTime(item.excerpt ?? ""),
-        image: item.mainImage ?? "",
+        image:
+          item.mainImage ||
+          SECTOR_IMAGE_BY_CATEGORY[item.category ?? ""] ||
+          FALLBACK_SECTOR_IMAGE,
       }));
 
     return mapped.length > 0 ? mapped : INSIGHTS_DATA;

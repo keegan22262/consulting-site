@@ -9,9 +9,10 @@ interface DiamondMotifProps {
   tone?: "blue" | "paper";
 }
 
-const RING_COLORS: Record<"blue" | "paper", [string, string, string, string]> = {
+const RING_COLORS: Record<"blue" | "paper" | "photo", [string, string, string, string]> = {
   blue: ["rgba(125,160,202,.14)", "rgba(125,160,202,.18)", "rgba(125,160,202,.22)", "rgba(193,122,70,.7)"],
   paper: ["rgba(247,246,242,.14)", "rgba(247,246,242,.18)", "rgba(247,246,242,.22)", "rgba(247,246,242,.7)"],
+  photo: ["rgba(193,122,70,.14)", "rgba(193,122,70,.18)", "rgba(193,122,70,.22)", "rgba(193,122,70,.7)"],
 };
 
 /**

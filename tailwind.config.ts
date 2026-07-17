@@ -27,7 +27,16 @@ const config: Config = {
         navy: {
           darkest: "#021024",
           dark: "#052659",
+          mid: "#19507A",
         },
+        sage: {
+          DEFAULT: "#477256",
+        },
+        olive: {
+          DEFAULT: "#84A822",
+          hover: "#6F8B1E",
+        },
+        paper: "#F7F6F2",
         blue: {
           mid: "#5483B3",
           light: "#7DA0CA",
@@ -68,13 +77,10 @@ const config: Config = {
         content: "1200px",
         prose: "65ch",
       },
-      borderRadius: {
-        card: "4px",
-      },
       transitionDuration: {
-        fast: "120ms",
-        normal: "200ms",
-        slow: "320ms",
+        fast: "150ms",
+        normal: "300ms",
+        slow: "500ms",
       },
     },
   },

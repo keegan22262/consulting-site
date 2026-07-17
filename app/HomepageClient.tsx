@@ -63,15 +63,29 @@ const HERO_ANSWER_WORDS = [
 const FEATURED_INDUSTRY_ID = "financial-services";
 const SUPPORTING_INDUSTRY_IDS = ["public-sector-government", "energy-resources", "industrials-manufacturing"];
 
+/* ── Homepage-featured insight images — matched by keyword in the title ── */
+const INSIGHT_IMAGES: { match: string; src: string }[] = [
+  { match: "resilience", src: "/images/insights/Institutional-cooperation.jpg" },
+  { match: "climate risk", src: "/images/insights/sustainability.jpeg" },
+  { match: "growth stack", src: "/images/insights/Digital-connectivity.jpg" },
+];
+
+function getInsightImage(title: string): string | null {
+  const found = INSIGHT_IMAGES.find((entry) =>
+    title.toLowerCase().includes(entry.match.toLowerCase())
+  );
+  return found?.src ?? null;
+}
+
 export default function HomepageClient({ insights }: HomepageClientProps) {
   return (
     <>
       <HeroSection />
       <DifferentiatorsSection />
-      <ServiceClustersSection />
-      <PointOfViewSection />
-      <IndustriesSection />
       {insights.length > 0 && <InsightsSection insights={insights} />}
+      <IndustriesSection />
+      <PointOfViewSection />
+      <ServiceClustersSection />
       <CtaBandSection />
     </>
   );
@@ -692,31 +706,55 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
   const last = insights.length - 1;
 
   return (
-    <section className="relative bg-navy-darkest">
+    <section className="relative bg-paper">
       <div className="mx-auto w-full max-w-[72rem] px-6 py-[clamp(64px,8vw,96px)] sm:px-16">
         <div className="mb-[clamp(40px,5vw,56px)] flex max-w-[42rem] flex-col gap-4">
-          <div className="text-[13px] font-bold uppercase tracking-[.14em] text-blue-light">Insights</div>
-          <h2 className="font-[var(--font-heading)] text-[clamp(2.25rem,1.5rem+3vw,4rem)] font-semibold leading-[1.08] tracking-[-0.01em] text-white">
+          <div className="text-[13px] font-bold uppercase tracking-[.06em] text-sage">Insights</div>
+          <h2 className="font-[var(--font-heading)] text-[clamp(2.25rem,1.5rem+3vw,4rem)] font-semibold leading-[1.08] tracking-[-0.01em] text-navy-darkest">
             Latest thinking.
           </h2>
+          <p className="text-[17px] leading-[1.75] text-[#37424F]">
+            Research and perspective from across financial services, public policy, energy, and industry — drawn from work on the ground, not observed from a distance.
+          </p>
         </div>
 
-        <div className="overflow-hidden rounded-[20px]">
+        <div className="overflow-hidden">
           <div
-            className="flex"
+            className="flex gap-4"
             style={{
-              transform: `translateX(-${index * 100}%)`,
+              transform: `translateX(calc(${8 - index * 84}% - ${index * 16}px))`,
               transition: reducedMotion ? "none" : "transform 300ms ease",
             }}
           >
             {insights.map((insight, i) => (
               <div
                 key={insight._id}
-                className="relative min-h-[380px] w-full flex-none overflow-hidden bg-[linear-gradient(165deg,#052659_0%,#021024_76%)] sm:min-h-[460px]"
+                className="relative min-h-[380px] w-[84%] flex-none overflow-hidden rounded-[24px] sm:min-h-[460px]"
+                style={{ opacity: i === index ? 1 : 0.55, transition: "opacity 300ms ease" }}
               >
-                <DiamondMotif left={`${20 + i * 30}%`} top={i % 2 === 0 ? "30%" : "78%"} size="80%" />
+                {getInsightImage(insight.title) ? (
+                  <>
+                    <img
+                      src={getInsightImage(insight.title)!}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0"
+                      style={{ background: "linear-gradient(to top, rgba(2,16,36,.88) 0%, rgba(2,16,36,.55) 30%, rgba(2,16,36,0) 60%)" }}
+                    />
+                    <DiamondMotif left={`${20 + i * 30}%`} top={i % 2 === 0 ? "30%" : "78%"} size="80%" tone="paper" />
+                  </>
+                ) : (
+                  <>
+                    <div className="absolute inset-0 bg-[linear-gradient(165deg,#052659_0%,#021024_76%)]" />
+                    <DiamondMotif left={`${20 + i * 30}%`} top={i % 2 === 0 ? "30%" : "78%"} size="80%" />
+                  </>
+                )}
                 <div className="relative z-[2] flex h-full max-w-[36rem] flex-col justify-end gap-3 p-[clamp(28px,4vw,48px)]">
-                  <div className="text-[11px] font-bold uppercase tracking-[.12em] text-blue-light">
+                  <div className="text-[11px] font-bold uppercase tracking-[.12em] text-[#7DA0CA]">
                     {insight.category}
                   </div>
                   <h3 className="font-[var(--font-heading)] text-[clamp(1.5rem,1.2rem+1.6vw,2.15rem)] font-normal leading-[1.2] text-white">
@@ -739,7 +777,7 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
               aria-label="Previous insight"
               disabled={index === 0}
               onClick={() => setIndex((i) => Math.max(0, i - 1))}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-blue-light/35 text-blue-light transition-colors hover:border-blue-light hover:bg-blue-light/12 disabled:opacity-35"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-navy-darkest/25 text-navy-darkest transition-colors hover:border-navy-darkest hover:bg-navy-darkest/6 disabled:opacity-35"
             >
               ‹
             </button>
@@ -752,7 +790,7 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
                   aria-current={i === index}
                   onClick={() => setIndex(i)}
                   className="h-[7px] rounded-full transition-[width,background] duration-200"
-                  style={{ width: i === index ? 22 : 7, background: i === index ? "#7DA0CA" : "rgba(125,160,202,.28)" }}
+                  style={{ width: i === index ? 22 : 7, background: i === index ? "#19507A" : "rgba(2,16,36,.18)" }}
                 />
               ))}
             </div>
@@ -761,7 +799,7 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
               aria-label="Next insight"
               disabled={index === last}
               onClick={() => setIndex((i) => Math.min(last, i + 1))}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-blue-light/35 text-blue-light transition-colors hover:border-blue-light hover:bg-blue-light/12 disabled:opacity-35"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-navy-darkest/25 text-navy-darkest transition-colors hover:border-navy-darkest hover:bg-navy-darkest/6 disabled:opacity-35"
             >
               ›
             </button>
@@ -771,7 +809,7 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
         <div className="mt-[clamp(24px,3vw,32px)] flex justify-center">
           <Link
             href="/insights"
-            className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-blue-light transition-transform hover:translate-x-0.5 hover:underline"
+            className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-navy-darkest transition-transform hover:translate-x-0.5 hover:underline"
           >
             All insights <span aria-hidden="true">→</span>
           </Link>
