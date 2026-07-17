@@ -6,7 +6,7 @@ interface DiamondMotifProps {
   animate?: boolean;
   playing?: boolean;
   /** Ring border color set — "blue" (default, used on navy/paper backgrounds) or "paper" (cream-tinted, used over the Hero's darkened video panel). */
-  tone?: "blue" | "paper";
+  tone?: "blue" | "paper" | "photo";
 }
 
 const RING_COLORS: Record<"blue" | "paper" | "photo", [string, string, string, string]> = {

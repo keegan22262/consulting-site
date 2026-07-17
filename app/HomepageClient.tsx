@@ -4,7 +4,7 @@ import Link from "next/link";
 import DiamondMotif from "@/components-v2/ui/DiamondMotif";
 import { useReducedMotionPreference } from "@/src/lib/motion/useReducedMotionPreference";
 import { CLUSTERS, SERVICES } from "@/src/sections/services/data";
-import { INDUSTRIES } from "@/src/sections/industries/data";
+import { INDUSTRIES, type IndustryData } from "@/src/sections/industries/data";
 import type { HomepageInsight } from "./page";
 
 interface HomepageClientProps {
@@ -62,6 +62,13 @@ const HERO_ANSWER_WORDS = [
 
 const FEATURED_INDUSTRY_ID = "financial-services";
 const SUPPORTING_INDUSTRY_IDS = ["public-sector-government", "energy-resources", "industrials-manufacturing"];
+
+const INDUSTRY_IMAGES: Record<string, string> = {
+  "financial-services": "/images/industries/Financial Services & Banking Advisory.jpg",
+  "public-sector-government": "/images/industries/Public Sector & Government.jpg",
+  "energy-resources": "/images/industries/Energy & Natural Resources.jpg",
+  "industrials-manufacturing": "/images/industries/Industrials & Manufacturing.jpg",
+};
 
 /* ── Homepage-featured insight images — matched by keyword in the title ── */
 const INSIGHT_IMAGES: { match: string; src: string }[] = [
@@ -622,10 +629,68 @@ function PointOfViewSection() {
 /* ════════════════════════════════════════════════════════════════════
    SECTION 5 — INDUSTRIES
 ════════════════════════════════════════════════════════════════════ */
+function IndustryTile({
+  industry,
+  image,
+  minHeight,
+  featured = false,
+  className,
+}: {
+  industry: IndustryData;
+  image?: string;
+  minHeight: string;
+  featured?: boolean;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={`/industries/${industry.id}`}
+      style={{ minHeight }}
+      className={`group relative flex-1 overflow-hidden rounded-2xl bg-navy-darkest ${className ?? ""}`}
+    >
+      {image ? (
+        <img
+          src={encodeURI(image)}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+        />
+      ) : (
+        <DiamondMotif left="50%" top="50%" size="120%" tone="photo" />
+      )}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(to top, rgba(2,16,36,.92) 0%, rgba(2,16,36,.58) 34%, rgba(2,16,36,.08) 68%)" }}
+      />
+      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-[clamp(18px,2vw,26px)]">
+        <div className="text-[0.65rem] font-bold uppercase tracking-[.12em] text-blue-mid">
+          {featured ? "Featured sector" : "Sector"}
+        </div>
+        <h3
+          className={`font-[var(--font-heading)] font-semibold leading-[1.2] text-white ${
+            featured ? "text-[clamp(1.4rem,1.1rem+1vw,1.9rem)]" : "max-w-[24ch] text-[1.15rem]"
+          }`}
+        >
+          {industry.title}
+        </h3>
+        <p
+          className={`leading-[1.5] text-[#C3D0DF] ${featured ? "text-[14px] line-clamp-3" : "max-w-[42ch] text-[13px] line-clamp-2"}`}
+        >
+          {industry.description}
+        </p>
+        <span className="mt-1 inline-flex items-center gap-1.5 text-[13px] font-bold text-[#B08858] transition-transform group-hover:translate-x-0.5">
+          Explore sector <span aria-hidden="true">→</span>
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 function IndustriesSection() {
   const featured = INDUSTRIES.find((i) => i.id === FEATURED_INDUSTRY_ID);
-  const supporting = SUPPORTING_INDUSTRY_IDS.map((id) => INDUSTRIES.find((i) => i.id === id)).filter(
-    (i): i is NonNullable<typeof i> => Boolean(i),
+  const [publicSector, energy, industrials] = SUPPORTING_INDUSTRY_IDS.map((id) =>
+    INDUSTRIES.find((i) => i.id === id),
   );
 
   if (!featured) return null;
@@ -641,47 +706,40 @@ function IndustriesSection() {
           </h2>
         </div>
 
-        <div className="flex gap-3 overflow-x-auto pb-4 [scrollbar-width:thin] lg:gap-1.5">
-          <div className="relative h-[clamp(360px,52vw,520px)] w-[88%] flex-none overflow-hidden rounded-2xl bg-[linear-gradient(165deg,#0B355E_0%,#021024_82%)] sm:w-[58%]">
-            <DiamondMotif left="16%" top="50%" size="110%" />
-            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 rounded-t-2xl bg-[var(--color-paper)] p-[22px]">
-              <div className="text-[0.65rem] font-bold uppercase tracking-[.12em] text-blue-mid">Featured sector</div>
-              <h3 className="font-[var(--font-heading)] text-[1.4rem] font-semibold leading-[1.2] text-navy-darkest">
-                {featured.title}
-              </h3>
-              <p className="text-[14px] leading-[1.5] text-[#37424F]">{featured.description}</p>
-              <Link
-                href={`/industries/${featured.id}`}
-                className="mt-1 inline-flex items-center gap-1.5 text-[14px] font-bold text-[#B08858] transition-transform hover:translate-x-0.5 hover:underline"
-              >
-                Explore sector <span aria-hidden="true">→</span>
-              </Link>
-            </div>
+        <div className="grid grid-cols-1 gap-[clamp(16px,2vw,24px)] md:grid-cols-[1.05fr_1fr] md:grid-rows-2">
+          {publicSector && (
+            <IndustryTile
+              industry={publicSector}
+              image={INDUSTRY_IMAGES[publicSector.id]}
+              minHeight="clamp(240px,28vw,320px)"
+              className="md:col-start-1 md:row-start-1"
+            />
+          )}
+
+          <div className="grid grid-cols-2 gap-[clamp(16px,2vw,24px)] md:col-start-1 md:row-start-2">
+            {energy && (
+              <IndustryTile
+                industry={energy}
+                image={INDUSTRY_IMAGES[energy.id]}
+                minHeight="clamp(180px,20vw,220px)"
+              />
+            )}
+            {industrials && (
+              <IndustryTile
+                industry={industrials}
+                image={INDUSTRY_IMAGES[industrials.id]}
+                minHeight="clamp(180px,20vw,220px)"
+              />
+            )}
           </div>
 
-          {supporting.map((industry, i) => (
-            <div
-              key={industry.id}
-              className="group relative h-[clamp(360px,52vw,520px)] w-[88%] flex-none overflow-hidden rounded-2xl bg-[linear-gradient(165deg,#0F3E6B_0%,#052659_85%)] sm:w-[46%] lg:w-[34%]"
-            >
-              <DiamondMotif left={`${20 + i * 30}%`} top={i % 2 === 0 ? "16%" : "88%"} size="120%" />
-              <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 overflow-hidden rounded-t-2xl bg-[var(--color-paper)] p-[18px] lg:h-[34%] lg:transition-[height] lg:duration-500 lg:ease-[cubic-bezier(0.25,0.46,0.45,0.94)] lg:group-hover:h-full lg:group-focus-within:h-full">
-                <div className="text-[0.65rem] font-bold uppercase tracking-[.12em] text-blue-mid">Sector</div>
-                <h3 className="max-w-[20ch] font-[var(--font-heading)] text-[1.15rem] font-semibold leading-[1.25] text-navy-darkest">
-                  {industry.title}
-                </h3>
-                <p className="text-[13px] leading-[1.5] text-[#37424F] lg:translate-y-2 lg:opacity-0 lg:transition-[opacity,transform] lg:duration-200 lg:ease-out lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100">
-                  {industry.description}
-                </p>
-                <Link
-                  href={`/industries/${industry.id}`}
-                  className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#B08858] hover:underline lg:translate-y-2 lg:opacity-0 lg:transition-[opacity,transform] lg:duration-200 lg:ease-out lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100"
-                >
-                  Explore sector <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-            </div>
-          ))}
+          <IndustryTile
+            industry={featured}
+            image={INDUSTRY_IMAGES[featured.id]}
+            minHeight="clamp(420px,48vw,560px)"
+            className="md:col-start-2 md:row-start-1 md:row-span-2"
+            featured
+          />
         </div>
 
         <div className="mt-[clamp(28px,3.5vw,36px)]">
@@ -714,7 +772,7 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
             Latest thinking.
           </h2>
           <p className="text-[17px] leading-[1.75] text-[#37424F]">
-            Research and perspective from across financial services, public policy, energy, and industry — drawn from work on the ground, not observed from a distance.
+            Research and perspective from across financial services, public policy, energy, and industry drawn from actual work on the ground.
           </p>
         </div>
       </div>
