@@ -707,8 +707,8 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
 
   return (
     <section className="relative bg-paper">
-      <div className="mx-auto w-full max-w-[72rem] px-6 py-[clamp(64px,8vw,96px)] sm:px-16">
-        <div className="mb-[clamp(40px,5vw,56px)] flex max-w-[42rem] flex-col gap-4">
+      <div className="mx-auto w-full max-w-[72rem] px-6 pt-[clamp(64px,8vw,96px)] sm:px-16">
+        <div className="flex max-w-[42rem] flex-col gap-4">
           <div className="text-[13px] font-bold uppercase tracking-[.06em] text-sage">Insights</div>
           <h2 className="font-[var(--font-heading)] text-[clamp(2.25rem,1.5rem+3vw,4rem)] font-semibold leading-[1.08] tracking-[-0.01em] text-navy-darkest">
             Latest thinking.
@@ -717,8 +717,12 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
             Research and perspective from across financial services, public policy, energy, and industry — drawn from work on the ground, not observed from a distance.
           </p>
         </div>
+      </div>
 
-        <div className="overflow-hidden">
+      <div
+        className="overflow-hidden"
+        style={{ width: "calc(100vw - 40px)", maxWidth: "calc(100vw - 40px)", margin: "clamp(32px, 4vw, 48px) auto" }}
+      >
           <div
             className="flex gap-4"
             style={{
@@ -770,8 +774,9 @@ function InsightsSection({ insights }: { insights: HomepageInsight[] }) {
           </div>
         </div>
 
+      <div className="mx-auto w-full max-w-[72rem] px-6 pb-[clamp(64px,8vw,96px)] sm:px-16">
         {insights.length > 1 && (
-          <div className="mt-[clamp(24px,3vw,32px)] flex items-center justify-center gap-5">
+          <div className="flex items-center justify-center gap-5">
             <button
               type="button"
               aria-label="Previous insight"
