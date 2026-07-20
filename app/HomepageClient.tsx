@@ -54,7 +54,7 @@ const DIFFERENTIATORS = [
 ] as const;
 
 /* ── Hero copy ── */
-const HERO_HEADLINE = "Institutional advisory, built for Execution.";
+const HERO_HEADLINE = "Institutional Advisory, built for Growth, Transformation, and Execution.";
 const HERO_ANSWER_WORDS = [
   "We", "advise", "across", "ten", "disciplines", "and", "eleven", "sectors", "pairing",
   "institutional", "rigor", "with", "judgment", "that", "holds", "up", "on", "the", "ground.",
@@ -68,6 +68,13 @@ const INDUSTRY_IMAGES: Record<string, string> = {
   "public-sector-government": "/images/industries/Public Sector & Government.jpg",
   "energy-resources": "/images/industries/Energy & Natural Resources.jpg",
   "industrials-manufacturing": "/images/industries/Industrials & Manufacturing.jpg",
+};
+
+const CLUSTER_IMAGES: Record<string, string> = {
+  "strategy-transformation": "/images/Homepage Sections/Strategy & Transformation.jpg",
+  "finance-risk-regulation": "/images/Homepage Sections/Finance risk & regulation.jpg",
+  "sustainability-public": "/images/Homepage Sections/Sustainability & public impact.jpg",
+  "growth-communications": "/images/Homepage Sections/Growth & Communications.jpg",
 };
 
 /* ── Homepage-featured insight images — matched by keyword in the title ── */
@@ -449,73 +456,67 @@ function ServiceClustersSection() {
   };
 
   const [c1, c2, c3, c4] = CLUSTERS;
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  const scrollByCard = (direction: 1 | -1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cardWidth = track.firstElementChild?.getBoundingClientRect().width ?? 320;
+    track.scrollBy({ left: direction * (cardWidth + 24), behavior: "smooth" });
+  };
 
   return (
     <section className="relative bg-white">
-      <div className="mx-auto w-full max-w-[72rem] px-6 py-[clamp(64px,8vw,96px)] sm:px-16">
-        <div className="mb-[clamp(48px,6vw,72px)] flex max-w-[42rem] flex-col gap-4.5">
-          <div className="text-[13px] font-bold uppercase tracking-[.14em] text-eyebrow">Services</div>
+      <div className="mx-auto w-full max-w-[72rem] px-6 pt-[clamp(64px,8vw,96px)] sm:px-16">
+        <div className="mb-[clamp(48px,6vw,72px)] flex max-w-[42rem] flex-col gap-4">
+          <div className="text-[13px] font-bold uppercase tracking-[.06em] text-sage">Services</div>
           <h2 className="font-[var(--font-heading)] text-[clamp(2.25rem,1.5rem+3vw,4rem)] font-semibold leading-[1.08] tracking-[-0.01em] text-navy-darkest">
             Ten disciplines. Four ways in.
           </h2>
         </div>
+      </div>
 
-        <div className="flex flex-col gap-[clamp(20px,3vw,24px)] min-[700px]:flex-row">
-          <ClusterCardBig num="01" cluster={c1} {...cardCopy(c1.id)} left="60%" top="56%" motifSize="78%" />
-          <div className="flex flex-col gap-[clamp(20px,3vw,24px)] min-[700px]:w-[45%]">
-            <ClusterCardSmall num="02" cluster={c2} {...cardCopy(c2.id)} left="84%" top="10%" motifSize="70%" />
-            <ClusterCardSmall num="03" cluster={c3} {...cardCopy(c3.id)} left="16%" top="94%" motifSize="70%" />
-          </div>
-        </div>
+      <div
+        ref={trackRef}
+        className="flex gap-6 overflow-x-auto pb-2 pl-5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        style={{ scrollSnapType: "x mandatory" }}
+      >
+        <ClusterCardBig num="01" cluster={c1} {...cardCopy(c1.id)} left="60%" top="56%" motifSize="78%" image={CLUSTER_IMAGES[c1.id]} />
+        <ClusterCardSmall num="02" cluster={c2} {...cardCopy(c2.id)} left="84%" top="10%" motifSize="70%" image={CLUSTER_IMAGES[c2.id]} />
+        <ClusterCardSmall num="03" cluster={c3} {...cardCopy(c3.id)} left="16%" top="94%" motifSize="70%" image={CLUSTER_IMAGES[c3.id]} />
+        <ClusterCardSmall num="04" cluster={c4} {...cardCopy(c4.id)} left="50%" top="50%" motifSize="70%" image={CLUSTER_IMAGES[c4.id]} />
+        <div className="w-5 flex-none" aria-hidden="true" />
+      </div>
 
-        <div className="relative mt-[clamp(32px,5vw,48px)] overflow-hidden rounded-3xl bg-[linear-gradient(165deg,#021024_0%,#052659_100%)] p-[clamp(24px,3vw,32px)]">
-          <DiamondMotif left="82%" top="50%" size="clamp(160px,20vw,240px)" />
-          <div className="relative z-[2] flex max-w-[26rem] flex-col gap-3">
-            <div className="text-[12px] font-bold tracking-[.12em] text-blue-light">04</div>
-            <h3 className="font-[var(--font-heading)] text-[clamp(1.5rem,1.2rem+1.5vw,2rem)] font-normal leading-[1.15] text-white">
-              {c4.label}
-            </h3>
-            <p className="text-[16px] leading-[1.55] text-[#C3D0DF]">{cardCopy(c4.id).one_liner}</p>
-            <ServiceLinks items={cardCopy(c4.id).items} />
-          </div>
-          <div className="relative z-[2] mt-4">
-            <Link
-              href="/services"
-              className="inline-flex items-center gap-2 rounded-full bg-terracotta px-[22px] py-3 text-[13px] font-bold text-navy-darkest transition-colors hover:bg-terracotta-hover"
-            >
-              Explore <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-        </div>
-
-        <div className="mt-[clamp(8px,2vw,16px)]">
+      <div className="mx-auto w-full max-w-[72rem] px-6 pb-[clamp(64px,8vw,96px)] pt-[clamp(20px,3vw,28px)] sm:px-16">
+        <div className="flex flex-wrap items-center justify-between gap-6">
           <Link
             href="/services"
-            className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-eyebrow transition-transform hover:translate-x-0.5 hover:underline"
+            className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-navy-darkest transition-transform hover:translate-x-0.5 hover:underline"
           >
             Explore all ten disciplines <span aria-hidden="true">→</span>
           </Link>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              aria-label="Previous cluster"
+              onClick={() => scrollByCard(-1)}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-navy-darkest/25 text-navy-darkest transition-colors hover:border-navy-darkest hover:bg-navy-darkest/6"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              aria-label="Next cluster"
+              onClick={() => scrollByCard(1)}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-navy-darkest/25 text-navy-darkest transition-colors hover:border-navy-darkest hover:bg-navy-darkest/6"
+            >
+              ›
+            </button>
+          </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function ServiceLinks({ items }: { items: { slug: string }[] }) {
-  return (
-    <div className="mt-0.5 flex flex-wrap items-center gap-2">
-      {items.map((s, i) => (
-        <span key={s.slug} className="flex items-center gap-2">
-          {i > 0 && <span className="text-white/30">·</span>}
-          <Link
-            href={`/services/${s.slug}`}
-            className="text-[14px] font-medium text-blue-light transition-colors hover:underline"
-          >
-            {SERVICE_SHORT_LABELS[s.slug] ?? s.slug}
-          </Link>
-        </span>
-      ))}
-    </div>
   );
 }
 
@@ -527,6 +528,7 @@ function ClusterCardBig({
   left,
   top,
   motifSize,
+  image,
 }: {
   num: string;
   cluster: { id: string; label: string };
@@ -535,23 +537,30 @@ function ClusterCardBig({
   left: string;
   top: string;
   motifSize: string;
+  image?: string;
 }) {
   return (
-    <div className="relative min-h-[320px] flex-1 overflow-hidden rounded-3xl bg-[linear-gradient(165deg,#021024_0%,#052659_100%)] p-[clamp(28px,3.5vw,40px)] min-[700px]:w-[55%] min-[700px]:flex-none">
-      <DiamondMotif left={left} top={top} size={motifSize} />
-      <div className="relative z-[2] flex h-full flex-col justify-between">
-        <div className="flex max-w-[34rem] flex-col gap-3">
-          <div className="text-[12px] font-bold tracking-[.12em] text-blue-light">{num}</div>
-          <h3 className="font-[var(--font-heading)] text-[clamp(1.75rem,1.3rem+2.2vw,2.5rem)] font-normal leading-[1.15] text-white">
-            {cluster.label}
-          </h3>
-          <p className="text-[16px] leading-[1.55] text-[#C3D0DF]">{one_liner}</p>
-          <ServiceLinks items={items} />
-        </div>
-        <div className="mt-4">
+    <div
+      className="relative h-[clamp(420px,48vw,560px)] w-[clamp(560px,66vw,780px)] flex-none overflow-hidden rounded-3xl"
+      style={{ scrollSnapAlign: "start" }}
+    >
+      {image ? (
+        <img src={encodeURI(image)} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+      ) : (
+        <div className="absolute inset-0 bg-[linear-gradient(165deg,#021024_0%,#052659_100%)]" />
+      )}
+      <DiamondMotif left={left} top={top} size={motifSize} tone="paper" />
+      <div className="absolute inset-y-[10%] right-[20px] z-[2] flex w-[54%] max-w-[26rem] flex-col justify-center gap-4 rounded-3xl bg-[var(--color-paper)] p-[clamp(24px,3vw,32px)] shadow-[0_24px_64px_-24px_rgba(2,16,36,.4)]">
+        <div className="text-[12px] font-bold tracking-[.12em] text-sage">{num}</div>
+        <h3 className="font-[var(--font-heading)] text-[clamp(1.4rem,1.1rem+1.6vw,2rem)] font-semibold leading-[1.2] text-navy-darkest">
+          {cluster.label}
+        </h3>
+        <p className="text-[15px] leading-[1.5] text-[#37424F]">{one_liner}</p>
+        <ServiceLinks items={items} />
+        <div className="mt-1">
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 rounded-full bg-terracotta px-[22px] py-3 text-[13px] font-bold text-navy-darkest transition-colors hover:bg-terracotta-hover"
+            className="inline-flex items-center gap-2 rounded-full bg-olive px-[22px] py-3 text-[13px] font-bold text-navy-darkest transition-colors hover:bg-olive-hover"
           >
             Explore <span aria-hidden="true">→</span>
           </Link>
@@ -569,6 +578,7 @@ function ClusterCardSmall({
   left,
   top,
   motifSize,
+  image,
 }: {
   num: string;
   cluster: { id: string; label: string };
@@ -577,28 +587,57 @@ function ClusterCardSmall({
   left: string;
   top: string;
   motifSize: string;
+  image?: string;
 }) {
   return (
-    <div className="relative aspect-[16/10] min-h-[180px] flex-1 overflow-hidden rounded-3xl bg-[linear-gradient(165deg,#021024_0%,#052659_100%)] p-[clamp(22px,2.6vw,28px)]">
-      <DiamondMotif left={left} top={top} size={motifSize} />
-      <div className="relative z-[2] flex h-full flex-col justify-between">
-        <div className="flex flex-col gap-2">
-          <div className="text-[11px] font-bold tracking-[.12em] text-blue-light">{num}</div>
-          <h3 className="font-[var(--font-heading)] text-[clamp(1.15rem,1rem+0.8vw,1.4rem)] font-normal leading-[1.2] text-white">
-            {cluster.label}
-          </h3>
-          <p className="text-[14px] leading-[1.5] text-[#C3D0DF]">{one_liner}</p>
+    <div
+      className="group relative h-[clamp(420px,48vw,560px)] w-[clamp(320px,36vw,400px)] flex-none overflow-hidden rounded-3xl"
+      style={{ scrollSnapAlign: "start" }}
+    >
+      {image ? (
+        <img src={encodeURI(image)} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+      ) : (
+        <div className="absolute inset-0 bg-[linear-gradient(165deg,#021024_0%,#052659_100%)]" />
+      )}
+      <DiamondMotif left={left} top={top} size={motifSize} tone="paper" />
+      <div className="absolute inset-x-[16px] bottom-[16px] z-[2] flex max-h-[35%] flex-col gap-2 overflow-hidden rounded-3xl bg-[var(--color-paper)] p-[clamp(16px,2vw,22px)] shadow-[0_24px_64px_-24px_rgba(2,16,36,.4)] transition-[left,right,bottom,max-height] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:inset-x-0 group-hover:bottom-0 group-hover:max-h-full group-focus-within:inset-x-0 group-focus-within:bottom-0 group-focus-within:max-h-full">
+        <div className="text-[11px] font-bold tracking-[.12em] text-sage">{num}</div>
+        <h3 className="font-[var(--font-heading)] text-[clamp(1.1rem,0.95rem+0.7vw,1.3rem)] font-semibold leading-[1.2] text-navy-darkest">
+          {cluster.label}
+        </h3>
+        <p className="translate-y-2 text-[14px] leading-[1.5] text-[#37424F] opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+          {one_liner}
+        </p>
+        <div className="translate-y-2 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
           <ServiceLinks items={items} />
         </div>
-        <div>
+        <div className="mt-1 translate-y-2 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
           <Link
             href="/services"
-            className="inline-flex items-center gap-1.5 rounded-full bg-terracotta px-[18px] py-2.5 text-[12px] font-bold text-navy-darkest transition-colors hover:bg-terracotta-hover"
+            className="inline-flex items-center gap-1.5 rounded-full bg-olive px-[18px] py-2.5 text-[12px] font-bold text-navy-darkest transition-colors hover:bg-olive-hover"
           >
             Explore <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ServiceLinks({ items }: { items: { slug: string }[] }) {
+  return (
+    <div className="mt-0.5 flex flex-wrap items-center gap-2">
+      {items.map((s, i) => (
+        <span key={s.slug} className="flex items-center gap-2">
+          {i > 0 && <span className="text-white/30">·</span>}
+          <Link
+            href={`/services/${s.slug}`}
+            className="text-[14px] font-medium text-blue-light transition-colors hover:underline"
+          >
+            {SERVICE_SHORT_LABELS[s.slug] ?? s.slug}
+          </Link>
+        </span>
+      ))}
     </div>
   );
 }
