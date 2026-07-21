@@ -591,10 +591,20 @@ function ClusterCardSmall({
   motifSize: string;
   image?: string;
 }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <div
-      className="group relative h-[clamp(420px,48vw,560px)] w-[clamp(320px,36vw,400px)] flex-none overflow-hidden rounded-3xl"
+      className="relative h-[clamp(420px,48vw,560px)] w-[clamp(320px,36vw,400px)] flex-none overflow-hidden rounded-3xl"
       style={{ scrollSnapAlign: "start" }}
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+      onFocus={() => setIsExpanded(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+          setIsExpanded(false);
+        }
+      }}
     >
       {image ? (
         <img src={encodeURI(image)} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
@@ -602,18 +612,28 @@ function ClusterCardSmall({
         <div className="absolute inset-0 bg-[linear-gradient(165deg,#021024_0%,#052659_100%)]" />
       )}
       <DiamondMotif left={left} top={top} size={motifSize} tone="paper" />
-      <div className="absolute inset-x-[16px] bottom-[16px] z-[2] flex max-h-[35%] flex-col gap-2 overflow-hidden rounded-3xl bg-[var(--color-paper)] p-[clamp(16px,2vw,22px)] shadow-[0_24px_64px_-24px_rgba(2,16,36,.4)] transition-[left,right,bottom,max-height] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:inset-x-0 group-hover:bottom-0 group-hover:max-h-full group-focus-within:inset-x-0 group-focus-within:bottom-0 group-focus-within:max-h-full">
+      <div
+        className="absolute z-[2] flex flex-col gap-2 overflow-hidden rounded-3xl bg-[var(--color-paper)] p-[clamp(16px,2vw,22px)] shadow-[0_24px_64px_-24px_rgba(2,16,36,.4)] transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+        style={
+          isExpanded
+            ? { left: "0px", right: "0px", top: "0px", bottom: "0px" }
+            : { left: "16px", right: "16px", top: "auto", bottom: "16px", maxHeight: "35%" }
+        }
+      >
         <div className="text-[11px] font-bold tracking-[.12em] text-sage">{num}</div>
         <h3 className="font-[var(--font-heading)] text-[clamp(1.1rem,0.95rem+0.7vw,1.3rem)] font-semibold leading-[1.2] text-navy-darkest">
           {cluster.label}
         </h3>
-        <p className="translate-y-2 text-[14px] leading-[1.5] text-[#37424F] opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+        <p
+          className="text-[14px] leading-[1.5] text-[#37424F] transition-opacity duration-200"
+          style={{ opacity: isExpanded ? 1 : 0 }}
+        >
           {one_liner}
         </p>
-        <div className="translate-y-2 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+        <div className="transition-opacity duration-200" style={{ opacity: isExpanded ? 1 : 0 }}>
           <ServiceLinks items={items} />
         </div>
-        <div className="mt-1 translate-y-2 opacity-0 transition-[opacity,transform] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+        <div className="mt-1 transition-opacity duration-200" style={{ opacity: isExpanded ? 1 : 0 }}>
           <Link
             href="/services"
             className="inline-flex items-center gap-1.5 rounded-full bg-olive px-[18px] py-2.5 text-[12px] font-bold text-navy-darkest transition-colors hover:bg-olive-hover"
