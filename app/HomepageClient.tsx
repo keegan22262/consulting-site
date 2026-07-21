@@ -77,6 +77,8 @@ const CLUSTER_IMAGES: Record<string, string> = {
   "growth-communications": "/images/Homepage Sections/Growth & Communications.jpg",
 };
 
+const CTA_BAND_IMAGE = "/images/Homepage Sections/Get in Touch.jpg";
+
 /* ── Homepage-featured insight images — matched by keyword in the title ── */
 const INSIGHT_IMAGES: { match: string; src: string }[] = [
   { match: "resilience", src: "/images/insights/Institutional-cooperation.jpg" },
@@ -929,7 +931,7 @@ function CtaBandSection() {
     <section className="relative overflow-hidden bg-[var(--color-paper)]">
       <div className="flex w-full flex-col md:flex-row md:items-stretch">
         <div className="flex flex-none flex-col gap-[22px] px-6 py-[clamp(56px,7vw,88px)] sm:px-16 md:w-[44%] md:justify-center md:px-16">
-          <div className="text-[13px] font-bold uppercase tracking-[.14em] text-blue-mid">Get in touch</div>
+          <div className="text-[13px] font-bold uppercase tracking-[.14em] text-sage">Get in touch</div>
           <h2 className="font-[var(--font-heading)] text-[clamp(2.25rem,1.6rem+2.6vw,3.25rem)] font-semibold leading-[1.14] tracking-[-0.01em] text-navy-darkest">
             Let&apos;s discuss what&apos;s next for your institution.
           </h2>
@@ -947,15 +949,21 @@ function CtaBandSection() {
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full bg-terracotta px-7 py-4 text-[14px] font-bold tracking-[.02em] text-navy-darkest transition-colors hover:bg-terracotta-hover"
+              className="inline-flex items-center gap-2 rounded-full bg-olive px-7 py-4 text-[14px] font-bold tracking-[.02em] text-navy-darkest transition-colors hover:bg-olive-hover"
             >
               Start a conversation <span aria-hidden="true">↗</span>
             </Link>
           </div>
         </div>
 
-        <div className="relative flex min-h-[320px] flex-none items-center justify-center overflow-hidden bg-[linear-gradient(155deg,#0B355E_0%,#021024_78%)] p-[clamp(28px,5vw,56px)] md:w-[56%]">
-          <DiamondMotif left="38%" top="44%" size="150%" />
+        <div className="relative flex min-h-[320px] flex-none items-center justify-center overflow-hidden p-[clamp(28px,5vw,56px)] md:w-[56%]">
+          <img
+            src={encodeURI(CTA_BAND_IMAGE)}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <DiamondMotif left="38%" top="44%" size="150%" tone="paper" />
         </div>
       </div>
     </section>

@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npm --version)",
+      "Bash(git checkout *)",
+      "Bash(sed -i '/eslint: { ignoreDuringBuilds: true },/d' next.config.ts)",
+      "Bash(node --input-type=module -e 'const m = await import\\(\"./eslint.config.mjs\"\\); const cfg = m.default; console.log\\(\"loaded OK — array of\", Array.isArray\\(cfg\\)?cfg.length:\"?\", \"config objects; first ignores:\", cfg[0]?.ignores\\)')",
+      "Bash(node -e 'console.log\\(\"eslint\", require\\(\"eslint/package.json\"\\).version\\)')",
+      "Bash(npx tsc *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(mkdir -p /tmp/claude-1000/-mnt-c-Users-hp-Documents-consulting-site/4c214d8c-eda7-4a68-b91a-711ebb20fa94/scratchpad/design-import)",
+      "Bash(python3 -c ' *)",
+      "Bash(pip install *)",
+      "Bash(python3 -c \"import PIL; print\\('ok', PIL.__version__\\)\")",
+      "Bash(node *)",
+      "mcp__claude-design__read_file",
+      "Bash(tee /tmp/task2_baseline_build.log)",
+      "Bash(mkdir -p /tmp/claude-1000/-mnt-c-Users-hp-Documents-consulting-site/7b2cf5f8-ff04-46a2-8754-1f48a901cd4e/scratchpad)",
+      "Bash(python3 -)",
+      "Skill(run)",
+      "Bash(echo \"grep-exit:$?\")",
+      "Bash(curl *)",
+      "Bash(python3 *)",
+      "Bash(kill 57325 57326 57367 57589)",
+      "Bash(echo \"done-exit-$?\")"
+    ]
+  }
+}
