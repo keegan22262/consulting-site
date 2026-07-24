@@ -264,7 +264,7 @@ function HeroSection() {
             <HeroHeadline text={HERO_HEADLINE} />
           </h1>
 
-          <div className="relative z-[4] mt-8 flex w-full flex-col gap-3 rounded-3xl bg-[#F7F6F2] p-[clamp(16px,1.6vw,22px)] md:absolute md:right-[5%] md:top-[8%] md:mt-0 md:w-[38%]">
+          <div className="relative z-[4] mt-8 flex w-full flex-col gap-3 rounded-3xl bg-[#F7F6F2] p-[clamp(16px,1.6vw,22px)] md:absolute md:bottom-[5%] md:left-[5%] md:mt-0 md:w-[42%]">
             <p className="text-[clamp(13px,0.4vw+11px,15px)] leading-[1.5] text-[#052659]">
               We advise governments, investors, and enterprises across ten disciplines and eleven
               sectors with rigor board expectations and ground truth execution demands.
@@ -285,38 +285,7 @@ function HeroSection() {
             </div>
           </div>
 
-          <div className="relative z-[5] mt-8 flex w-full flex-col gap-2 rounded-3xl bg-[#F7F6F2] p-[clamp(14px,1.6vw,18px)] md:absolute md:bottom-[5%] md:left-[5%] md:mt-0 md:w-[42%]">
-            <div className="text-[13px] font-semibold uppercase leading-[1.4] tracking-[.06em] text-[#477256]">
-              Ask Jibu
-            </div>
-            <div className="flex items-center gap-2.5 rounded-full border border-navy-darkest/12 bg-white py-1.5 pr-1.5 pl-[18px]">
-              <input
-                type="text"
-                placeholder="Ask me anything?"
-                disabled
-                className="min-w-0 flex-1 border-none bg-transparent py-2 text-[14px] text-[#37424F] outline-none"
-              />
-              <span
-                aria-hidden="true"
-                className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-navy-darkest text-[14px] text-white"
-              >
-                →
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <div className="text-[13px] font-bold text-navy-darkest">Rill Singh Answer</div>
-              <p className="max-w-[36ch] text-[14px] leading-[1.6] text-[#052659]">
-                <AnimatedWords
-                  words={HERO_ANSWER_WORDS}
-                  reducedMotion={reducedMotion}
-                  baseDelay={1500}
-                  step={45}
-                  duration={400}
-                  gapEm={0.22}
-                />
-              </p>
-            </div>
-          </div>
+          <JibuChat />
 
           {!reducedMotion && (
             <button
@@ -330,6 +299,147 @@ function HeroSection() {
           )}
         </div>
     </section>
+  );
+}
+
+function ThinkingDots() {
+  return (
+    <span className="inline-flex items-center gap-1 py-1">
+      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#052659]" style={{ animationDelay: "0ms" }} />
+      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#052659]" style={{ animationDelay: "200ms" }} />
+      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#052659]" style={{ animationDelay: "400ms" }} />
+    </span>
+  );
+}
+
+type JibuMessage = { role: "user" | "assistant"; content: string };
+const JIBU_MAX_HISTORY = 8;
+
+function JibuChat() {
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<JibuMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed || isLoading) return;
+
+    const nextMessages = [...messages, { role: "user" as const, content: trimmed }].slice(-JIBU_MAX_HISTORY);
+    setMessages(nextMessages);
+    setInput("");
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: nextMessages }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "Something went wrong. Please try again.");
+      } else {
+        setMessages((prev) => [...prev, { role: "assistant" as const, content: data.answer }].slice(-JIBU_MAX_HISTORY));
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setMessages([]);
+    setError(null);
+    setInput("");
+  };
+
+  const charsRemaining = 2000 - input.length;
+  const showCharWarning = input.length > 1800;
+  const hasContent = messages.length > 0 || isLoading || error;
+
+  return (
+    <div className="relative z-[5] mt-8 flex max-h-[380px] w-full flex-col gap-2 rounded-3xl bg-[#F7F6F2] p-[clamp(14px,1.6vw,18px)] md:absolute md:right-[5%] md:top-[8%] md:mt-0 md:w-[38%]">
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-[13px] font-semibold uppercase leading-[1.4] tracking-[.06em] text-[#477256]">
+          Ask Jibu
+        </div>
+        {messages.length > 0 && (
+          <button
+            type="button"
+            onClick={handleReset}
+            className="text-[12px] font-medium text-navy-darkest/60 transition-colors hover:text-navy-darkest hover:underline"
+          >
+            Ask something else →
+          </button>
+        )}
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-none items-center gap-2.5 rounded-full border border-navy-darkest/12 bg-white py-1.5 pr-1.5 pl-[18px]"
+      >
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value.slice(0, 2000))}
+          placeholder="Ask me anything?"
+          disabled={isLoading}
+          className="min-w-0 flex-1 border-none bg-transparent py-2 text-[14px] text-[#37424F] outline-none"
+        />
+        <button
+          type="submit"
+          disabled={isLoading || !input.trim()}
+          aria-label="Send question to Jibu"
+          className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-navy-darkest text-[14px] text-white transition-opacity disabled:opacity-40"
+        >
+          {isLoading ? "…" : "→"}
+        </button>
+      </form>
+
+      {showCharWarning && (
+        <p className="flex-none text-[11px] text-[#9B2318]">{charsRemaining} characters remaining</p>
+      )}
+
+      {hasContent && (
+        <div
+          ref={scrollRef}
+          aria-live="polite"
+          className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1 [scrollbar-color:#19507A_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#19507A]/40 [&::-webkit-scrollbar-track]:bg-transparent"
+        >
+          {messages.map((msg, i) =>
+            msg.role === "user" ? (
+              <div key={i} className="text-[13px] font-semibold text-navy-darkest">
+                You asked: <span className="font-normal text-[#37424F]">{msg.content}</span>
+              </div>
+            ) : (
+              <div key={i} className="flex flex-col gap-1">
+                <div className="text-[13px] font-bold text-navy-darkest">Rill Singh Answer</div>
+                <p className="whitespace-pre-wrap text-[14px] leading-[1.6] text-[#052659]">{msg.content}</p>
+              </div>
+            )
+          )}
+          {isLoading && (
+            <div className="flex flex-col gap-1">
+              <div className="text-[13px] font-bold text-navy-darkest">Rill Singh Answer</div>
+              <ThinkingDots />
+            </div>
+          )}
+          {error && <p className="text-[14px] leading-[1.6] text-[#9B2318]">{error}</p>}
+        </div>
+      )}
+    </div>
   );
 }
 
