@@ -817,7 +817,7 @@ function IndustryTile({
     <Link
       href={`/industries/${industry.id}`}
       style={{ minHeight }}
-      className={`group relative flex-1 overflow-hidden rounded-2xl bg-navy-darkest ${className ?? ""}`}
+      className={`group relative flex-1 overflow-hidden rounded-3xl bg-navy-darkest ${className ?? ""}`}
     >
       {image ? (
         <img
@@ -832,25 +832,24 @@ function IndustryTile({
       <div
         aria-hidden="true"
         className="absolute inset-0"
-        style={{ background: "linear-gradient(to top, rgba(2,16,36,.92) 0%, rgba(2,16,36,.58) 34%, rgba(2,16,36,.08) 68%)" }}
+        style={{ background: "linear-gradient(to top, rgba(2,16,36,.94) 0%, rgba(2,16,36,.62) 38%, rgba(2,16,36,.05) 70%)" }}
       />
-      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-[clamp(18px,2vw,26px)]">
-        <div className="text-[0.65rem] font-bold uppercase tracking-[.12em] text-blue-mid">
+      <div
+        className={`absolute inset-x-0 bottom-0 flex flex-col gap-4 ${
+          featured ? "p-[clamp(28px,3.2vw,44px)]" : "p-[clamp(20px,2.4vw,30px)]"
+        }`}
+      >
+        <div className="text-[0.7rem] font-bold uppercase tracking-[.14em] text-blue-mid">
           {featured ? "Featured sector" : "Sector"}
         </div>
         <h3
-          className={`font-[var(--font-heading)] font-semibold leading-[1.2] text-white ${
-            featured ? "text-[clamp(1.4rem,1.1rem+1vw,1.9rem)]" : "max-w-[24ch] text-[1.15rem]"
+          className={`font-[var(--font-heading)] font-semibold leading-[1.08] tracking-[-0.01em] text-white ${
+            featured ? "text-[clamp(2rem,1.5rem+2.2vw,3rem)]" : "max-w-[20ch] text-[clamp(1.4rem,1.1rem+1.2vw,1.9rem)]"
           }`}
         >
           {industry.title}
         </h3>
-        <p
-          className={`leading-[1.5] text-[#C3D0DF] ${featured ? "text-[14px] line-clamp-3" : "max-w-[42ch] text-[13px] line-clamp-2"}`}
-        >
-          {industry.description}
-        </p>
-        <span className="mt-1 inline-flex items-center gap-1.5 text-[13px] font-bold text-[#B08858] transition-transform group-hover:translate-x-0.5">
+        <span className="mt-1 inline-flex w-fit items-center gap-2 rounded-full bg-olive px-5 py-2.5 text-[13px] font-bold text-navy-darkest transition-colors group-hover:bg-olive-hover">
           Explore sector <span aria-hidden="true">→</span>
         </span>
       </div>
@@ -869,37 +868,42 @@ function IndustriesSection() {
   return (
     <section className="relative overflow-hidden bg-white">
       <DiamondMotif left="92%" top="6%" size="46%" />
-      <div className="relative z-[2] mx-auto w-full max-w-[72rem] px-6 py-[clamp(64px,8vw,96px)] sm:px-16">
+      <div className="relative z-[2] mx-auto w-full max-w-[72rem] px-6 pt-[clamp(64px,8vw,96px)] sm:px-16">
         <div className="mb-[clamp(40px,5vw,56px)] flex max-w-[42rem] flex-col gap-4">
           <div className="text-[13px] font-bold uppercase tracking-[.14em] text-eyebrow">Industries</div>
           <h2 className="font-[var(--font-heading)] text-[clamp(2.25rem,1.5rem+3vw,4rem)] font-semibold leading-[1.08] tracking-[-0.01em] text-navy-darkest">
             Sector depth across the real economy.
           </h2>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 gap-[clamp(16px,2vw,24px)] md:grid-cols-[1.05fr_1fr] md:grid-rows-2">
+      <div
+        className="relative z-[2]"
+        style={{ width: "calc(100vw - 40px)", maxWidth: "calc(100vw - 40px)", margin: "0 auto" }}
+      >
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-[1.05fr_1fr] md:grid-rows-2">
           {publicSector && (
             <IndustryTile
               industry={publicSector}
               image={INDUSTRY_IMAGES[publicSector.id]}
-              minHeight="clamp(240px,28vw,320px)"
+              minHeight="clamp(320px,34vw,420px)"
               className="md:col-start-1 md:row-start-1"
             />
           )}
 
-          <div className="grid grid-cols-2 gap-[clamp(16px,2vw,24px)] md:col-start-1 md:row-start-2">
+          <div className="grid grid-cols-2 gap-2 md:col-start-1 md:row-start-2">
             {energy && (
               <IndustryTile
                 industry={energy}
                 image={INDUSTRY_IMAGES[energy.id]}
-                minHeight="clamp(180px,20vw,220px)"
+                minHeight="clamp(220px,24vw,280px)"
               />
             )}
             {industrials && (
               <IndustryTile
                 industry={industrials}
                 image={INDUSTRY_IMAGES[industrials.id]}
-                minHeight="clamp(180px,20vw,220px)"
+                minHeight="clamp(220px,24vw,280px)"
               />
             )}
           </div>
@@ -907,20 +911,20 @@ function IndustriesSection() {
           <IndustryTile
             industry={featured}
             image={INDUSTRY_IMAGES[featured.id]}
-            minHeight="clamp(420px,48vw,560px)"
+            minHeight="clamp(520px,58vw,680px)"
             className="md:col-start-2 md:row-start-1 md:row-span-2"
             featured
           />
         </div>
+      </div>
 
-        <div className="mt-[clamp(28px,3.5vw,36px)]">
-          <Link
-            href="/industries"
-            className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-eyebrow transition-transform hover:translate-x-0.5 hover:underline"
-          >
-            See all 11 sectors <span aria-hidden="true">→</span>
-          </Link>
-        </div>
+      <div className="relative z-[2] mx-auto w-full max-w-[72rem] px-6 pb-[clamp(64px,8vw,96px)] pt-[clamp(28px,3.5vw,36px)] sm:px-16">
+        <Link
+          href="/industries"
+          className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-eyebrow transition-transform hover:translate-x-0.5 hover:underline"
+        >
+          See all 11 sectors <span aria-hidden="true">→</span>
+        </Link>
       </div>
     </section>
   );
