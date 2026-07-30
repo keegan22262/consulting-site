@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useInsights } from "@/lib/hooks/useInsights";
 import { useResponsiveValue } from "@/components-v2/foundation/useResponsiveValue";
 import InsightsHeroSection from "@/src/sections/insights/InsightsHeroSection";
@@ -34,9 +35,26 @@ const estimateReadTime = (text: string) => {
 
 export default function InsightsPageClient() {
   const { data: cmsInsights } = useInsights();
-  const [activeFilter, setActiveFilter] = useState("All Insights");
+  const searchParams = useSearchParams();
+
+  const [activeFilter, setActiveFilter] = useState(() => {
+    const filterParam = searchParams.get("filter");
+    const match = TOPIC_FILTERS.find((topic) => topic.label === filterParam);
+    return match ? match.label : "All Insights";
+  });
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+
   const loadMoreMargin = useResponsiveValue({ desktop: "56px", tablet: "48px", mobile: "40px" });
+
+  useEffect(() => {
+    const filterParam = searchParams.get("filter");
+    if (!filterParam) return;
+    const match = TOPIC_FILTERS.find((topic) => topic.label === filterParam);
+    if (match) {
+      setActiveFilter(match.label);
+      setVisibleCount(ITEMS_PER_PAGE);
+    }
+  }, [searchParams]);
 
   const handleFilterChange = (nextFilter: string) => {
     setActiveFilter(nextFilter);

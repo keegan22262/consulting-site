@@ -23,6 +23,13 @@ export const CLUSTERS: Cluster[] = [
   { id: "growth-communications", label: "Growth & communications" },
 ];
 
+export const CLUSTER_IMAGES: Record<string, string> = {
+  "strategy-transformation": "/images/Homepage Sections/Strategy & Transformation.jpg",
+  "finance-risk-regulation": "/images/Homepage Sections/Finance risk & regulation.jpg",
+  "sustainability-public": "/images/Homepage Sections/Sustainability & public impact.jpg",
+  "growth-communications": "/images/Homepage Sections/Growth & Communications.jpg",
+};
+
 export const SERVICES: ServiceItem[] = [
   {
     slug: "strategy",
